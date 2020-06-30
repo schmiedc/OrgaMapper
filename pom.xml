@@ -12,21 +12,21 @@
 		<relativePath />
 	</parent>
 
-	<groupId>com.mycompany</groupId>
-	<artifactId>GaussFiltering</artifactId>
+	<groupId>de.leibnizfmp</groupId>
+	<artifactId>MapOrganelle</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
-	<name>Gauss Filtering</name>
-	<description>A Maven project implementing an ImageJ command.</description>
-	<url>https://mycompany.com/imagej/gauss-filtering/</url>
-	<inceptionYear>2017</inceptionYear>
+	<name>Organelle Positioning</name>
+	<description>ImageJ plugin for detecting and mapping organelles within a cell</description>
+	<url>https://github.com/schmiedc/imagej2-plugin-test</url>
+	<inceptionYear>2020</inceptionYear>
 	<organization>
-		<name>My Company</name>
-		<url>https://mycompany.com/</url>
+		<name>FMP-Berlin</name>
+		<url>https://www.leibniz-fmp.de/home/</url>
 	</organization>
 	<licenses>
 		<license>
-			<name>Simplified BSD License</name>
+			<name>MIT License</name>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -34,55 +34,55 @@
 	<developers>
 		<!-- See https://imagej.net/Team -->
 		<developer>
-			<id>ctrueden</id>
-			<name>Curtis Rueden</name>
-			<url>https://imagej.net/User:Rueden</url>
+			<id>schmiedc</id>
+			<name>Christopher Schmied</name>
+			<url>https://github.com/schmiedc</url>
 			<roles>
-				<role>founder</role>
-				<role>lead</role>
 				<role>developer</role>
-				<role>debugger</role>
-				<role>reviewer</role>
-				<role>support</role>
 				<role>maintainer</role>
 			</roles>
 		</developer>
 	</developers>
 	<contributors>
 		<contributor>
-			<name>Yili Zhao</name>
-			<url>https://imagej.net/User:Panovr</url>
-			<roles><role>founder</role></roles>
-			<properties><id>panovr</id></properties>
+			<name>Michael Ebner</name>
+			<url>https://www.leibniz-fmp.de/research/molecular-physiology-and-cell-biology/research-groups/haucke/membersr</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<properties>
+				<id>None</id>
+			</properties>
 		</contributor>
 	</contributors>
 
 	<mailingLists>
 		<mailingList>
-			<name>Image.sc Forum</name>
-			<archive>https://forum.image.sc/tags/imagej</archive>
+			<name>github</name>
+			<archive>https://github.com/schmiedc/imagej2-plugin-test/issues</archive>
 		</mailingList>
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/imagej/example-imagej-command</connection>
-		<developerConnection>scm:git:git@github.com:imagej/example-imagej-command</developerConnection>
+		<connection>scm:git:git://github.com/schmiedc/map-organelle</connection>
+		<developerConnection>scm:git:git@github.com:schmiedc/map-organelle</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/imagej/example-imagej-command</url>
+		<url>https://github.com/schmiedc/map-organelle</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/imagej/example-imagej-command/issues</url>
+		<url>https://github.com/schmiedc/map-organelle/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
 
 	<properties>
-		<package-name>com.mycompany.imagej</package-name>
-		<main-class>com.mycompany.imagej.GaussFiltering</main-class>
-		<license.licenseName>bsd_2</license.licenseName>
-		<license.copyrightOwners>My Company, Inc.</license.copyrightOwners>
+		<package-name>de.leibnizfmp</package-name>
+		<main-class>de.leibnizfmp.MapOrganelle</main-class>
+		<license.licenseName>MIT</license.licenseName>
+		<license.copyrightOwners>Christopher Schmied</license.copyrightOwners>
+		<scijava.app.directory>/data1/FMP_Docs/DevelopmentEnv/2020-06-30_fiji/</scijava.app.directory>
 	</properties>
 
 	<repositories>
@@ -96,6 +96,21 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-common</artifactId>
+			<version>0.28.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+			<version>5.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-ops</artifactId>
+			<version>0.43.2</version>
 		</dependency>
 	</dependencies>
 </project>
