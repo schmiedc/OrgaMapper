@@ -112,5 +112,30 @@
 			<artifactId>imagej-ops</artifactId>
 			<version>0.43.2</version>
 		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+			<version>1.52o</version>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+			<version>2.0.0-beta-44</version>
+		</dependency>
+		<dependency>
+			<groupId>ome</groupId>
+			<artifactId>formats-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ome</groupId>
+			<artifactId>bio-formats_plugins</artifactId>
+			<version>6.5.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.systems.cisd</groupId>
+					<artifactId>jhdf5</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 </project>

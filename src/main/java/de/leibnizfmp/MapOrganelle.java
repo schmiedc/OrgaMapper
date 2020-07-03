@@ -8,20 +8,29 @@
 
 package de.leibnizfmp;
 
+import ij.IJ;
+import ij.ImagePlus;
+
+import loci.common.DebugTools;
+import loci.formats.meta.IMetadata;
+import loci.plugins.in.ImporterOptions;
 import net.imagej.Dataset;
 import net.imagej.ImageJ;
 import net.imagej.ops.OpService;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
+import org.knowm.xchart.style.markers.None;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import loci.formats.FormatException;
+import loci.plugins.BF;
+import loci.formats.ImageReader;
+import loci.formats.MetadataTools;
+import sun.rmi.server.UnicastServerRef;
+
+import java.io.IOException;
 
 /**
  * This example illustrates how to create an ImageJ {@link Command} plugin.
@@ -51,6 +60,43 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
     @Override
     public void run() {
 
+        // test paths
+        String workingDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/";
+        //String inputDir = "/Plugin_InputTest/";
+        String inputDir = "/TestDataSet_LysoPos/";
+        String outputDir = "/Plugin_OutputTest/";
+        //String testFile =  "HeLa_control_1_WellA1_Seq0000.nd2 - HeLa_control_1_WellA1_Seq0000.nd2 (series 01).tif";
+        String testFile = "HeLa_scr.nd2";
+        String testInput = workingDir + inputDir;
+        String inputPath = workingDir + inputDir + testFile;
+
+        Image testImage = new Image(testInput, ".nd2", 1.0, 3, 1, "nucleus", "cytoplams", "lysosome","None");
+        ImagePlus imp = testImage.openImageBF(testFile);
+        imp.show();
+
+        try {
+
+            DebugTools.setRootLevel("OFF");
+
+            // get the meta data from multiseries file
+            ImageReader reader = new ImageReader();
+            IMetadata omeMeta = MetadataTools.createOMEXMLMetadata();
+            reader.setMetadataStore(omeMeta);
+            reader.setId(inputPath);
+            int nSeries = reader.getSeriesCount();
+            reader.close();
+
+        } catch (FormatException e) {
+            IJ.error("Sorry, an error occurred: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+            IJ.error("Sorry, an error occurred: " + e.getMessage());
+        }
+
+
+
+
     }
 
     /**
@@ -63,22 +109,16 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
      */
     public static void main(final String... args) throws Exception {
         // create the ImageJ application context with all available services
-        final ImageJ ij = new ImageJ();
-        ij.ui().showUI();
+        new ImageJ();
 
-        // ask the user for a file to open
-        final File file = ij.ui().chooseFile(null, "open");
+        new MapOrganelle().run();
 
-        if (file != null) {
-            // load the dataset
-            final Dataset dataset = ij.scifio().datasetIO().open(file.getPath());
 
-            // show the image
-            ij.ui().show(dataset);
+        //final UnsignedByteType threshold = new UnsignedByteType( 127 );
+        //final net.imagej.ImageJ ij = new ImageJ();
+        //final Img< BitType > mask = (Img<BitType>) ij.op().threshold().apply( img, threshold );
+        //ImageJFunctions.show( mask );
 
-            // invoke the plugin
-            ij.command().run(MapOrganelle.class, true);
-        }
     }
 
 }
