@@ -52,24 +52,24 @@ public class Image {
     private int seriesID;
 
     /**
-     *  channel1 : string, identity of channel1
+     *  nucleus : int, number of nucleus channel
      */
-    private String channel1;
+    public int nucleus;
 
     /**
-     *  channel2 : string, identity of channel2
+     *  cytoplasm : int, number of cytoplasm channel
      */
-    private String channel2;
+    public int cytoplasm;
 
     /**
-     *  channel3 : string, identity of channel3
+     *  organelle : int, number of organelle channel
      */
-    private String channel3;
+    public int organelle;
 
     /**
-     *  channel4 : string, identity of channel4
+     *  measure : int, number of measurement channel
      */
-    private String channel4;
+    public int measure;
 
     /**
      * opens the image using the ImageJ default opener
@@ -87,7 +87,7 @@ public class Image {
         return image;
     }
 
-    ImagePlus openImageBF(String inputFile) {
+    ImagePlus openWithBF(String inputFile) {
 
         IJ.log("Opening file: " + inputFile);
 
@@ -155,13 +155,13 @@ public class Image {
      * @param pxSize pixel size in micron
      * @param numberChannels number of Channels
      * @param whichSeriesNum the series ID
-     * @param ch1 identity of channel 1
-     * @param ch2 identity of channel 2
-     * @param ch3 identity of channel 3
-     * @param ch4 identity of channel 4
+     * @param nucleusChannel identity of channel 1
+     * @param cytoplasmChannel identity of channel 2
+     * @param organelleChannel identity of channel 3
+     * @param measureChannel  identity of channel 4
      */
     public Image(String inputDir, String imageFormat, double pxSize, int numberChannels,
-                 int whichSeriesNum, String ch1, String ch2, String ch3, String ch4){
+                 int whichSeriesNum, int nucleusChannel, int cytoplasmChannel, int organelleChannel, int measureChannel ){
 
         directory = inputDir;
         format = imageFormat;
@@ -169,12 +169,29 @@ public class Image {
         pxSizeCalib = pxSize;
         numChannel = numberChannels;
         seriesID = whichSeriesNum;
-        channel1 = ch1;
-        channel2 = ch2;
-        channel3 = ch3;
-        channel4 = ch4;
+        nucleus = nucleusChannel;
+        cytoplasm = cytoplasmChannel;
+        organelle = organelleChannel;
+        measure = measureChannel ;
 
     }
+
+    public Image(String inputDir, String imageFormat, double pxSize, int numberChannels,
+                 int whichSeriesNum, int nucleusChannel, int cytoplasmChannel, int organelleChannel){
+
+        directory = inputDir;
+        format = imageFormat;
+        sizeUnit = "micron";
+        pxSizeCalib = pxSize;
+        numChannel = numberChannels;
+        seriesID = whichSeriesNum;
+        nucleus = nucleusChannel;
+        cytoplasm = cytoplasmChannel;
+        organelle = organelleChannel;
+        measure = 0;
+
+    }
+
 
 
 

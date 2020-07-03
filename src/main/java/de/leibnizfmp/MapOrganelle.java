@@ -11,6 +11,8 @@ package de.leibnizfmp;
 import ij.IJ;
 import ij.ImagePlus;
 
+import ij.ImageStack;
+import ij.plugin.ChannelSplitter;
 import loci.common.DebugTools;
 import loci.formats.meta.IMetadata;
 import loci.plugins.in.ImporterOptions;
@@ -33,14 +35,7 @@ import sun.rmi.server.UnicastServerRef;
 import java.io.IOException;
 
 /**
- * This example illustrates how to create an ImageJ {@link Command} plugin.
- * <p>
- * The code here is a simple Gaussian blur using ImageJ Ops.
- * </p>
- * <p>
- * You should replace the parameter fields with your own inputs and outputs,
- * and replace the {@link run} method implementation with your own logic.
- * </p>
+ *
  */
 @Plugin(type = Command.class, menuPath = "Plugins>Map Organelle")
 public class MapOrganelle<T extends RealType<T>> implements Command {
@@ -70,9 +65,19 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         String testInput = workingDir + inputDir;
         String inputPath = workingDir + inputDir + testFile;
 
-        Image testImage = new Image(testInput, ".nd2", 1.0, 3, 1, "nucleus", "cytoplams", "lysosome","None");
-        ImagePlus imp = testImage.openImageBF(testFile);
+        Image testImage = new Image(testInput, ".nd2", 1.0, 3, 1, 1, 2, 3);
+        ImagePlus imp = testImage.openWithBF(testFile);
         imp.show();
+
+        ChannelSplitter splitter = new ChannelSplitter();
+        ImagePlus[] imp_channels = splitter.split(imp);
+        ImagePlus nucleus = imp_channels[testImage.nucleus - 1];
+        ImagePlus cytoplasm = imp_channels[testImage.cytoplasm - 1];
+        ImagePlus organelle = imp_channels[testImage.organelle - 1];
+
+
+
+
 
         try {
 
