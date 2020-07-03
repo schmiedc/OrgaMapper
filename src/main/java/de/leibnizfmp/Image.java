@@ -87,6 +87,12 @@ public class Image {
         return image;
     }
 
+    /**
+     * opens the image using bio-formats importer
+     *
+     * @param inputFile name of image
+     * @return and ImagePlus object
+     */
     ImagePlus openWithBF(String inputFile) {
 
         IJ.log("Opening file: " + inputFile);

@@ -8,17 +8,20 @@
 
 package de.leibnizfmp;
 
+import com.drew.imaging.ImageProcessingException;
 import ij.IJ;
 import ij.ImagePlus;
 
 import ij.ImageStack;
 import ij.plugin.ChannelSplitter;
+import ij.process.ImageProcessor;
 import loci.common.DebugTools;
 import loci.formats.meta.IMetadata;
 import loci.plugins.in.ImporterOptions;
 import net.imagej.Dataset;
 import net.imagej.ImageJ;
 import net.imagej.ops.OpService;
+import net.imagej.ops.Ops;
 import net.imglib2.type.numeric.RealType;
 import org.knowm.xchart.style.markers.None;
 import org.scijava.command.Command;
@@ -57,15 +60,15 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
 
         // test paths
         String workingDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/";
-        //String inputDir = "/Plugin_InputTest/";
-        String inputDir = "/TestDataSet_LysoPos/";
+        String inputDir = "/Plugin_InputTest/";
+        //String inputDir = "/TestDataSet_LysoPos/";
         String outputDir = "/Plugin_OutputTest/";
-        //String testFile =  "HeLa_control_1_WellA1_Seq0000.nd2 - HeLa_control_1_WellA1_Seq0000.nd2 (series 01).tif";
-        String testFile = "HeLa_scr.nd2";
+        String testFile =  "HeLa_control_1_WellA1_Seq0000.nd2 - HeLa_control_1_WellA1_Seq0000.nd2 (series 01).tif";
+        //String testFile = "HeLa_scr.nd2";
         String testInput = workingDir + inputDir;
         String inputPath = workingDir + inputDir + testFile;
 
-        Image testImage = new Image(testInput, ".nd2", 1.0, 3, 1, 1, 2, 3);
+        Image testImage = new Image(testInput, ".nd2", 1.0, 3, 0, 1, 2, 3);
         ImagePlus imp = testImage.openWithBF(testFile);
         imp.show();
 
@@ -76,6 +79,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         ImagePlus organelle = imp_channels[testImage.organelle - 1];
 
 
+        NucleusSegmenter nuc = new NucleusSegmenter();
+        ImagePlus nucleusMask = nuc.segmentNucleus(nucleus, 5, "Otsu", 2, 100, 20000, 0.5, 1.00);
+        nucleusMask.show();
 
 
 
