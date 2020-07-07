@@ -75,9 +75,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
         //nucleusMask.show();
 
-        CellAreaSegmenter back = new CellAreaSegmenter();
-        ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
-        backgroundMask.show();
+        //CellAreaSegmenter back = new CellAreaSegmenter();
+        //ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
+        //backgroundMask.show();
 
 
 
