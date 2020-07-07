@@ -79,6 +79,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
         //backgroundMask.show();
 
+        CellSeparator separator = new CellSeparator();
+        separator.separateCells(nucleus, cytoplasm, 15, 500);
+
 
 
         try {

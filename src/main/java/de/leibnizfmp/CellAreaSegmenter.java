@@ -7,6 +7,12 @@ import ij.plugin.Filters3D;
 import ij.plugin.filter.BackgroundSubtracter;
 import ij.process.ImageProcessor;
 
+/**
+ * segments area covered by cells
+ *
+ * @author christopher Schmied
+ * @version 1.0.0
+ */
 public class CellAreaSegmenter {
 
     ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold) {
