@@ -28,8 +28,7 @@ public class NucleusSegmenter {
         int minSizePx = Image.calculateSizePx( pxSizeFromImage, minSize);
         int maxSizePx = Image.calculateSizePx( pxSizeFromImage, maxSize);
 
-        ImageStack imageStack = image.getImageStack();
-        ImageStack filteredStack = Filters3D.filter(imageStack, Filters3D.MEDIAN, kernelSize, kernelSize, kernelSize);
+        ImageStack filteredStack = Filters3D.filter(image.getImageStack(), Filters3D.MEDIAN, kernelSize, kernelSize, kernelSize);
 
         ImageProcessor filteredProcessor = filteredStack.getProcessor(1);
         BackgroundSubtracter subtracted= new BackgroundSubtracter();
@@ -55,7 +54,7 @@ public class NucleusSegmenter {
         ImagePlus erodedFilteredMask = new ImagePlus("nucleiMask", unfilteredMaskByteProcessor);
 
         // makes sure that mask keeps calibration
-        erodedFilteredMask .setCalibration(calibration);
+        erodedFilteredMask.setCalibration(calibration);
 
         return erodedFilteredMask ;
 
