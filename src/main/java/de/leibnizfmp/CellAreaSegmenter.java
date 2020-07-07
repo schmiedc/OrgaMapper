@@ -5,6 +5,7 @@ import ij.ImageStack;
 import ij.measure.Calibration;
 import ij.plugin.Filters3D;
 import ij.plugin.filter.BackgroundSubtracter;
+import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
 /**
@@ -27,9 +28,9 @@ public class CellAreaSegmenter {
                 false, false, true, false, false );
 
         filteredProcessor.setThreshold(manualThreshold, 65536, 1);
-        filteredProcessor.createMask();
+        ByteProcessor nucleiMask = filteredProcessor.createMask();
 
-        ImagePlus cellMask = new ImagePlus("backgroundMask", filteredProcessor);
+        ImagePlus cellMask = new ImagePlus("backgroundMask", nucleiMask);
         cellMask.setCalibration( calibration );
 
         return cellMask;

@@ -10,6 +10,8 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.plugin.ImageCalculator;
+import ij.process.ImageProcessor;
 import net.imagej.ImageJ;
 
 import ij.plugin.ChannelSplitter;
@@ -75,12 +77,18 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
         //nucleusMask.show();
 
-        //CellAreaSegmenter back = new CellAreaSegmenter();
-        //ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
-        //backgroundMask.show();
+        CellAreaSegmenter back = new CellAreaSegmenter();
+        ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
+        backgroundMask.show();
 
         CellSeparator separator = new CellSeparator();
-        separator.separateCells(nucleus, cytoplasm, 15, 500);
+        ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, 15, 500);
+        separatedCells.show();
+
+        ImageCalculator calculator = new ImageCalculator();
+        ImagePlus individualCells = calculator.run("Multiply create 32-bit", backgroundMask, separatedCells);
+        ImagePlus individualCellsFinal = new ImagePlus ("individualCells", individualCells.getProcessor().convertToShort(true));
+        individualCellsFinal.show();
 
 
 
