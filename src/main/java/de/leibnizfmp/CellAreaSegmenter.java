@@ -7,9 +7,9 @@ import ij.plugin.Filters3D;
 import ij.plugin.filter.BackgroundSubtracter;
 import ij.process.ImageProcessor;
 
-public class BackgroundSegmenter {
+public class CellAreaSegmenter {
 
-    ImagePlus segmentBackground(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold) {
+    ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold) {
 
         Calibration calibration = image.getCalibration();
 
