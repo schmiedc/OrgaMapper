@@ -70,9 +70,13 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         ImagePlus cytoplasm = imp_channels[testImage.cytoplasm - 1];
         ImagePlus organelle = imp_channels[testImage.organelle - 1];
 
-        NucleusSegmenter nuc = new NucleusSegmenter();
-        ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
-        nucleusMask.show();
+
+        //NucleusSegmenter nuc = new NucleusSegmenter();
+        //ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
+        //nucleusMask.show();
+
+
+
 
         try {
 

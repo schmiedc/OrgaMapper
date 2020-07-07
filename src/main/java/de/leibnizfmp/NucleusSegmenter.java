@@ -19,7 +19,7 @@ import ij.process.ImageProcessor;
 
 public class NucleusSegmenter {
 
-    ImagePlus segmentNuclei(ImagePlus image, float kernelSize, double subtractBackground, String threshold, int erosion,
+    ImagePlus segmentNuclei(ImagePlus image, float kernelSize, double rollingBallRadius, String threshold, int erosion,
                             double minSize, double maxSize, double lowCirc, double highCirc ) {
 
         // extract calibration and convert size filter from micron to px
@@ -33,7 +33,7 @@ public class NucleusSegmenter {
 
         ImageProcessor filteredProcessor = filteredStack.getProcessor(1);
         BackgroundSubtracter subtracted= new BackgroundSubtracter();
-        subtracted.rollingBallBackground(filteredProcessor, subtractBackground,
+        subtracted.rollingBallBackground(filteredProcessor, rollingBallRadius,
                 false, false, true, false, false);
 
         filteredProcessor.setAutoThreshold( threshold, true, 1);
