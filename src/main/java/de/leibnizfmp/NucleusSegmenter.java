@@ -38,7 +38,7 @@ public class NucleusSegmenter {
         filteredProcessor.setAutoThreshold( threshold, true, 1);
         ByteProcessor unfilteredMask = filteredProcessor.createMask();
 
-        // 4104 = 4096 + 8
+        // 4104 = ( show masks = 4096 + exclude on edges = 8 )
         ParticleAnalyzer analyzer = new ParticleAnalyzer(4104,0,null,
                 minSizePx , maxSizePx, lowCirc, highCirc );
 

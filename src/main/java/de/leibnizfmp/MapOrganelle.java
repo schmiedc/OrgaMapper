@@ -86,7 +86,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         separatedCells.show();
 
 
-
+        CellFilter cellFilter = new CellFilter();
+        ImagePlus filteredCells = cellFilter.filterCells(backgroundMask, separatedCells, 100, 150000, 0.00, 1.00);
+        filteredCells.show();
 
 
 

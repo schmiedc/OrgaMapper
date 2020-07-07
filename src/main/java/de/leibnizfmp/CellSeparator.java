@@ -22,7 +22,7 @@ public class CellSeparator {
         Calibration calibration = nucleus.getCalibration();
 
         ImageCalculator calculator = new ImageCalculator();
-        ImagePlus nucleusCytoplasm = calculator.run("Add create 32-bit", nucleus, cytoplasm);
+        ImagePlus nucleusCytoplasm = calculator.run("Add 32-bit", nucleus, cytoplasm);
         ImageProcessor nucleusCytoplasmProcessor = nucleusCytoplasm.getProcessor().convertToShort(true);
 
         nucleusCytoplasmProcessor.blurGaussian(sigmaGauss);
