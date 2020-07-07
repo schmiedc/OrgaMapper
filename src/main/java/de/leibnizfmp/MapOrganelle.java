@@ -8,32 +8,24 @@
 
 package de.leibnizfmp;
 
-import com.drew.imaging.ImageProcessingException;
 import ij.IJ;
 import ij.ImagePlus;
+import net.imagej.ImageJ;
 
-import ij.ImageStack;
 import ij.plugin.ChannelSplitter;
-import ij.process.ImageProcessor;
 import loci.common.DebugTools;
 import loci.formats.meta.IMetadata;
-import loci.plugins.in.ImporterOptions;
 import net.imagej.Dataset;
-import net.imagej.ImageJ;
 import net.imagej.ops.OpService;
-import net.imagej.ops.Ops;
 import net.imglib2.type.numeric.RealType;
-import org.knowm.xchart.style.markers.None;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
 
 import loci.formats.FormatException;
-import loci.plugins.BF;
 import loci.formats.ImageReader;
 import loci.formats.MetadataTools;
-import sun.rmi.server.UnicastServerRef;
 
 import java.io.IOException;
 
@@ -78,12 +70,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         ImagePlus cytoplasm = imp_channels[testImage.cytoplasm - 1];
         ImagePlus organelle = imp_channels[testImage.organelle - 1];
 
-
         NucleusSegmenter nuc = new NucleusSegmenter();
-        ImagePlus nucleusMask = nuc.segmentNucleus(nucleus, 5, "Otsu", 2, 100, 20000, 0.5, 1.00);
+        ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
         nucleusMask.show();
-
-
 
         try {
 
@@ -105,9 +94,6 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
             IJ.error("Sorry, an error occurred: " + e.getMessage());
         }
 
-
-
-
     }
 
     /**
@@ -120,10 +106,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
      */
     public static void main(final String... args) throws Exception {
         // create the ImageJ application context with all available services
-        new ImageJ();
+        final ImageJ ij = new ImageJ();
 
         new MapOrganelle().run();
-
 
         //final UnsignedByteType threshold = new UnsignedByteType( 127 );
         //final net.imagej.ImageJ ij = new ImageJ();
