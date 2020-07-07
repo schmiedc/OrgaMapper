@@ -85,10 +85,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, 15, 500);
         separatedCells.show();
 
-        ImageCalculator calculator = new ImageCalculator();
-        ImagePlus individualCells = calculator.run("Multiply create 32-bit", backgroundMask, separatedCells);
-        ImagePlus individualCellsFinal = new ImagePlus ("individualCells", individualCells.getProcessor().convertToShort(true));
-        individualCellsFinal.show();
+
+
+
 
 
 
