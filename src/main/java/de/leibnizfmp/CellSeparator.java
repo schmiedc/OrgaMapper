@@ -17,7 +17,7 @@ import ij.process.ImageProcessor;
 
 public class CellSeparator {
 
-    ImagePlus separateCells( ImagePlus nucleus, ImagePlus cytoplasm, double sigmaGauss, double prominence ) {
+    static ImagePlus separateCells( ImagePlus nucleus, ImagePlus cytoplasm, double sigmaGauss, double prominence ) {
 
         Calibration calibration = nucleus.getCalibration();
 

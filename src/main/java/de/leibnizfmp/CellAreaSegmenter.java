@@ -16,7 +16,7 @@ import ij.process.ImageProcessor;
  */
 public class CellAreaSegmenter {
 
-    ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold) {
+    static ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold) {
 
         Calibration calibration = image.getCalibration();
 

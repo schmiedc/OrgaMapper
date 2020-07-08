@@ -93,8 +93,7 @@ public class SegmentationVisualizer {
         // set the specified calibration
         originalImage.setOverlay(null);
 
-        NucleusSegmenter nuc = new NucleusSegmenter();
-        ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, kernelSize, rollingBallRadius, threshold, erosion, minSize, maxSize, lowCirc, highCirc);
+        ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus, kernelSize, rollingBallRadius, threshold, erosion, minSize, maxSize, lowCirc, highCirc);
 
         int maxArea = nucleus.getWidth() * nucleus.getHeight();
 
@@ -159,14 +158,11 @@ public class SegmentationVisualizer {
         // set the specified calibration
         originalImage.setOverlay(null);
 
-        CellAreaSegmenter back = new CellAreaSegmenter();
-        ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
+        ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
 
-        CellSeparator separator = new CellSeparator();
-        ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
+        ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
 
-        CellFilter cellFilter = new CellFilter();
-        ImagePlus filteredCells = cellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCirc, highCirc);
+        ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCirc, highCirc);
 
         int maxArea = nucleus.getWidth() * nucleus.getHeight();
 
