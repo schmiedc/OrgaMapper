@@ -1,15 +1,19 @@
 package de.leibnizfmp;
 
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.measure.Calibration;
+import ij.measure.ResultsTable;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.frame.RoiManager;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+
+import java.util.List;
 
 public class SegmentationVisualizer {
 
@@ -27,7 +31,7 @@ public class SegmentationVisualizer {
                            double prominence,
                            boolean setDisplayRange) {
 
-        // set the specified calibration
+        // remove existing overlays
         originalImage.setOverlay(null);
 
         ChannelSplitter splitter = new ChannelSplitter();
@@ -39,12 +43,16 @@ public class SegmentationVisualizer {
 
         ImageProcessor getMaxima = detectedLysosomes.getProcessor().convertToByteProcessor();
 
+        // get detections as polygons and put on image as roi
         MaximumFinder maxima = new MaximumFinder();
-        maxima.findMaxima(getMaxima, 1, 3, false);
+        java.awt.Polygon detections = maxima.getMaxima(getMaxima, 1, false);
+        PointRoi roi = new PointRoi(detections);
 
-        ImagePlus seeMaxima = new ImagePlus( "maxima", getMaxima );
-        seeMaxima.show();
+        // TODO: set on original image with correctly selected channel
+        organelle.setRoi(roi);
+        organelle.show();
 
+        IJ.log("Visualizing " + detections.npoints + " lysosome(s)");
 
         if (setDisplayRange) {
 
@@ -57,10 +65,8 @@ public class SegmentationVisualizer {
 
         }
 
-        PointRoi pointRoi = new PointRoi( 10, 10);
-        organelle.setRoi(pointRoi);
-        organelle.show();
 
     }
+
 
 }
