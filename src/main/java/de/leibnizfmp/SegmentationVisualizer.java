@@ -4,16 +4,11 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
-import ij.measure.Calibration;
-import ij.measure.ResultsTable;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.frame.RoiManager;
-import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-
-import java.util.List;
 
 public class SegmentationVisualizer {
 
@@ -37,9 +32,7 @@ public class SegmentationVisualizer {
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus organelle = imp_channels[imageObject.organelle - 1];
 
-        LysosomeDetector lysoDetector = new LysosomeDetector();
-        ImagePlus detectedLysosomes = lysoDetector.detectLysosomes(organelle, sigmaLoG, prominence);
-        // TODO: filter lysosomes from nuclei
+        ImagePlus detectedLysosomes = LysosomeDetector.detectLysosomes(organelle, sigmaLoG, prominence);
 
         // get detections as polygons and put on image as roi
         MaximumFinder maxima = new MaximumFinder();
@@ -47,9 +40,9 @@ public class SegmentationVisualizer {
         java.awt.Polygon detections = maxima.getMaxima(getMaxima, 1, false);
         PointRoi roi = new PointRoi(detections);
 
-        // TODO: set on original image with correctly selected channel
-        organelle.setRoi(roi);
-        organelle.show();
+        originalImage.setC( imageObject.organelle );
+        originalImage.setRoi(roi);
+        originalImage.show();
 
         IJ.log("Visualizing " + detections.npoints + " lysosome(s)");
 
@@ -173,7 +166,7 @@ public class SegmentationVisualizer {
         ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
 
         CellFilter cellFilter = new CellFilter();
-        ImagePlus filteredCells = cellFilter.filterCells(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCirc, highCirc);
+        ImagePlus filteredCells = cellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCirc, highCirc);
 
         int maxArea = nucleus.getWidth() * nucleus.getHeight();
 

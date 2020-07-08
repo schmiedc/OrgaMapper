@@ -17,7 +17,7 @@ import trainableSegmentation.ImageScience;
 
 public class LysosomeDetector {
 
-    ImagePlus detectLysosomes(ImagePlus image, double simgaLoG, double prominence) {
+    static ImagePlus detectLysosomes(ImagePlus image, double simgaLoG, double prominence) {
 
         Calibration calibration = image.getCalibration();
 

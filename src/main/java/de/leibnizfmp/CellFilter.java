@@ -15,8 +15,8 @@ import ij.process.ImageProcessor;
 
 public class CellFilter {
 
-    ImagePlus filterCells( ImagePlus backgroundMask, ImagePlus separatedCells,
-                           double minCellSize, double maxCellSize, double lowCirc, double highCirc) {
+    ImagePlus filterByCellSize(ImagePlus backgroundMask, ImagePlus separatedCells,
+                               double minCellSize, double maxCellSize, double lowCirc, double highCirc) {
 
         Calibration calibration = backgroundMask.getCalibration();
         Double pxSizeFromImage = calibration.pixelWidth;
@@ -48,4 +48,10 @@ public class CellFilter {
         return individualCellsFinal;
 
     }
+
+    void filterByNuclei() {
+
+    }
+
+
 }
