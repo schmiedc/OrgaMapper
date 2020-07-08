@@ -10,6 +10,8 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.Overlay;
+import ij.plugin.frame.RoiManager;
 import net.imagej.ImageJ;
 
 import ij.plugin.ChannelSplitter;
@@ -71,25 +73,32 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
         nucleusMask.show();
 
-        //CellAreaSegmenter back = new CellAreaSegmenter();
-        //ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
+        ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, 10, 50, 200);
         //backgroundMask.show();
 
-        //CellSeparator separator = new CellSeparator();
-        //ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, 15, 500);
+        ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, 15, 500);
         //separatedCells.show();
 
-        //CellFilter cellFilter = new CellFilter();
-        //ImagePlus filteredCells = cellFilter.filterCells(backgroundMask, separatedCells, 100, 150000, 0.00, 1.00);
+        ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, 100, 150000, 0.00, 1.00);
         //filteredCells.show();
 
-        ImagePlus detectedLysosomes = LysosomeDetector.detectLysosomes(organelle, 2, 2);
-        ImagePlus filteredDetections = DetectionFilter.filterByNuclei(nucleusMask, detectedLysosomes);
+        RoiManager filteredCellRois = CellFilter.filterByNuclei(filteredCells, nucleusMask);
+
+        imp.setC( testImage.cytoplasm );
+        filteredCellRois.moveRoisToOverlay(imp);
+        Overlay overlay = imp.getOverlay();
+        overlay.drawLabels(false);
+        imp.show();
+
+        //ImagePlus detectedLysosomes = LysosomeDetector.detectLysosomes(organelle, 2, 2);
+        //ImagePlus filteredDetections = DetectionFilter.filterByNuclei(nucleusMask, detectedLysosomes);
 
         SegmentationVisualizer segmentationVisualizer = new SegmentationVisualizer();
-        segmentationVisualizer.visualizeSpots(imp, testImage, 2, 2, true);
-        //segmentationVisualizer.visulizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, true);
-        //segmentationVisualizer.visulizeCellSegments(imp, testImage, 10, 50, 200, 15, 500, 100, 150000, 0.00, 1.00, true);
+        //segmentationVisualizer.visualizeSpots(imp, testImage, 2, 2, true);
+        //segmentationVisualizer.visualizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, false);
+        //segmentationVisualizer.visualizeCellSegments(imp, testImage, 10, 50, 200, 15, 500, 100, 150000, 0.00, 1.00, true);
+
+
 
         try {
 

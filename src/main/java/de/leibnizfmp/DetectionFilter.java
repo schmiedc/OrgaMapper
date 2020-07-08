@@ -7,6 +7,8 @@ import ij.process.ImageProcessor;
 
 public class DetectionFilter {
 
+    // TODO: maybe implement a filter by cell segmentation
+
     static ImagePlus filterByNuclei(ImagePlus nuclei, ImagePlus detections ) {
 
         Calibration calibration = nuclei.getCalibration();

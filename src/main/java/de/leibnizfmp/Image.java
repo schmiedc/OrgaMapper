@@ -153,6 +153,12 @@ public class Image {
 
     }
 
+    static int calculateMaxArea(int width, int heigth) {
+
+        return width * heigth;
+
+    }
+
     /**
      * Image constructor
      *
