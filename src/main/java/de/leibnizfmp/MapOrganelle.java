@@ -77,21 +77,24 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //ImagePlus nucleusMask = nuc.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 100, 20000, 0.5, 1.00);
         //nucleusMask.show();
 
-        CellAreaSegmenter back = new CellAreaSegmenter();
-        ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
-        backgroundMask.show();
+        //CellAreaSegmenter back = new CellAreaSegmenter();
+        //ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, 10, 50, 200);
+        //backgroundMask.show();
 
-        CellSeparator separator = new CellSeparator();
-        ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, 15, 500);
-        separatedCells.show();
+        //CellSeparator separator = new CellSeparator();
+        //ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, 15, 500);
+        //separatedCells.show();
 
+        //CellFilter cellFilter = new CellFilter();
+        //ImagePlus filteredCells = cellFilter.filterCells(backgroundMask, separatedCells, 100, 150000, 0.00, 1.00);
+        //filteredCells.show();
 
-        CellFilter cellFilter = new CellFilter();
-        ImagePlus filteredCells = cellFilter.filterCells(backgroundMask, separatedCells, 100, 150000, 0.00, 1.00);
-        filteredCells.show();
+        //LysosomeDetector lysoDetector = new LysosomeDetector();
+        //ImagePlus detectedLysosomes = lysoDetector.detectLysosomes(organelle, 2, 2);
+        //detectedLysosomes.show();
 
-
-
+        SegmentationVisualizer segmentationVisualizer = new SegmentationVisualizer();
+        segmentationVisualizer.spotVisualization(imp, testImage, 2, 2, true);
 
         try {
 

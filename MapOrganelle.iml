@@ -154,6 +154,21 @@
     <orderEntry type="library" name="Maven: net.imglib2:imglib2-ij:2.0.0-beta-44" level="project" />
     <orderEntry type="library" name="Maven: net.imglib2:imglib2-cache:1.0.0-beta-11" level="project" />
     <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:2.4.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:imagescience:3.0.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:Image_5D:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:Trainable_Segmentation:3.2.33" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:Anisotropic_Diffusion_2D:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:VIB-lib:2.2.0" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:pal-optimization:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: sc.fiji:fiji-lib:2.1.2" level="project" />
+    <orderEntry type="library" name="Maven: net.imagej:ij1-patcher:0.12.9" level="project" />
+    <orderEntry type="library" name="Maven: org.javassist:javassist:3.24.0-GA" level="project" />
+    <orderEntry type="library" name="Maven: net.imglib2:imglib2-algorithm-gpl:0.2.3" level="project" />
+    <orderEntry type="library" name="Maven: mpicbg:mpicbg:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.scijava:vecmath:1.6.0-scijava-2" level="project" />
+    <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka:weka-dev:3.9.3" level="project" />
+    <orderEntry type="library" name="Maven: nz.ac.waikato.cms.weka.thirdparty:bounce:0.18" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.matrix-toolkits-java:mtj:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: ome:formats-api:6.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.openmicroscopy:ome-common:6.0.0" level="project" />
     <orderEntry type="library" name="Maven: io.minio:minio:5.0.2" level="project" />

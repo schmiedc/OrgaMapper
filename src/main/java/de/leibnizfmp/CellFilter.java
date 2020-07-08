@@ -6,6 +6,13 @@ import ij.plugin.ImageCalculator;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.process.ImageProcessor;
 
+/**
+ * filter cells based on size and circularity
+ *
+ * @author christopher Schmied
+ * @version 1.0.0
+ */
+
 public class CellFilter {
 
     ImagePlus filterCells( ImagePlus backgroundMask, ImagePlus separatedCells,
