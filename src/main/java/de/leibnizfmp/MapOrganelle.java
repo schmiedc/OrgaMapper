@@ -10,8 +10,6 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.plugin.ImageCalculator;
-import ij.process.ImageProcessor;
 import net.imagej.ImageJ;
 
 import ij.plugin.ChannelSplitter;
@@ -94,7 +92,8 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //detectedLysosomes.show();
 
         SegmentationVisualizer segmentationVisualizer = new SegmentationVisualizer();
-        segmentationVisualizer.spotVisualization(imp, testImage, 2, 2, true);
+        segmentationVisualizer.visualizeSpots(imp, testImage, 2, 2, true);
+        segmentationVisualizer.visulizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, true);
 
         try {
 
