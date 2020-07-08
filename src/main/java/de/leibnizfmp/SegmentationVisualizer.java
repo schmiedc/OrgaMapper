@@ -34,8 +34,7 @@ public class SegmentationVisualizer {
         // remove existing overlays
         originalImage.setOverlay(null);
 
-        ChannelSplitter splitter = new ChannelSplitter();
-        ImagePlus[] imp_channels = splitter.split(originalImage);
+        ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus organelle = imp_channels[imageObject.organelle - 1];
 
         LysosomeDetector lysoDetector = new LysosomeDetector();
@@ -83,20 +82,19 @@ public class SegmentationVisualizer {
      * @param highCirc          higher threshold circularity
      * @param setDisplayRange   sets the display range for vis
      */
-    void visulizeNucleiSegments(ImagePlus originalImage,
-                                Image imageObject,
-                                float kernelSize,
-                                double rollingBallRadius,
-                                String threshold,
-                                int erosion,
-                                double minSize,
-                                double maxSize,
-                                double lowCirc,
-                                double highCirc,
-                                boolean setDisplayRange) {
+    void visualizeNucleiSegments(ImagePlus originalImage,
+                                 Image imageObject,
+                                 float kernelSize,
+                                 double rollingBallRadius,
+                                 String threshold,
+                                 int erosion,
+                                 double minSize,
+                                 double maxSize,
+                                 double lowCirc,
+                                 double highCirc,
+                                 boolean setDisplayRange) {
 
-        ChannelSplitter splitter = new ChannelSplitter();
-        ImagePlus[] imp_channels = splitter.split(originalImage);
+        ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
 
         // set the specified calibration
@@ -110,6 +108,78 @@ public class SegmentationVisualizer {
         RoiManager manager = new RoiManager();
         ParticleAnalyzer backAnalyzer = new ParticleAnalyzer(2048, 0, null, 0, maxArea);
         backAnalyzer.analyze(nucleusMask);
+
+        manager.moveRoisToOverlay(originalImage);
+        Overlay overlay = originalImage.getOverlay();
+        overlay.drawLabels(false);
+
+        if (setDisplayRange) {
+
+            double rangeMin = originalImage.getDisplayRangeMin();
+            double newLower = rangeMin * 1.75;
+            double rangeMax = originalImage.getDisplayRangeMax();
+            double newUpper = (rangeMax / 2);
+            originalImage.setDisplayRange(newLower, newUpper);
+
+        }
+
+        originalImage.show();
+
+        manager.reset();
+        manager.close();
+
+    }
+
+    /**
+     * visualization of the background segmentation
+     *
+     * @param originalImage     the original image for vis
+     * @param imageObject       image for segmentation of the nucleus
+     * @param kernelSizeCellArea median filter for cell area
+     * @param rollingBallRadiusCellArea rolling ball radius for cell area
+     * @param manualThresholdCellArea manual threshold setting for cell area
+     * @param gaussSeparateCells gauss sigma for separated cell region
+     * @param prominenceSeparatedCells prominence for maxima finder to creat cell region
+     * @param minCellSize           minimum background region size
+     * @param maxCellSize           maximum background region siz
+     * @param lowCirc           lower threshold circularity
+     * @param highCirc          higher threshold circularity
+     * @param setDisplayRange   sets the display range for vis
+     */
+    void visulizeCellSegments(ImagePlus originalImage,
+                                Image imageObject,
+                                float kernelSizeCellArea,
+                                double rollingBallRadiusCellArea,
+                                int manualThresholdCellArea,
+                                double gaussSeparateCells,
+                                double prominenceSeparatedCells,
+                                double minCellSize,
+                                double maxCellSize,
+                                double lowCirc,
+                                double highCirc,
+                                boolean setDisplayRange) {
+
+        ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
+        ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
+        ImagePlus cytoplasm = imp_channels[imageObject.cytoplasm - 1];
+
+        // set the specified calibration
+        originalImage.setOverlay(null);
+
+        CellAreaSegmenter back = new CellAreaSegmenter();
+        ImagePlus backgroundMask = back.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
+
+        CellSeparator separator = new CellSeparator();
+        ImagePlus separatedCells = separator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
+
+        CellFilter cellFilter = new CellFilter();
+        ImagePlus filteredCells = cellFilter.filterCells(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCirc, highCirc);
+
+        int maxArea = nucleus.getWidth() * nucleus.getHeight();
+
+        RoiManager manager = new RoiManager();
+        ParticleAnalyzer backAnalyzer = new ParticleAnalyzer(2048, 0, null, 0, maxArea);
+        backAnalyzer.analyze( filteredCells );
 
         manager.moveRoisToOverlay(originalImage);
         Overlay overlay = originalImage.getOverlay();

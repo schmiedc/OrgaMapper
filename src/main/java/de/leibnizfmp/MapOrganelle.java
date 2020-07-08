@@ -62,10 +62,8 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
 
         Image testImage = new Image(testInput, ".nd2", 1.0, 3, 0, 1, 2, 3);
         ImagePlus imp = testImage.openWithBF(testFile);
-        imp.show();
 
-        ChannelSplitter splitter = new ChannelSplitter();
-        ImagePlus[] imp_channels = splitter.split(imp);
+        ImagePlus[] imp_channels = ChannelSplitter.split(imp);
         ImagePlus nucleus = imp_channels[testImage.nucleus - 1];
         ImagePlus cytoplasm = imp_channels[testImage.cytoplasm - 1];
         ImagePlus organelle = imp_channels[testImage.organelle - 1];
@@ -92,8 +90,9 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //detectedLysosomes.show();
 
         SegmentationVisualizer segmentationVisualizer = new SegmentationVisualizer();
-        segmentationVisualizer.visualizeSpots(imp, testImage, 2, 2, true);
-        segmentationVisualizer.visulizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, true);
+        //segmentationVisualizer.visualizeSpots(imp, testImage, 2, 2, true);
+        //segmentationVisualizer.visulizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, true);
+        segmentationVisualizer.visulizeCellSegments(imp, testImage, 10, 50, 200, 15, 500, 100, 150000, 0.00, 1.00, true);
 
         try {
 
