@@ -30,6 +30,7 @@ import loci.formats.ImageReader;
 import loci.formats.MetadataTools;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -134,7 +135,23 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
 
-        new MapOrganelle().run();
+        //new MapOrganelle().run();
+
+        String testInDir = "/home/schmiedc/Desktop/Projects/pHlorin_Review_TS/New TestIn/";
+        String testOutDir = "/home/schmiedc/Desktop/Projects/pHlorin_Review_TS/New TestOut/";
+        String settings = "setting";
+        String fileEnding = ".nd2";
+
+        FileList getFileList = new FileList(fileEnding);
+        ArrayList<String> fileList = getFileList.getFileList(testInDir);
+
+        for (String file : fileList) {
+            System.out.println(file);
+        }
+
+        PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList);
+        guiTest.setUpGui();
+
 
         //final UnsignedByteType threshold = new UnsignedByteType( 127 );
         //final net.imagej.ImageJ ij = new ImageJ();
