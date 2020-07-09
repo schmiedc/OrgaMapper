@@ -6,9 +6,54 @@ import java.util.ArrayList;
 
 public class PreviewGui extends JPanel {
 
+    // threshold method list
+    private String[] thresholdString = { "Default", "Huang", "IJ_IsoData", "Intermodes",
+            "IsoData", "Li", "MaxEntropy", "Mean", "MinError", "Minimum",
+            "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag",
+            "Triangle","Yen",
+    };
+
+    // basic settings
     private String inputDir;
     private String outputDir;
     private ArrayList<String> fileList;
+
+    // settings for nucleus settings
+    private float kernelSizeNuc;
+    private double rollingBallRadiusNuc;
+    private String thresholdNuc;
+    private int erosionNuc;
+    private double minSizeNuc;
+    private double maxSizeNuc;
+    private double lowCircNuc;
+    private double highCircNuc;
+
+    // settings for cell area segmentation
+    private float kernelSizeCellArea;
+    private double getRollingBallRadiusCellArea;
+    private int manualThresholdCellArea;
+
+    // settings for cell separator
+    private double sigmaGaussCellSep;
+    private double prominenceCellSep;
+
+    // settings for cell filter size
+    private double minCellSize;
+    private double maxCellSize;
+    private double lowCircCellSize;
+    private double highCircCelLSize;
+
+    // settings for organelle detection
+    private double sigmaLoGOrga;
+    private double prominenceOrga;
+
+    // image settings
+    private boolean calibrationSettings;
+    private double pxSizeMicron;
+    private int nucleusChannel;
+    private int cytoplasmChannel;
+    private int organelleChannel;
+    private int measure;
 
     // tabbed pane
     private JTabbedPane tabbedPane = new JTabbedPane();
@@ -117,6 +162,43 @@ public class PreviewGui extends JPanel {
         inputDir = inputDirectory;
         outputDir = outputDirectory;
         fileList = filesToProcess;
+
+        // settings for nucleus settings
+        kernelSizeNuc = 5;
+        rollingBallRadiusNuc = 50;
+        thresholdNuc = "Otsu";
+        erosionNuc = 2;
+        minSizeNuc = 100;
+        maxSizeNuc = 20000;
+        lowCircNuc = 0.0;
+        highCircNuc = 1.00;
+
+        // settings for cell area segmentation
+        kernelSizeCellArea = 10;
+        getRollingBallRadiusCellArea = 50;
+        manualThresholdCellArea = 200;
+
+        // settings for cell separator
+        sigmaGaussCellSep = 15;
+        prominenceCellSep = 500;
+
+        // settings for cell filter size
+        minCellSize = 100;
+        maxCellSize = 150000;
+        lowCircCellSize = 0.0;
+        highCircCelLSize = 1.0;
+
+        // settings for organelle detection
+        sigmaLoGOrga = 2;
+        prominenceOrga = 2;
+
+        // image settings
+        calibrationSettings = false;
+        pxSizeMicron = 0.1567095;
+        nucleusChannel = 1;
+        cytoplasmChannel = 2;
+        organelleChannel = 3;
+        measure = 0;
 
     }
 

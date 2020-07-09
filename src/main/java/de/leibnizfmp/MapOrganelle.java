@@ -137,8 +137,8 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
 
         //new MapOrganelle().run();
 
-        String testInDir = "/home/schmiedc/Desktop/Projects/pHlorin_Review_TS/New TestIn/";
-        String testOutDir = "/home/schmiedc/Desktop/Projects/pHlorin_Review_TS/New TestOut/";
+        String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
+        String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
         String settings = "setting";
         String fileEnding = ".nd2";
 
