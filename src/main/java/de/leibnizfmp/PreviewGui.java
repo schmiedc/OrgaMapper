@@ -264,7 +264,7 @@ public class PreviewGui extends JPanel {
 
         SpinnerModel doubleSpinThreshold = new SpinnerNumberModel(manualThresholdCellArea, 0.0, 65536, 1.0);
         String spinBackLabel3 = "Global Threshold: ";
-        String spinBackUnit3 = "";
+        String spinBackUnit3 = "A.U.";
         Box spinnerBack3 = addLabeledSpinnerUnit(spinBackLabel3, doubleSpinThreshold, spinBackUnit3);
         segmentationBox.add(spinnerBack3);
 
@@ -286,7 +286,7 @@ public class PreviewGui extends JPanel {
 
         SpinnerModel doubleSpinnerProminenceSpot = new SpinnerNumberModel(prominenceCellSep, 0.0,1000.0, 0.0001);
         String spinLabelProminence = "Prominence: ";
-        String spinUnitProminence = "";
+        String spinUnitProminence = "A.U.";
         Box spinSpot2 = addLabeledSpinner5Digit(spinLabelProminence, doubleSpinnerProminenceSpot, spinUnitProminence);
         separationBox.add(spinSpot2);
 
@@ -330,10 +330,41 @@ public class PreviewGui extends JPanel {
         //previewButton.addActionListener(new MyPreviewCellListener());
         cellSegBox.add(previewButton);
 
-
     }
 
     private void setUpOrganellesTab() {
+
+        // settings for organelle detection
+        //private double sigmaLoGOrga;
+        //private double prominenceOrga;
+
+        //box with titled borders
+        Box detectionBox = new Box(BoxLayout.Y_AXIS);
+        TitledBorder titleDetection;
+        blackline = BorderFactory.createLineBorder(Color.black);
+        titleDetection = BorderFactory.createTitledBorder(blackline, "Detect: number & position of spots");
+        detectionBox.setBorder(titleDetection);
+
+        // Spinner for some number input
+        SpinnerModel doubleSpinnerLoGSpot = new SpinnerNumberModel(sigmaLoGOrga, 0.0,20.0, 0.1);
+        String spinLabelSpot1 = "LoG sigma: ";
+        String spinUnitSpot1 = "px";
+        Box spinSpot1 = addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGSpot, spinUnitSpot1);
+        detectionBox.add(spinSpot1);
+
+        SpinnerModel doubleSpinnerProminenceSpot = new SpinnerNumberModel(prominenceOrga, 0.0,1000.0, 0.0001);
+        String spinLabelSpot2 = "Prominence: ";
+        String spinUnitSpot2 = "A.U.";
+        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelSpot2, doubleSpinnerProminenceSpot, spinUnitSpot2);
+        detectionBox.add(spinSpot2);
+
+        organelleBox.add(detectionBox);
+
+        // setup Buttons
+        JButton previewButton = new JButton("Preview");
+        //previewButton.addActionListener(new MyPreviewOrganelleListener());
+        organelleBox.add(previewButton);
+
     }
 
     private void setUpSettingsTab() {
