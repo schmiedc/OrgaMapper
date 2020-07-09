@@ -1,18 +1,21 @@
 package de.leibnizfmp;
 
+import ij.IJ;
 import org.scijava.util.ArrayUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PreviewGui extends JPanel {
 
     // threshold method list
-    private String[] thresholdString = { "Default", "Huang", "IJ_IsoData", "Intermodes",
+    private final String[] thresholdString = { "Default", "Huang", "IJ_IsoData", "Intermodes",
             "IsoData", "Li", "MaxEntropy", "Mean", "MinError", "Minimum",
             "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag",
             "Triangle","Yen",
@@ -35,7 +38,7 @@ public class PreviewGui extends JPanel {
 
     // settings for cell area segmentation
     private float kernelSizeCellArea;
-    private double getRollingBallRadiusCellArea;
+    private double rollingBallRadiusCellArea;
     private int manualThresholdCellArea;
 
     // settings for cell separator
@@ -118,7 +121,7 @@ public class PreviewGui extends JPanel {
         saveLoadBox.add(loadButton);
 
         JButton resetButton = new JButton("Reset Processing Settings");
-        //resetButton.addActionListener(new MyResetListener());
+        resetButton.addActionListener(new MyResetListener());
         saveLoadBox.add(resetButton);
 
         JButton resetDirButton = new JButton("Reset Directories");
@@ -256,7 +259,7 @@ public class PreviewGui extends JPanel {
         Box spinnerBack1 = addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelSizeNuc, spinBackUnit1);
         segmentationBox.add(spinnerBack1);
 
-        SpinnerModel doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(getRollingBallRadiusCellArea, 0.0, 10000, 1.0);
+        SpinnerModel doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(rollingBallRadiusCellArea, 0.0, 10000, 1.0);
         String spinBackLabel2 = "Rolling ball radius: ";
         String spinBackUnit2 = "px";
         Box spinnerBack2 = addLabeledSpinnerUnit(spinBackLabel2, doubleSpinrollingBallRadiusNuc, spinBackUnit2);
@@ -325,6 +328,11 @@ public class PreviewGui extends JPanel {
 
         cellSegBox.add(filterBox);
 
+        JCheckBox checkFilter = new JCheckBox("Filter by nuclei?");
+        checkFilter.setSelected(true);
+        checkFilter.setToolTipText("Only affects visualization");
+        cellSegBox.add(checkFilter);
+
         // setup Buttons
         JButton previewButton = new JButton("Preview");
         //previewButton.addActionListener(new MyPreviewCellListener());
@@ -333,10 +341,6 @@ public class PreviewGui extends JPanel {
     }
 
     private void setUpOrganellesTab() {
-
-        // settings for organelle detection
-        //private double sigmaLoGOrga;
-        //private double prominenceOrga;
 
         //box with titled borders
         Box detectionBox = new Box(BoxLayout.Y_AXIS);
@@ -360,6 +364,11 @@ public class PreviewGui extends JPanel {
 
         organelleBox.add(detectionBox);
 
+        JCheckBox checkFilter = new JCheckBox("Filter in nucleus?");
+        checkFilter.setToolTipText("Only affects visualization");
+        checkFilter.setSelected(true);
+        organelleBox.add(checkFilter);
+
         // setup Buttons
         JButton previewButton = new JButton("Preview");
         //previewButton.addActionListener(new MyPreviewOrganelleListener());
@@ -379,6 +388,7 @@ public class PreviewGui extends JPanel {
         boxSettings.add(boxPixelSize);
 
         JCheckBox checkCalibration = new JCheckBox("Override metadata?");
+        checkCalibration.setToolTipText("Use when metadata is corrupted");
         checkCalibration.setSelected(calibrationSetting);
         boxSettings.add(checkCalibration);
 
@@ -451,6 +461,69 @@ public class PreviewGui extends JPanel {
         return spinnerLabelBox;
     }
 
+    /**
+     * resets the settings to default values
+     */
+    public class MyResetListener extends Component implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Boolean checkResetSettings = IJ.showMessageWithCancel("Warning!", "Reset Segmentation Settings?");
+
+            if ( checkResetSettings ) {
+
+                IJ.log("Resetting settings to default parameters");
+
+                // settings for nucleus settings
+                kernelSizeNuc = 5;
+                rollingBallRadiusNuc = 50;
+                thresholdNuc = "Otsu";
+                erosionNuc = 2;
+                minSizeNuc = 100;
+                maxSizeNuc = 20000;
+                lowCircNuc = 0.0;
+                highCircNuc = 1.00;
+
+                // settings for cell area segmentation
+                kernelSizeCellArea = 10;
+                rollingBallRadiusCellArea = 50;
+                manualThresholdCellArea = 200;
+
+                // settings for cell separator
+                sigmaGaussCellSep = 15;
+                prominenceCellSep = 500;
+
+                // settings for cell filter size
+                minCellSize = 100;
+                maxCellSize = 150000;
+                lowCircCellSize = 0.0;
+                highCircCelLSize = 1.0;
+
+                // settings for organelle detection
+                sigmaLoGOrga = 2;
+                prominenceOrga = 2;
+
+                // create tabbed panes
+                nucSegBox.removeAll();
+                setUpNucleiTab();
+                tabbedPane.addTab("Nuclei", nucSegBox);
+
+                cellSegBox.removeAll();
+                setUpCellsTab();
+                tabbedPane.addTab("Cells", cellSegBox);
+
+                organelleBox.removeAll();
+                setUpOrganellesTab();
+                tabbedPane.addTab("Organelles", organelleBox);
+
+            } else {
+
+                IJ.log("Canceled resetting of processing settings!");
+
+            }
+        }
+    }
+
 
     PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess ) {
 
@@ -470,7 +543,7 @@ public class PreviewGui extends JPanel {
 
         // settings for cell area segmentation
         kernelSizeCellArea = 10;
-        getRollingBallRadiusCellArea = 50;
+        rollingBallRadiusCellArea = 50;
         manualThresholdCellArea = 200;
 
         // settings for cell separator
@@ -497,5 +570,75 @@ public class PreviewGui extends JPanel {
 
     }
 
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess,
+                 float getKernelSizeNuc,
+                 double getRollingBallRadiusNuc,
+                 String getThresholdNuc,
+                 int getErosionNuc,
+                 double getMinSizeNuc,
+                 double getMaxSizeNuc,
+                 double getLowCircNuc,
+                 double getHighCircNuc,
+                 float getKernelSizeCellArea,
+                 double getRollingBallRadiusCellArea,
+                 int getManualThresholdCellArea,
+                 double getSigmaGaussCellSep,
+                 double getProminenceCellSep,
+                 double getMinCellSize,
+                 double getMaxCellSize,
+                 double getLowCircCellSize,
+                 double getHighCircCelLSize,
+                 double getSigmaLoGOrga,
+                 double getProminenceOrga,
+                 boolean getCalibrationSetting,
+                 double getPxSizeMicron,
+                 int getNucleusChannel,
+                 int getCytoplasmChannel,
+                 int getOrganelleChannel,
+                 int getMeasure) {
+
+        inputDir = inputDirectory;
+        outputDir = outputDirectory;
+        fileList = filesToProcess;
+
+        // settings for nucleus settings
+        kernelSizeNuc = getKernelSizeNuc;
+        rollingBallRadiusNuc = getRollingBallRadiusNuc;
+        thresholdNuc = getThresholdNuc;
+        erosionNuc = getErosionNuc;
+        minSizeNuc = getMinSizeNuc;
+        maxSizeNuc = getMaxSizeNuc;
+        lowCircNuc = getLowCircNuc;
+        highCircNuc = getHighCircNuc;
+
+        // settings for cell area segmentation
+        kernelSizeCellArea = getKernelSizeCellArea;
+        rollingBallRadiusCellArea = getRollingBallRadiusCellArea;
+        manualThresholdCellArea = getManualThresholdCellArea;
+
+        // settings for cell separator
+        sigmaGaussCellSep = getSigmaGaussCellSep;
+        prominenceCellSep = getProminenceCellSep;
+
+        // settings for cell filter size
+        minCellSize = getMinCellSize;
+        maxCellSize = getMaxCellSize;
+        lowCircCellSize = getLowCircCellSize;
+        highCircCelLSize = getHighCircCelLSize;
+
+        // settings for organelle detection
+        sigmaLoGOrga = getSigmaLoGOrga;
+        prominenceOrga = getProminenceOrga;
+
+        // image settings
+        calibrationSetting = getCalibrationSetting;
+        pxSizeMicron = getPxSizeMicron;
+        nucleusChannel = getNucleusChannel;
+        cytoplasmChannel = getCytoplasmChannel;
+        organelleChannel = getOrganelleChannel;
+        measure = getMeasure;
+    }
+
 
 }
+

@@ -150,12 +150,6 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList);
         guiTest.setUpGui();
 
-
-        //final UnsignedByteType threshold = new UnsignedByteType( 127 );
-        //final net.imagej.ImageJ ij = new ImageJ();
-        //final Img< BitType > mask = (Img<BitType>) ij.op().threshold().apply( img, threshold );
-        //ImageJFunctions.show( mask );
-
     }
 
 }
