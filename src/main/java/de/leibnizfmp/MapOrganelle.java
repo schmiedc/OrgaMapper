@@ -99,8 +99,6 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //segmentationVisualizer.visualizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, false);
         //segmentationVisualizer.visualizeCellSegments(imp, testImage, 10, 50, 200, 15, 500, 100, 150000, 0.00, 1.00, true);
 
-
-
         try {
 
             DebugTools.setRootLevel("OFF");
