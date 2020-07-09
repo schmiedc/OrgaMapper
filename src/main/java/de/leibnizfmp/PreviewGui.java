@@ -2,6 +2,7 @@ package de.leibnizfmp;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PreviewGui extends JPanel {
@@ -48,12 +49,17 @@ public class PreviewGui extends JPanel {
     private double prominenceOrga;
 
     // image settings
-    private boolean calibrationSettings;
+    private boolean calibrationSetting;
     private double pxSizeMicron;
     private int nucleusChannel;
     private int cytoplasmChannel;
     private int organelleChannel;
     private int measure;
+
+    Box batchBox = new Box(BoxLayout.Y_AXIS);
+    Box boxSettings = new Box(BoxLayout.Y_AXIS);
+    private SpinnerModel doubleSpinnerPixelSize;
+    private JCheckBox checkCalibration;
 
     // tabbed pane
     private JTabbedPane tabbedPane = new JTabbedPane();
@@ -83,7 +89,7 @@ public class PreviewGui extends JPanel {
         //tabbedPane.addTab("Organelles", boxBackground);
 
         setUpSettingsTab();
-        //batchBox.add(boxSettings);
+        batchBox.add(boxSettings);
 
         // file selection scroller
         JScrollPane scroller = setUpFileList(fileList);
@@ -113,7 +119,7 @@ public class PreviewGui extends JPanel {
 
         // add boxes to panel and frame
         background.add(BorderLayout.WEST, tabbedPane);
-        //background.add(BorderLayout.EAST, batchBox);
+        background.add(BorderLayout.EAST, batchBox);
         background.add(BorderLayout.CENTER, scroller);
         background.add(BorderLayout.SOUTH, saveLoadBox);
         theFrame.getContentPane().add(background);
@@ -146,6 +152,28 @@ public class PreviewGui extends JPanel {
     }
 
     private void setUpSettingsTab() {
+
+        JLabel settingsLabel = new JLabel("Specify experimental Settings: ");
+        boxSettings.add(settingsLabel);
+
+        doubleSpinnerPixelSize = new SpinnerNumberModel(pxSizeMicron, 0.000,10.000, 0.001);
+        String pixelSizeLabel = "Pixel size: ";
+        String pixelSizeUnit = "µm";
+        Box boxPixelSize = addLabeledSpinnerUnit(pixelSizeLabel,doubleSpinnerPixelSize, pixelSizeUnit);
+        boxSettings.add(boxPixelSize);
+
+        checkCalibration = new JCheckBox("Override metadata?");
+        checkCalibration.setSelected(calibrationSetting);
+        boxSettings.add(checkCalibration);
+
+        // TODO: create channel settings
+        // TODO: channel selection sanity check - each channel is selected only once
+        // TODO: option for measureing in another channel
+
+        JButton batchButton = new JButton("Batch Process");
+        //batchButton.addActionListener(new MyBatchListener());
+        boxSettings.add(batchButton);
+
     }
 
     private void setUpOrganellesTab() {
@@ -156,6 +184,66 @@ public class PreviewGui extends JPanel {
 
     private void setUpNucleiTab() {
     }
+
+    /**
+     * creates a labeled spinner
+     * @param label name
+     * @param model for which spinner
+     * @param unit label after spinner
+     * @return box with labeled spinner
+     */
+    private static Box addLabeledSpinnerUnit(String label,
+                                             SpinnerModel model,
+                                             String unit) {
+
+        Box spinnerLabelBox = new Box(BoxLayout.X_AXIS);
+        JLabel l1 = new JLabel(label);
+        l1.setPreferredSize(new Dimension(150, l1.getMinimumSize().height));
+        spinnerLabelBox.add(l1);
+
+        JSpinner spinner = new JSpinner(model);
+        l1.setLabelFor(spinner);
+        spinnerLabelBox.add(spinner);
+        spinner.setMaximumSize(new Dimension(Integer.MAX_VALUE, spinner.getMinimumSize().height));
+
+        JLabel l2 = new JLabel(unit);
+        l2.setPreferredSize(new Dimension(30, l2.getMinimumSize().height));
+        spinnerLabelBox.add(l2);
+
+        return spinnerLabelBox;
+    }
+
+    /**
+     * creates a 5 digit spinner
+     * @param label name
+     * @param model for spinner
+     * @param unit label after the spinner box
+     * @return box with labeled spinner with 5 digits
+     */
+    private static Box addLabeledSpinner5Digit(String label,
+                                               SpinnerModel model,
+                                               String unit) {
+
+        Box spinnerLabelBox = new Box(BoxLayout.X_AXIS);
+        JLabel l1 = new JLabel(label);
+        l1.setPreferredSize(new Dimension(150, l1.getMinimumSize().height));
+        spinnerLabelBox.add(l1);
+
+        JSpinner spinner = new JSpinner(model);
+        JSpinner.NumberEditor editor = (JSpinner.NumberEditor)spinner.getEditor();
+        DecimalFormat format = editor.getFormat();
+        format.setMinimumFractionDigits(4);
+        l1.setLabelFor(spinner);
+        spinnerLabelBox.add(spinner);
+        spinner.setMaximumSize(new Dimension(Integer.MAX_VALUE, spinner.getMinimumSize().height));
+
+        JLabel l2 = new JLabel(unit);
+        l2.setPreferredSize(new Dimension(30, l2.getMinimumSize().height));
+        spinnerLabelBox.add(l2);
+
+        return spinnerLabelBox;
+    }
+
 
     PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess ) {
 
@@ -193,7 +281,7 @@ public class PreviewGui extends JPanel {
         prominenceOrga = 2;
 
         // image settings
-        calibrationSettings = false;
+        calibrationSetting = false;
         pxSizeMicron = 0.1567095;
         nucleusChannel = 1;
         cytoplasmChannel = 2;

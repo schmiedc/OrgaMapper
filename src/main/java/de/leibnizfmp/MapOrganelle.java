@@ -140,7 +140,7 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
         String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
         String settings = "setting";
-        String fileEnding = ".nd2";
+        String fileEnding = ".tif";
 
         FileList getFileList = new FileList(fileEnding);
         ArrayList<String> fileList = getFileList.getFileList(testInDir);
