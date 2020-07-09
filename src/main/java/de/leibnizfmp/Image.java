@@ -24,12 +24,12 @@ public class Image {
     /**
      * directory : String, source directory
      */
-    private String directory;
+    private final String directory;
 
     /**
      * format: String, format of the image
      */
-    private String format;
+    public final String format;
 
     /**
      * sizeUnit : String, unit of pixel size
@@ -44,32 +44,32 @@ public class Image {
     /**
      * numChannel : int, number of channels
      */
-    private int numChannel;
+    private final int numChannel;
 
     /**
      * numSeries : int, number of series
      */
-    private int seriesID;
+    private final int seriesID;
 
     /**
      *  nucleus : int, number of nucleus channel
      */
-    public int nucleus;
+    public final int nucleus;
 
     /**
      *  cytoplasm : int, number of cytoplasm channel
      */
-    public int cytoplasm;
+    public final int cytoplasm;
 
     /**
      *  organelle : int, number of organelle channel
      */
-    public int organelle;
+    public final int organelle;
 
     /**
      *  measure : int, number of measurement channel
      */
-    public int measure;
+    public final int measure;
 
     /**
      * opens the image using the ImageJ default opener

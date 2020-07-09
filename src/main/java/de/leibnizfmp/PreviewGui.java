@@ -1,6 +1,9 @@
 package de.leibnizfmp;
 
 import ij.IJ;
+import ij.ImagePlus;
+import ij.WindowManager;
+import ij.measure.Calibration;
 import org.scijava.util.ArrayUtils;
 
 import javax.swing.*;
@@ -11,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PreviewGui extends JPanel {
 
@@ -26,6 +30,9 @@ public class PreviewGui extends JPanel {
     private String outputDir;
     private ArrayList<String> fileList;
 
+    // list of files
+    private JList list;
+
     // settings for nucleus settings
     private float kernelSizeNuc;
     private double rollingBallRadiusNuc;
@@ -35,6 +42,15 @@ public class PreviewGui extends JPanel {
     private double maxSizeNuc;
     private double lowCircNuc;
     private double highCircNuc;
+
+    SpinnerModel doubleSpinKernelSizeNuc;
+    SpinnerModel doubleSpinrollingBallRadiusNuc;
+    JComboBox<String> thresholdListBack;
+    SpinnerModel doubleSpinErosionNuc;
+    SpinnerModel doubleSpinMinSize;
+    SpinnerModel doubleSpinMaxSize;
+    SpinnerModel doubleSpinLowCirc;
+    SpinnerModel doubleSpinHighCirc;
 
     // settings for cell area segmentation
     private float kernelSizeCellArea;
@@ -62,6 +78,13 @@ public class PreviewGui extends JPanel {
     private int cytoplasmChannel;
     private int organelleChannel;
     private int measure;
+
+    private String fileFormat;
+    private boolean setDisplayRange = false;
+
+
+    JCheckBox checkCalibration;
+    private SpinnerModel doubleSpinnerPixelSize;
 
     Box nucSegBox = new Box(BoxLayout.Y_AXIS);
     Box cellSegBox = new Box(BoxLayout.Y_AXIS);
@@ -143,7 +166,7 @@ public class PreviewGui extends JPanel {
     private JScrollPane setUpFileList(ArrayList<String> fileList) {
 
         // setup List
-        JList list = new JList(fileList.toArray());
+        list = new JList(fileList.toArray());
 
         // create a new scroll pane
         JScrollPane scroller = new JScrollPane(list);
@@ -171,19 +194,19 @@ public class PreviewGui extends JPanel {
         titleSegmentation = BorderFactory.createTitledBorder(blackline, "Processing and threshold: ");
         segmentationBox.setBorder(titleSegmentation);
 
-        SpinnerModel doubleSpinKernelSizeNuc = new SpinnerNumberModel(kernelSizeNuc, 0.0, 50.0, 1.0);
+        doubleSpinKernelSizeNuc = new SpinnerNumberModel(kernelSizeNuc, 0.0, 50.0, 1.0);
         String spinBackLabel1 = "Median filter size: ";
         String spinBackUnit1 = "px";
         Box spinnerBack1 = addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelSizeNuc, spinBackUnit1);
         segmentationBox.add(spinnerBack1);
 
-        SpinnerModel doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(rollingBallRadiusNuc, 0.0, 10000, 1.0);
+        doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(rollingBallRadiusNuc, 0.0, 10000, 1.0);
         String spinBackLabel2 = "Rolling ball radius: ";
         String spinBackUnit2 = "px";
         Box spinnerBack2 = addLabeledSpinnerUnit(spinBackLabel2, doubleSpinrollingBallRadiusNuc, spinBackUnit2);
         segmentationBox.add(spinnerBack2);
 
-        JComboBox<String> thresholdListBack = new JComboBox<>(thresholdString);
+        thresholdListBack = new JComboBox<>(thresholdString);
         JLabel thresholdListBackLabel  = new JLabel("Select threshold: ");
         Box thresholdListBackBox= new Box(BoxLayout.X_AXIS);
         thresholdListBack.setMaximumSize(new Dimension(Integer.MAX_VALUE, thresholdListBack.getMinimumSize().height));
@@ -196,7 +219,7 @@ public class PreviewGui extends JPanel {
         thresholdListBackBox.add(thresholdListBack);
         segmentationBox.add(thresholdListBackBox);
 
-        SpinnerModel doubleSpinErosionNuc = new SpinnerNumberModel(erosionNuc, 0.0, 10, 1.0);
+        doubleSpinErosionNuc = new SpinnerNumberModel(erosionNuc, 0.0, 10, 1.0);
         String spinBackLabel3 = "Erode: ";
         String spinBackUnit3 = "x";
         Box spinnerBack3 = addLabeledSpinnerUnit(spinBackLabel3, doubleSpinErosionNuc, spinBackUnit3);
@@ -211,25 +234,25 @@ public class PreviewGui extends JPanel {
         titleFilter = BorderFactory.createTitledBorder(blackline, "Filter: size and circ.");
         filterBox.setBorder(titleFilter);
 
-        SpinnerModel doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,1000000,10.0);
+        doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,1000000,10.0);
         String minSizeLabel = "Select min. size: ";
         String minUnitLabel = "µm²";
         Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSize, minUnitLabel );
         filterBox.add(spinnerNuc4);
 
-        SpinnerModel doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,1000000,10.0);
+        doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,1000000,10.0);
         String maxSizeLabel = "Select max. size: ";
         String maxUnitLabel = "µm²";
         Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSize, maxUnitLabel);
         filterBox.add(spinnerNuc5);
 
-        SpinnerModel doubleSpinLowCirc = new SpinnerNumberModel(lowCircNuc,0.0,1.0,0.1);
+        doubleSpinLowCirc = new SpinnerNumberModel(lowCircNuc,0.0,1.0,0.1);
         String minCircLabel = "Select minimal circularity: ";
         String minCircUnit = "";
         Box lowCircBox = addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCirc, minCircUnit);
         filterBox.add(lowCircBox);
 
-        SpinnerModel doubleSpinHighCirc = new SpinnerNumberModel(highCircNuc,0.0,1.0,0.1);
+        doubleSpinHighCirc = new SpinnerNumberModel(highCircNuc,0.0,1.0,0.1);
         String highCircLabel = "Select maximal circularity: ";
         String highCircUnit = "";
         Box highCircBox = addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCirc, highCircUnit);
@@ -239,7 +262,7 @@ public class PreviewGui extends JPanel {
 
         // setup Buttons
         JButton previewButton = new JButton("Preview");
-        //previewButton.addActionListener(new MyPreviewNucleusListener());
+        previewButton.addActionListener(new MyPreviewNucleusListener());
         nucSegBox.add(previewButton);
 
     }
@@ -381,13 +404,13 @@ public class PreviewGui extends JPanel {
         JLabel settingsLabel = new JLabel("Specify experimental Settings: ");
         boxSettings.add(settingsLabel);
 
-        SpinnerModel doubleSpinnerPixelSize = new SpinnerNumberModel(pxSizeMicron, 0.000,10.000, 0.001);
+        doubleSpinnerPixelSize = new SpinnerNumberModel(pxSizeMicron, 0.000,10.000, 0.001);
         String pixelSizeLabel = "Pixel size: ";
         String pixelSizeUnit = "µm";
         Box boxPixelSize = addLabeledSpinnerUnit(pixelSizeLabel,doubleSpinnerPixelSize, pixelSizeUnit);
         boxSettings.add(boxPixelSize);
 
-        JCheckBox checkCalibration = new JCheckBox("Override metadata?");
+        checkCalibration = new JCheckBox("Override metadata?");
         checkCalibration.setToolTipText("Use when metadata is corrupted");
         checkCalibration.setSelected(calibrationSetting);
         boxSettings.add(checkCalibration);
@@ -525,11 +548,12 @@ public class PreviewGui extends JPanel {
     }
 
 
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess ) {
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
         fileList = filesToProcess;
+        fileFormat = format;
 
         // settings for nucleus settings
         kernelSizeNuc = 5;
@@ -570,7 +594,7 @@ public class PreviewGui extends JPanel {
 
     }
 
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess,
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format,
                  float getKernelSizeNuc,
                  double getRollingBallRadiusNuc,
                  String getThresholdNuc,
@@ -600,6 +624,7 @@ public class PreviewGui extends JPanel {
         inputDir = inputDirectory;
         outputDir = outputDirectory;
         fileList = filesToProcess;
+        fileFormat = format;
 
         // settings for nucleus settings
         kernelSizeNuc = getKernelSizeNuc;
@@ -640,5 +665,181 @@ public class PreviewGui extends JPanel {
     }
 
 
+    private class MyPreviewNucleusListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent a) {
+
+            IJ.log("Starting preview for nuclei segmentation");
+
+            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+            Float nucFilterSize = nucFilterSizeDouble.floatValue();
+            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+            int nucErosion= nucErosionDouble.intValue();
+            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+            boolean calibrationSetting = checkCalibration.isSelected();
+            Double pxSizeMicron = (Double) doubleSpinnerPixelSize.getValue();
+
+            // TODO: need to get settings from settings in preview GUI
+            Image previewImage = new Image(inputDir, fileFormat, pxSizeMicron, 3, 0, 1, 2, 3);
+
+            int selectionChecker = list.getSelectedIndex();
+
+            if (selectionChecker != -1){
+
+                String selectedFile = (String) list.getSelectedValue();
+                IJ.log("Selected File: " + selectedFile);
+
+                // check if there are windows open already
+                int openImages = WindowManager.getImageCount();
+
+                // if there are image windows open check if they are of the list and of the selected image
+                if  ( openImages != 0 ) {
+
+                    IJ.log("There are images open!");
+
+                    String[] openImage = WindowManager.getImageTitles();
+                    ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
+
+                    FileList fileUtility = new FileList(fileFormat);
+                    ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
+
+                    boolean selectedFileChecker = false;
+
+                    for (String image : openInputImages) {
+
+                        if (image.equals(selectedFile)) {
+
+                            IJ.log(selectedFile + " is already open");
+                            selectedFileChecker = true;
+
+                        } else {
+
+                            IJ.selectWindow(image);
+                            IJ.run("Close");
+
+                        }
+
+                    }
+
+                    if (selectedFileChecker) {
+
+                        IJ.log("Selected file is already open");
+
+                        IJ.selectWindow(selectedFile);
+                        ImagePlus selectedImage = WindowManager.getCurrentWindow().getImagePlus();
+                        setDisplayRange = false;
+
+                        if (calibrationSetting) {
+
+                            previewImage.calibrate();
+                            IJ.log("Metadata will be overwritten.");
+                            IJ.log("Pixel size set to: " + pxSizeMicron);
+
+                        } else {
+
+                            IJ.log("Metadata will no be overwritten");
+
+                        }
+
+                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                        visualizer.visualizeNucleiSegments(selectedImage,
+                                previewImage,
+                                nucFilterSize,
+                                nucRollBallRadius,
+                                nucThreshold,
+                                nucErosion,
+                                nucMinSize,
+                                nucMaxSize,
+                                nucLowCirc,
+                                nucHighCirc,
+                                setDisplayRange);
+
+                    } else {
+
+                        IJ.log("The selected image is not open");
+
+                        // segment background and show for validation
+                        setDisplayRange = true;
+                        ImagePlus originalImage = previewImage.openImage(selectedFile);
+
+                        if (calibrationSetting) {
+
+                            previewImage.calibrate();
+                            IJ.log("Metadata will be overwritten.");
+                            IJ.log("Pixel size set to: " + pxSizeMicron);
+
+                        } else {
+
+                            IJ.log("Metadata will no be overwritten");
+
+                        }
+
+                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                        visualizer.visualizeNucleiSegments(originalImage,
+                                previewImage,
+                                nucFilterSize,
+                                nucRollBallRadius,
+                                nucThreshold,
+                                nucErosion,
+                                nucMinSize,
+                                nucMaxSize,
+                                nucLowCirc,
+                                nucHighCirc,
+                                setDisplayRange);
+
+                    }
+
+                } else {
+
+                    IJ.log("There are no images open!");
+
+                    // segment background and show for validation
+                    ImagePlus originalImage = previewImage.openImage(selectedFile);
+                    setDisplayRange = true;
+
+                    if (calibrationSetting) {
+
+                        previewImage.calibrate();
+                        IJ.log("Metadata will be overwritten.");
+                        IJ.log("Pixel size set to: " + pxSizeMicron);
+
+                    } else {
+
+                        IJ.log("Metadata will no be overwritten");
+
+                    }
+
+                    SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                    visualizer.visualizeNucleiSegments(originalImage,
+                            previewImage,
+                            nucFilterSize,
+                            nucRollBallRadius,
+                            nucThreshold,
+                            nucErosion,
+                            nucMinSize,
+                            nucMaxSize,
+                            nucLowCirc,
+                            nucHighCirc,
+                            setDisplayRange);
+                }
+
+            } else {
+
+                IJ.error("Please choose a file in the file list!");
+
+            }
+
+
+        }
+    }
 }
 
