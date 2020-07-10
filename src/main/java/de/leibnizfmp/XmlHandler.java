@@ -18,35 +18,51 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.DoubleUnaryOperator;
 
 /**
  * implements reading, writing of the xml settings file
  */
 class XmlHandler {
 
-    String readProjMethod;
+    // settings for nucleus settings
+    float kernelSizeNuc;
+    double rollingBallRadiusNuc;
+    String thresholdNuc;
+    int erosionNuc;
+    double minSizeNuc;
+    double maxSizeNuc;
+    double lowCircNuc;
+    double highCircNuc;
 
-    double readSigmaLoG;
-    double readProminence;
-    double readSigmaSpots;
-    double readRollingSpots;
-    String readThresholdSpots;
-    boolean readSpotErosion;
-    int readRadiusGradient;
-    double readMinSizeSpot;
-    double readMaxSizeSpot;
-    double readLowCirc;
-    double readHighCirc;
+    // settings for cell area segmentation
+    float kernelSizeCellArea;
+    double rollingBallRadiusCellArea;
+    int manualThresholdCellArea;
 
-    double readSigmaBackground;
-    String readThresholdBackground;
-    double readMinSizeBack;
-    double readMaxSizeBack;
+    // settings for cell separator
+    double sigmaGaussCellSep;
+    double prominenceCellSep;
 
-    boolean readCalibrationSetting;
-    double readPxSizeMicron;
-    double readFrameRate;
-    int readStimFrame;
+    // settings for cell filter size
+    double minCellSize;
+    double maxCellSize;
+    double lowCircCellSize;
+    double highCircCelLSize;
+
+    // settings for organelle detection
+    double sigmaLoGOrga;
+    double prominenceOrga;
+
+    // image settings
+    boolean calibrationSetting;
+    double pxSizeMicron;
+    int nucleusChannel;
+    int cytoplasmChannel;
+    int organelleChannel;
+    int measure;
+
+    String fileFormat;
 
     /**
      * reads the xml settings file
@@ -66,26 +82,32 @@ class XmlHandler {
         Document doc = builder.parse(xmlFile);
 
         // get nodes of tag name
-        readProjMethod = doc.getElementsByTagName("projMethod").item(0).getTextContent();
-        readSigmaLoG = Double.parseDouble(doc.getElementsByTagName("sigmaLoG").item(0).getTextContent());
-        readProminence= Double.parseDouble(doc.getElementsByTagName("prominence").item(0).getTextContent());
-        readSigmaSpots = Double.parseDouble(doc.getElementsByTagName("sigmaSpots").item(0).getTextContent());
-        readRollingSpots = Double.parseDouble(doc.getElementsByTagName("rollingSpots").item(0).getTextContent());
-        readThresholdSpots = doc.getElementsByTagName("thresholdSpots").item(0).getTextContent();
-        readSpotErosion = Boolean.parseBoolean(doc.getElementsByTagName("spotErosion").item(0).getTextContent());
-        readRadiusGradient = Integer.parseInt(doc.getElementsByTagName("radiusGradient").item(0).getTextContent());
-        readMinSizeSpot = Double.parseDouble(doc.getElementsByTagName("minSizeSpot").item(0).getTextContent());
-        readMaxSizeSpot= Double.parseDouble(doc.getElementsByTagName("maxSizeSpot").item(0).getTextContent());
-        readLowCirc = Double.parseDouble(doc.getElementsByTagName("lowCirc").item(0).getTextContent());
-        readHighCirc = Double.parseDouble(doc.getElementsByTagName("highCirc").item(0).getTextContent());
-        readSigmaBackground = Double.parseDouble(doc.getElementsByTagName("sigmaBackground").item(0).getTextContent());
-        readThresholdBackground = doc.getElementsByTagName("thresholdBackground").item(0).getTextContent();
-        readMinSizeBack = Double.parseDouble(doc.getElementsByTagName("minSizeBack").item(0).getTextContent());
-        readMaxSizeBack = Double.parseDouble(doc.getElementsByTagName("maxSizeBack").item(0).getTextContent());
-        readCalibrationSetting = Boolean.parseBoolean(doc.getElementsByTagName("calibrationSetting").item(0).getTextContent());
-        readPxSizeMicron = Double.parseDouble(doc.getElementsByTagName("pxSizeMicron").item(0).getTextContent());
-        readFrameRate= Double.parseDouble(doc.getElementsByTagName("frameRate").item(0).getTextContent());
-        readStimFrame = Integer.parseInt(doc.getElementsByTagName("stimFrame").item(0).getTextContent());
+        kernelSizeNuc = Float.parseFloat(doc.getElementsByTagName("kernelSizeNuc").item(0).getTextContent());
+        rollingBallRadiusNuc = Double.parseDouble(doc.getElementsByTagName("rollingBallRadiusNuc").item(0).getTextContent());
+        thresholdNuc= String.valueOf(Double.parseDouble(doc.getElementsByTagName("thresholdNuc").item(0).getTextContent()));
+        erosionNuc = Integer.parseInt(doc.getElementsByTagName("erosionNuc").item(0).getTextContent());
+        minSizeNuc = Double.parseDouble(doc.getElementsByTagName("minSizeNuc").item(0).getTextContent());
+        maxSizeNuc= Double.parseDouble(doc.getElementsByTagName("maxSizeNuc").item(0).getTextContent());
+        lowCircNuc = Double.parseDouble(doc.getElementsByTagName("lowCircNuc").item(0).getTextContent());
+        highCircNuc = Integer.parseInt(doc.getElementsByTagName("highCircNuc").item(0).getTextContent());
+        kernelSizeCellArea = Float.parseFloat(doc.getElementsByTagName("kernelSizeCellArea").item(0).getTextContent());
+        rollingBallRadiusCellArea = Double.parseDouble(doc.getElementsByTagName("rollingBallRadiusCellArea").item(0).getTextContent());
+        manualThresholdCellArea = Integer.parseInt(doc.getElementsByTagName("manualThresholdCellArea").item(0).getTextContent());
+        sigmaGaussCellSep = Double.parseDouble(doc.getElementsByTagName("sigmaGaussCellSep").item(0).getTextContent());
+        prominenceCellSep = Double.parseDouble(doc.getElementsByTagName("sigmaBackground").item(0).getTextContent());
+        minCellSize = Double.parseDouble(doc.getElementsByTagName("minCellSize").item(0).getTextContent());
+        maxCellSize = Double.parseDouble(doc.getElementsByTagName("maxCellSize").item(0).getTextContent());
+        lowCircCellSize = Double.parseDouble(doc.getElementsByTagName("lowCircCellSize").item(0).getTextContent());
+        highCircCelLSize = Double.parseDouble(doc.getElementsByTagName("highCircCelLSize").item(0).getTextContent());
+        sigmaLoGOrga = Double.parseDouble(doc.getElementsByTagName("sigmaLoGOrga").item(0).getTextContent());
+        prominenceOrga = Double.parseDouble(doc.getElementsByTagName("prominenceOrga").item(0).getTextContent());
+        calibrationSetting = Boolean.parseBoolean(doc.getElementsByTagName("calibrationSetting").item(0).getTextContent());
+        pxSizeMicron = Double.parseDouble(doc.getElementsByTagName("pxSizeMicron").item(0).getTextContent());
+        nucleusChannel = Integer.parseInt(doc.getElementsByTagName("nucleusChannel").item(0).getTextContent());
+        cytoplasmChannel = Integer.parseInt(doc.getElementsByTagName("cytoplasmChannel").item(0).getTextContent());
+        organelleChannel= Integer.parseInt(doc.getElementsByTagName("organelleChannel").item(0).getTextContent());
+        measure = Integer.parseInt(doc.getElementsByTagName("measure").item(0).getTextContent());
+        fileFormat = doc.getElementsByTagName("fileFormat").item(0).getTextContent();
 
         IJ.log("Loaded settings file from: " + filePath);
 
@@ -95,35 +117,61 @@ class XmlHandler {
      * writes xml settings file
      *
      * @param outputPath directory for saving results
-     * @param getProjectionMethod projection method
-     * @param getSigmaLoG sigma for LoG
-     * @param getProminence prominence for spot detection
-     * @param getSigmaSpots sigma for spot segmentation
-     * @param getRollingSpots rolling ball background radius for spot segmentation
-     * @param getThresholdSpots global intensity based threshold for spots
-     * @param getSpotErosion binary mask erosion for spots
-     * @param getRadiusGradient radius for creating gradient image (watershed)
-     * @param getMinSizePxSpot minimum spot size in px
-     * @param getMaxSizePxSpot maximum spot size in px
-     * @param getLowCirc minimum circularity of spots
-     * @param getHighCirc maximum circularity of spots
-     * @param getSigmaBackground sigma gaussian blur for background segmentation
-     * @param getThresholdBackground global intensity threshold for background segmentation
-     * @param getMinSizePxBack minimum background region size
-     * @param getMaxSizePxBack maximum background region size
-     * @param getStimFrame frame when stimulation happens
-     * @param getCalibrationSetting image calibration setting
-     * @param getSizeMicron pixel size in micron
-     * @param getFrameRate frame rate in seconds
+     * @param getKernelSizeNuc filter size for filtering nuclei
+     * @param getRollingBallRadiusNuc rolling ball background radius for neuclei
+     * @param getThresholdNuc threshold nucleus segmentation
+     * @param getErosionNuc erosion for nucleus segmentation
+     * @param getMinSizeNuc minimum size of nuclei
+     * @param getMaxSizeNuc maximum size of nuclei
+     * @param getLowCircNuc minimum circularity of nuclei
+     * @param getHighCircNuc maximum circularity of nuclei
+     * @param getKernelSizeCellArea filter size for nuclei segmentation
+     * @param getRollingBallRadiusCellArea rolling ball radius for cell segmentation
+     * @param getManualThresholdCellArea manual threshold for cell area
+     * @param getSigmaGaussCellSep sigma gaussian blur
+     * @param getProminenceCellSep prominence for watershed
+     * @param getMinCellSize minimum cell size
+     * @param getMaxCellSize maximum cell size
+     * @param getLowCircCellSize minimum circularity of cells
+     * @param getHighCircCelLSize maximum circularity of cells
+     * @param getSigmaLoGOrga sigma for LoG3D for organelle detection
+     * @param getProminenceOrga prominence for organelle detection
+     * @param getCalibrationSetting global intensity threshold for background segmentation
+     * @param getPxSizeMicron pixel size
+     * @param getNucleusChannel number for nucleus channel
+     * @param getCytoplasmChannel number for cytoplams channel
+     * @param getOrganelleChannel number for organelle channel
+     * @param getMeasure number for measurement channel
+     * @param getFileFormat string for file format ending
      */
-    void xmlWriter(String outputPath, String fileName, String getProjectionMethod,
-                   double getSigmaLoG, double getProminence,
-                   double getSigmaSpots, double getRollingSpots, String getThresholdSpots, boolean getSpotErosion,
-                   int getRadiusGradient,
-                   double getMinSizePxSpot, double getMaxSizePxSpot, double getLowCirc, double getHighCirc,
-                   double getSigmaBackground, String getThresholdBackground,
-                   double getMinSizePxBack, double getMaxSizePxBack,
-                   int getStimFrame, boolean getCalibrationSetting, double getSizeMicron, double getFrameRate ){
+    void xmlWriter(String outputPath,
+                   String fileName,
+                   float getKernelSizeNuc,
+                   double getRollingBallRadiusNuc,
+                   String getThresholdNuc,
+                   int getErosionNuc,
+                   double getMinSizeNuc,
+                   double getMaxSizeNuc,
+                   double getLowCircNuc,
+                   double getHighCircNuc,
+                   float getKernelSizeCellArea,
+                   double getRollingBallRadiusCellArea,
+                   int getManualThresholdCellArea,
+                   double getSigmaGaussCellSep,
+                   double getProminenceCellSep,
+                   double getMinCellSize,
+                   double getMaxCellSize,
+                   double getLowCircCellSize,
+                   double getHighCircCelLSize,
+                   double getSigmaLoGOrga,
+                   double getProminenceOrga,
+                   boolean getCalibrationSetting,
+                   double getPxSizeMicron,
+                   int getNucleusChannel,
+                   int getCytoplasmChannel,
+                   int getOrganelleChannel,
+                   int getMeasure,
+                   String getFileFormat){
 
         // Write the content into XML file
         String filePath = outputPath + fileName;
@@ -131,25 +179,30 @@ class XmlHandler {
         try
         {
 
-            String sigmaLoG = Double.toString(getSigmaLoG);
-            String prominence = Double.toString(getProminence);
-            String sigmaSpots = Double.toString(getSigmaSpots);
-            String rollingSpots = Double.toString(getRollingSpots);
-            String spotErosion = Boolean.toString(getSpotErosion);
-            String radiusGradient = Integer.toString(getRadiusGradient);
-            String minSizePxSpot = Double.toString(getMinSizePxSpot);
-            String maxSizePxSpot = Double.toString(getMaxSizePxSpot);
-            String lowCirc = Double.toString(getLowCirc);
-            String highCirc = Double.toString(getHighCirc);
-
-            String simgaBackground = Double.toString(getSigmaBackground);
-            String minSizePxBack = Double.toString(getMinSizePxBack);
-            String maxSizePxBack = Double.toString(getMaxSizePxBack);
-
-            String stimFrame = Integer.toString(getStimFrame);
-            String calibrationSetting = Boolean.toString(getCalibrationSetting);
-            String sizeMicron = Double.toString(getSizeMicron);
-            String frameRate = Double.toString(getFrameRate);
+            String kernelSizeNuc = Float.toString(getKernelSizeNuc);
+            String rollingBallRadiusNuc = Double.toString(getRollingBallRadiusNuc);
+            String erosionNuc = Integer.toString(getErosionNuc);
+            String minSizeNuc = Double.toString(getMinSizeNuc);
+            String maxSizeNuc = Double.toString(getMaxSizeNuc);
+            String lowCircNuc = Double.toString(getLowCircNuc);
+            String highCircNuc = Double.toString(getHighCircNuc);
+            String kernelSizeCellArea = Float.toString(getKernelSizeCellArea);
+            String rollingBallRadiusCellArea = Double.toString(getRollingBallRadiusCellArea);
+            String manualThresholdCellArea = Integer.toString(getManualThresholdCellArea);
+            String sigmaGaussCellSep = Double.toString(getSigmaGaussCellSep);
+            String prominenceCellSep = Double.toString(getProminenceCellSep);
+            String minCellSize = Double.toString(getMinCellSize);
+            String maxCellSize = Double.toString(getMaxCellSize);
+            String lowCircCellSize = Double.toString(getLowCircCellSize);
+            String highCircCellSize = Double.toString(getHighCircCelLSize);
+            String sigmaLoGOrga = Double.toString(getSigmaLoGOrga);
+            String prominenceOrga = Double.toString(getProminenceOrga);
+            String calibrationSettings = Boolean.toString(getCalibrationSetting);
+            String pxSizeMicron = Double.toString(getPxSizeMicron);
+            String nucleusChannel = Integer.toString(getNucleusChannel);
+            String cytoplasmChannel = Integer.toString(getCytoplasmChannel);
+            String organelleChannel = Integer.toString(getOrganelleChannel);
+            String measureChannel = Integer.toString(getMeasure);
 
             // create document builder
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -160,87 +213,109 @@ class XmlHandler {
             Element rootElement = doc.createElement("pHluorinSettings");
             doc.appendChild(rootElement);
 
-            // add the different settings as child of root
-            Element settingsProjMethod = doc.createElement("projMethod");
-            settingsProjMethod.setTextContent(getProjectionMethod);
-            rootElement.appendChild(settingsProjMethod);
+            Element settingsKernelSizeNuc = doc.createElement("kernelSizeNuc");
+            settingsKernelSizeNuc.setTextContent(kernelSizeNuc);
+            rootElement.appendChild(settingsKernelSizeNuc);
 
-            Element settingsSigmaLoG = doc.createElement("sigmaLoG");
-            settingsSigmaLoG.setTextContent(sigmaLoG);
-            rootElement.appendChild(settingsSigmaLoG);
+            Element settingsRollingBallRadiusNuc = doc.createElement("rollingBallRadiusNuc");
+            settingsRollingBallRadiusNuc.setTextContent(rollingBallRadiusNuc);
+            rootElement.appendChild(settingsRollingBallRadiusNuc);
 
-            Element settingsProminence = doc.createElement("prominence");
-            settingsProminence.setTextContent(prominence);
-            rootElement.appendChild(settingsProminence);
+            Element settingsThresholdNuc = doc.createElement("thresholdNuc");
+            settingsThresholdNuc.setTextContent(getThresholdNuc);
+            rootElement.appendChild(settingsThresholdNuc);
 
-            Element settingsSigmaSpots = doc.createElement("sigmaSpots");
-            settingsSigmaSpots.setTextContent(sigmaSpots);
-            rootElement.appendChild(settingsSigmaSpots);
+            Element settingsErosionNuc = doc.createElement("erosionNuc");
+            settingsErosionNuc.setTextContent(erosionNuc);
+            rootElement.appendChild(settingsErosionNuc);
 
-            Element settingsRollingSpots = doc.createElement("rollingSpots");
-            settingsRollingSpots.setTextContent(rollingSpots);
-            rootElement.appendChild(settingsRollingSpots);
+            Element setMinSizeNuc = doc.createElement("minSizeNuc");
+            setMinSizeNuc.setTextContent(minSizeNuc);
+            rootElement.appendChild(setMinSizeNuc);
 
-            Element settingsThresholdSpots = doc.createElement("thresholdSpots");
-            settingsThresholdSpots.setTextContent(getThresholdSpots);
-            rootElement.appendChild(settingsThresholdSpots);
+            Element setMaxSizeNuc = doc.createElement("maxSizeNuc");
+            setMaxSizeNuc.setTextContent(maxSizeNuc);
+            rootElement.appendChild(setMaxSizeNuc);
 
-            Element settingsSpotErosion = doc.createElement("spotErosion");
-            settingsSpotErosion.setTextContent(spotErosion);
-            rootElement.appendChild(settingsSpotErosion);
+            Element setlowCircNuc = doc.createElement("lowCircNuc");
+            setlowCircNuc.setTextContent(lowCircNuc);
+            rootElement.appendChild(setlowCircNuc);
 
-            Element settingsRadiusGradient = doc.createElement("radiusGradient");
-            settingsRadiusGradient.setTextContent(radiusGradient);
-            rootElement.appendChild(settingsRadiusGradient);
+            Element sethighCircNuc = doc.createElement("highCircNuc");
+            sethighCircNuc.setTextContent(highCircNuc);
+            rootElement.appendChild(sethighCircNuc);
 
-            Element settingsMinSizePxSpot = doc.createElement("minSizeSpot");
-            settingsMinSizePxSpot.setTextContent(minSizePxSpot);
-            rootElement.appendChild(settingsMinSizePxSpot);
+            Element setkernelSizeCellArea = doc.createElement("kernelSizeCellArea");
+            setkernelSizeCellArea.setTextContent(kernelSizeCellArea);
+            rootElement.appendChild(setkernelSizeCellArea);
 
-            Element settingsMaxSizePxSpot = doc.createElement("maxSizeSpot");
-            settingsMaxSizePxSpot.setTextContent(maxSizePxSpot);
-            rootElement.appendChild(settingsMaxSizePxSpot);
+            Element setrollingBallRadiusCellArea = doc.createElement("rollingBallRadiusCellArea");
+            setrollingBallRadiusCellArea.setTextContent(rollingBallRadiusCellArea);
+            rootElement.appendChild(setrollingBallRadiusCellArea);
 
-            Element settingsLowCirc = doc.createElement("lowCirc");
-            settingsLowCirc.setTextContent(lowCirc);
-            rootElement.appendChild(settingsLowCirc);
+            Element setmanualThresholdCellArea = doc.createElement("manualThresholdCellArea");
+            setmanualThresholdCellArea.setTextContent(manualThresholdCellArea);
+            rootElement.appendChild(setmanualThresholdCellArea);
 
-            Element settingsHighCirc = doc.createElement("highCirc");
-            settingsHighCirc.setTextContent(highCirc);
-            rootElement.appendChild(settingsHighCirc);
+            Element setsigmaGaussCellSep = doc.createElement("sigmaGaussCellSep");
+            setsigmaGaussCellSep.setTextContent(sigmaGaussCellSep);
+            rootElement.appendChild(setsigmaGaussCellSep);
 
-            Element settingsSimgaBackground = doc.createElement("sigmaBackground");
-            settingsSimgaBackground.setTextContent(simgaBackground);
-            rootElement.appendChild(settingsSimgaBackground);
+            Element setprominenceCellSep = doc.createElement("prominenceCellSep");
+            setprominenceCellSep.setTextContent(prominenceCellSep);
+            rootElement.appendChild(setprominenceCellSep);
 
-            Element settingsThresholdBackground = doc.createElement("thresholdBackground");
-            settingsThresholdBackground.setTextContent(getThresholdBackground);
-            rootElement.appendChild(settingsThresholdBackground);
+            Element setminCellSize = doc.createElement("minCellSize");
+            setminCellSize.setTextContent(minCellSize);
+            rootElement.appendChild(setminCellSize);
 
-            Element settingsMinSizePxBack = doc.createElement("minSizeBack");
-            settingsMinSizePxBack.setTextContent(minSizePxBack);
-            rootElement.appendChild(settingsMinSizePxBack);
+            Element setmaxCellSize = doc.createElement("maxCellSize");
+            setmaxCellSize.setTextContent(maxCellSize);
+            rootElement.appendChild(setmaxCellSize);
 
-            Element settingsMaxSizePxBack = doc.createElement("maxSizeBack");
-            settingsMaxSizePxBack.setTextContent(maxSizePxBack);
-            rootElement.appendChild(settingsMaxSizePxBack);
+            Element setlowCircCellSize = doc.createElement("lowCircCellSize");
+            setlowCircCellSize.setTextContent(lowCircCellSize);
+            rootElement.appendChild(setlowCircCellSize);
 
-            Element settingsStimFrame = doc.createElement("stimFrame");
-            settingsStimFrame.setTextContent(stimFrame);
-            rootElement.appendChild(settingsStimFrame);
+            Element sethighCircCellSize = doc.createElement("highCircCellSize");
+            sethighCircCellSize.setTextContent(highCircCellSize);
+            rootElement.appendChild(sethighCircCellSize);
 
-            Element settingsCalibrationSetting = doc.createElement("calibrationSetting");
-            settingsCalibrationSetting.setTextContent(calibrationSetting);
-            rootElement.appendChild(settingsCalibrationSetting);
+            Element setsigmaLoGOrga = doc.createElement("sigmaLoGOrga");
+            setsigmaLoGOrga.setTextContent(sigmaLoGOrga);
+            rootElement.appendChild(setsigmaLoGOrga);
 
-            Element settingsSizeMicron = doc.createElement("pxSizeMicron");
-            settingsSizeMicron.setTextContent(sizeMicron);
-            rootElement.appendChild(settingsSizeMicron);
+            Element setprominenceOrga = doc.createElement("prominenceOrga");
+            setprominenceOrga.setTextContent(prominenceOrga);
+            rootElement.appendChild(setprominenceOrga);
 
-            Element settingsFrameRate = doc.createElement("frameRate");
-            settingsFrameRate.setTextContent(frameRate);
-            rootElement.appendChild(settingsFrameRate);
+            Element setcalibrationSettings = doc.createElement("calibrationSettings");
+            setcalibrationSettings.setTextContent(calibrationSettings);
+            rootElement.appendChild(setcalibrationSettings);
 
+            Element setpxSizeMicron = doc.createElement("pxSizeMicron");
+            setpxSizeMicron.setTextContent(pxSizeMicron);
+            rootElement.appendChild(setpxSizeMicron);
+
+            Element setnucleusChannel = doc.createElement("nucleusChannel");
+            setnucleusChannel.setTextContent(nucleusChannel);
+            rootElement.appendChild(setnucleusChannel);
+
+            Element setcytoplasmChannel = doc.createElement("cytoplasmChannel");
+            setcytoplasmChannel.setTextContent(cytoplasmChannel);
+            rootElement.appendChild(setcytoplasmChannel);
+
+            Element setorganelleChannel = doc.createElement("organelleChannel");
+            setorganelleChannel.setTextContent(organelleChannel);
+            rootElement.appendChild(setorganelleChannel);
+
+            Element setmeasureChannel = doc.createElement("measureChannel");
+            setmeasureChannel.setTextContent(measureChannel);
+            rootElement.appendChild(setmeasureChannel);
+
+            Element setFileFormat = doc.createElement("FileFormat");
+            setFileFormat.setTextContent(getFileFormat);
+            rootElement.appendChild(setFileFormat);
 
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new FileOutputStream(filePath));
