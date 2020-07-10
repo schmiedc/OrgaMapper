@@ -26,7 +26,6 @@ public class SegmentationVisualizer {
                         double prominence,
                         boolean setDisplayRange) {
 
-        // remove existing overlays
         originalImage.setOverlay(null);
 
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
@@ -87,11 +86,10 @@ public class SegmentationVisualizer {
                                  double highCirc,
                                  boolean setDisplayRange) {
 
+        originalImage.setOverlay(null);
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
-
-        // set the specified calibration
-        originalImage.setOverlay(null);
+        nucleus.setOverlay(null);
 
         ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus, kernelSize, rollingBallRadius, threshold, erosion, minSize, maxSize, lowCirc, highCirc);
 
@@ -102,6 +100,7 @@ public class SegmentationVisualizer {
         backAnalyzer.analyze(nucleusMask);
 
         originalImage.setC( imageObject.nucleus );
+        originalImage.setOverlay(null);
         manager.moveRoisToOverlay(originalImage);
         Overlay overlay = originalImage.getOverlay();
         overlay.drawLabels(false);
@@ -117,7 +116,6 @@ public class SegmentationVisualizer {
         }
 
         originalImage.show();
-
         manager.reset();
         manager.close();
 
@@ -152,12 +150,11 @@ public class SegmentationVisualizer {
                                double highCirc,
                                boolean setDisplayRange) {
 
+        originalImage.setOverlay(null);
+
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
         ImagePlus cytoplasm = imp_channels[imageObject.cytoplasm - 1];
-
-        // set the specified calibration
-        originalImage.setOverlay(null);
 
         ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
 

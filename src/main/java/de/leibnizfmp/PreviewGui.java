@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static ij.WindowManager.getCurrentWindow;
+
 public class PreviewGui extends JPanel {
 
     // threshold method list
@@ -730,9 +732,8 @@ public class PreviewGui extends JPanel {
                     if (selectedFileChecker) {
 
                         IJ.log("Selected file is already open");
-
                         IJ.selectWindow(selectedFile);
-                        ImagePlus selectedImage = WindowManager.getCurrentWindow().getImagePlus();
+                        ImagePlus selectedImage = WindowManager.getCurrentImage();
                         setDisplayRange = false;
 
                         if (calibrationSetting) {
@@ -743,7 +744,7 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            IJ.log("Metadata will no be overwritten");
+                            IJ.log("Metadata will not be overwritten");
 
                         }
 
@@ -777,7 +778,7 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            IJ.log("Metadata will no be overwritten");
+                            IJ.log("Metadata will not be overwritten");
 
                         }
 
@@ -813,7 +814,7 @@ public class PreviewGui extends JPanel {
 
                     } else {
 
-                        IJ.log("Metadata will no be overwritten");
+                        IJ.log("Metadata will not be overwritten");
 
                     }
 
