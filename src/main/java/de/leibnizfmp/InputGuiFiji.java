@@ -16,9 +16,6 @@ import java.util.ArrayList;
  */
 class InputGuiFiji {
 
-    private static File inputDirectory = null;
-    private static File outputDirectory = null;
-    private static String fileFormat = null;
     private File settingsFile;
 
     String defaultInputDirectory;
@@ -66,13 +63,14 @@ class InputGuiFiji {
      *
      * @param inputDir location for test files
      * @param outputDir location for writing the test outputs
+     * @param fileFormat fileFormat
      * @param settingsFileString location of test settingsFile
      */
-    InputGuiFiji(String inputDir, String outputDir, String settingsFileString ) {
+    InputGuiFiji(String inputDir, String outputDir, String fileFormat, String settingsFileString ) {
 
         defaultInputDirectory = inputDir;
         defaultOutputDirectory = outputDir;
-        defaultFileFormat = ".tif";
+        defaultFileFormat = fileFormat;
         defaultSettingsFile = settingsFileString;
         settingsFile = null;
         showSettingsSwitch = true;
@@ -99,6 +97,7 @@ class InputGuiFiji {
 
         gdPlus.addDirectoryField("Input directory: ", defaultInputDirectory, 50);
         gdPlus.addDirectoryField("Output directory: ", defaultOutputDirectory, 50);
+        gdPlus.addStringField("File ending: ", defaultFileFormat, 50);
 
         if ( !showSettingsSwitch ) {
 
@@ -110,7 +109,6 @@ class InputGuiFiji {
 
         }
 
-
         gdPlus.showDialog();
 
         // when canceled is pressed
@@ -120,10 +118,14 @@ class InputGuiFiji {
 
         } else {
 
-            inputDirectory = new File( defaultInputDirectory = gdPlus.getNextString() );
-            outputDirectory = new File( defaultOutputDirectory = gdPlus.getNextString() );
+            File inputDirectory = new File(defaultInputDirectory = gdPlus.getNextString());
+            File outputDirectory = new File(defaultOutputDirectory = gdPlus.getNextString());
+
+            // TODO: needs a way to sanity check the file format or put in warning when weird files are chosen
+            String fileFormat = gdPlus.getNextString();
 
             if ( showSettingsSwitch ) {
+
                 settingsFile = new File(defaultSettingsFile = gdPlus.getNextString());
             }
 
@@ -141,6 +143,7 @@ class InputGuiFiji {
                 System.out.println("Proceed with preview");
                 System.out.println("Input Directory: " + inputDirectory);
                 System.out.println("Output Directory: " + outputDirectory);
+                System.out.println("File Ending: " + fileFormat);
                 System.out.println("Settings File: " + settingsFile);
 
                 FileList getFileList = new FileList(fileFormat);
@@ -171,6 +174,7 @@ class InputGuiFiji {
                             // reads settings file
                             readMyXml.xmlReader(settingsFileString);
 
+                            // TODO: write new XML reader from InputGUI
                             // Constructs the preview GUI with the loaded settings from the settings file
                             //PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString),
                             //        checkTrailingSlash(outputFileString),
