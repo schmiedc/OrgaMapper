@@ -14,17 +14,34 @@ public class SegmentationVisualizer {
 
     /**
      * visualization of the spot segmentation
-     *
      * @param originalImage   selected image for vis
      * @param sigmaLoG        sigma for LoG
      * @param prominence      prominence for spot detection
+     * @param organelleFilterCheck check if detections need to be filtered by nuclei masks
      * @param setDisplayRange sets the display range for vis
+     * @param kernelSizeNuc             sigma gaussian blur for background segmentation
+     * @param rollingBallRadiusNuc      rolling ball radius for background subtraction
+     * @param thresholdNuc              global intensity threshold for background segmentation
+     * @param erosionNuc                number of erosions
+     * @param minSizeNuc                minimum background region size
+     * @param maxSizeNuc                maximum background region size
+     * @param lowCircNuc                lower threshold circularity
+     * @param highCircNuc               higher threshold circularity
      */
     void visualizeSpots(ImagePlus originalImage,
                         Image imageObject,
                         double sigmaLoG,
                         double prominence,
-                        boolean setDisplayRange) {
+                        boolean organelleFilterCheck,
+                        boolean setDisplayRange,
+                        float kernelSizeNuc,
+                        double rollingBallRadiusNuc,
+                        String thresholdNuc,
+                        int erosionNuc,
+                        double minSizeNuc,
+                        double maxSizeNuc,
+                        double lowCircNuc,
+                        double highCircNuc) {
 
         IJ.log("Starting visualization for organelle detection...");
         originalImage.setOverlay(null);
@@ -32,11 +49,30 @@ public class SegmentationVisualizer {
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus organelle = imp_channels[imageObject.organelle - 1];
 
-        ImagePlus detectedLysosomes = LysosomeDetector.detectLysosomes(organelle, sigmaLoG, prominence);
+        ImagePlus detectedLysosomes = OrganelleDetector.detectOrganelles(organelle, sigmaLoG, prominence);
+
+        ImagePlus detectedLysosomesFinal;
+
+        if ( organelleFilterCheck ) {
+
+            ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
+
+            ImagePlus nucleiMask = NucleusSegmenter.segmentNuclei(nucleus, kernelSizeNuc, rollingBallRadiusNuc, thresholdNuc, erosionNuc, minSizeNuc, maxSizeNuc, lowCircNuc, highCircNuc);
+
+            detectedLysosomesFinal = DetectionFilter.filterByNuclei(nucleiMask, detectedLysosomes);
+            IJ.log("Detections within nuclei will not be shown");
+            nucleus.close();
+
+        } else {
+
+            detectedLysosomesFinal = detectedLysosomes;
+            IJ.log("Detections within nuclei will be shown");
+
+        }
 
         // get detections as polygons and put on image as roi
         MaximumFinder maxima = new MaximumFinder();
-        ImageProcessor getMaxima = detectedLysosomes.getProcessor().convertToByteProcessor();
+        ImageProcessor getMaxima = detectedLysosomesFinal.getProcessor().convertToByteProcessor();
         java.awt.Polygon detections = maxima.getMaxima(getMaxima, 1, false);
         PointRoi roi = new PointRoi(detections);
 
@@ -68,11 +104,11 @@ public class SegmentationVisualizer {
      * @param originalImage     the original image for vis
      * @param imageObject       image for segmentation of the nucleus
      * @param kernelSize        sigma gaussian blur for background segmentation
-     * @param rollingBallRadius global intensity threshold for background segmentation
+     * @param rollingBallRadius rolling ball radius for background subtraction
      * @param threshold         thresholding method
      * @param erosion           number of erosions
      * @param minSize           minimum background region size
-     * @param maxSize           maximum background region siz
+     * @param maxSize           maximum background region size
      * @param lowCirc           lower threshold circularity
      * @param highCirc          higher threshold circularity
      * @param setDisplayRange   sets the display range for vis
@@ -128,19 +164,27 @@ public class SegmentationVisualizer {
 
     /**
      * visualization of the background segmentation
-     *
-     * @param originalImage     the original image for vis
-     * @param imageObject       image for segmentation of the nucleus
-     * @param kernelSizeCellArea median filter for cell area
+     * @param originalImage             the original image for vis
+     * @param imageObject               image for segmentation of the nucleus
+     * @param kernelSizeCellArea        median filter for cell area
      * @param rollingBallRadiusCellArea rolling ball radius for cell area
-     * @param manualThresholdCellArea manual threshold setting for cell area
-     * @param gaussSeparateCells gauss sigma for separated cell region
-     * @param prominenceSeparatedCells prominence for maxima finder to creat cell region
-     * @param minCellSize           minimum background region size
-     * @param maxCellSize           maximum background region siz
-     * @param lowCirc           lower threshold circularity
-     * @param highCirc          higher threshold circularity
-     * @param setDisplayRange   sets the display range for vis
+     * @param manualThresholdCellArea   manual threshold setting for cell area
+     * @param gaussSeparateCells        gauss sigma for separated cell region
+     * @param prominenceSeparatedCells  prominence for maxima finder to creat cell region
+     * @param minCellSize               minimum background region size
+     * @param maxCellSize               maximum background region siz
+     * @param lowCellCirc               lower threshold circularity
+     * @param highCellCirc              higher threshold circularity
+     * @param cellFilterCheck           if one applies a further cell filter by nuclei number
+     * @param setDisplayRange           sets the display range for vis
+     * @param kernelSizeNuc             sigma gaussian blur for background segmentation
+     * @param rollingBallRadiusNuc      rolling ball radius for background subtraction
+     * @param thresholdNuc              global intensity threshold for background segmentation
+     * @param erosionNuc                number of erosions
+     * @param minSizeNuc                minimum background region size
+     * @param maxSizeNuc                maximum background region size
+     * @param lowCircNuc                lower threshold circularity
+     * @param highCircNuc               higher threshold circularity
      */
     void visualizeCellSegments(ImagePlus originalImage,
                                Image imageObject,
@@ -151,11 +195,20 @@ public class SegmentationVisualizer {
                                double prominenceSeparatedCells,
                                double minCellSize,
                                double maxCellSize,
-                               double lowCirc,
-                               double highCirc,
-                               boolean setDisplayRange) {
+                               double lowCellCirc,
+                               double highCellCirc,
+                               boolean cellFilterCheck,
+                               boolean setDisplayRange,
+                               float kernelSizeNuc,
+                               double rollingBallRadiusNuc,
+                               String thresholdNuc,
+                               int erosionNuc,
+                               double minSizeNuc,
+                               double maxSizeNuc,
+                               double lowCircNuc,
+                               double highCircNuc) {
 
-        IJ.log("Starting visualization for nucleus segmentation ");
+        IJ.log("Starting visualization for cell segmentation ");
 
         originalImage.setOverlay(null);
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
@@ -168,19 +221,47 @@ public class SegmentationVisualizer {
 
         ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
 
-        ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCirc, highCirc);
+        ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCellCirc, highCellCirc);
 
-        int maxArea = nucleus.getWidth() * nucleus.getHeight();
 
-        RoiManager manager = new RoiManager();
-        ParticleAnalyzer cellAnalyzer = new ParticleAnalyzer(2048, 0, null, 0, maxArea);
-        cellAnalyzer.analyze( filteredCells );
 
-        originalImage.setC( imageObject.cytoplasm );
-        originalImage.setOverlay(null);
-        manager.moveRoisToOverlay(originalImage);
-        Overlay overlay = originalImage.getOverlay();
-        overlay.drawLabels(false);
+        if (cellFilterCheck) {
+
+            ImagePlus neucleiMask= NucleusSegmenter.segmentNuclei(nucleus, kernelSizeNuc, rollingBallRadiusNuc, thresholdNuc, erosionNuc, minSizeNuc, maxSizeNuc, lowCircNuc, highCircNuc);
+            RoiManager manager;
+            IJ.log("Cell masks will be shown with nuclei number filter applied");
+            manager = CellFilter.filterByNuclei(filteredCells, neucleiMask);
+
+            originalImage.setC( imageObject.cytoplasm );
+            originalImage.setOverlay(null);
+
+            manager.moveRoisToOverlay(originalImage);
+            Overlay overlay = originalImage.getOverlay();
+            overlay.drawLabels(false);
+            manager.reset();
+            manager.close();
+
+
+        } else {
+
+            RoiManager manager = new RoiManager();
+
+            IJ.log("Cell masks will be shown without nuclei number filter applied");
+            int maxArea = nucleus.getWidth() * nucleus.getHeight();
+
+            ParticleAnalyzer cellAnalyzer = new ParticleAnalyzer(2048, 0, null, 0, maxArea);
+            cellAnalyzer.analyze( filteredCells );
+
+            originalImage.setC( imageObject.cytoplasm );
+            originalImage.setOverlay(null);
+
+            manager.moveRoisToOverlay(originalImage);
+            Overlay overlay = originalImage.getOverlay();
+            overlay.drawLabels(false);
+            manager.reset();
+            manager.close();
+
+        }
 
         if (setDisplayRange) {
 
@@ -194,9 +275,6 @@ public class SegmentationVisualizer {
 
         originalImage.show();
         IJ.log("Cell visualization done");
-
-        manager.reset();
-        manager.close();
 
     }
 
