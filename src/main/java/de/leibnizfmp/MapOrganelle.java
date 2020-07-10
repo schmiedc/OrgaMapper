@@ -64,7 +64,7 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         String testInput = workingDir + inputDir;
         String inputPath = workingDir + inputDir + testFile;
 
-        Image testImage = new Image(testInput, ".nd2", 1.0, 3, 0, 1, 2, 3);
+        Image testImage = new Image(testInput, ".nd2", 1, 3, 0, 1, 2, 3);
         ImagePlus imp = testImage.openWithBF(testFile);
 
         ImagePlus[] imp_channels = ChannelSplitter.split(imp);

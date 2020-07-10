@@ -86,6 +86,7 @@ public class SegmentationVisualizer {
                                  double highCirc,
                                  boolean setDisplayRange) {
 
+        IJ.log("Starting nucleus segmentation visualization");
         originalImage.setOverlay(null);
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
@@ -116,6 +117,7 @@ public class SegmentationVisualizer {
         }
 
         originalImage.show();
+        IJ.log("Nucleus visualization done");
         manager.reset();
         manager.close();
 

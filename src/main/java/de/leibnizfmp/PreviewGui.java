@@ -84,7 +84,6 @@ public class PreviewGui extends JPanel {
     private String fileFormat;
     private boolean setDisplayRange = false;
 
-
     JCheckBox checkCalibration;
     private SpinnerModel doubleSpinnerPixelSize;
 
@@ -493,7 +492,7 @@ public class PreviewGui extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Boolean checkResetSettings = IJ.showMessageWithCancel("Warning!", "Reset Segmentation Settings?");
+            boolean checkResetSettings = IJ.showMessageWithCancel("Warning!", "Reset Segmentation Settings?");
 
             if ( checkResetSettings ) {
 
@@ -674,7 +673,7 @@ public class PreviewGui extends JPanel {
             IJ.log("Starting preview for nuclei segmentation");
 
             Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
-            Float nucFilterSize = nucFilterSizeDouble.floatValue();
+            float nucFilterSize = nucFilterSizeDouble.floatValue();
             Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
             String nucThreshold = (String) thresholdListBack.getSelectedItem();
             Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
@@ -685,12 +684,13 @@ public class PreviewGui extends JPanel {
             Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
 
             boolean calibrationSetting = checkCalibration.isSelected();
-            Double pxSizeMicron = (Double) doubleSpinnerPixelSize.getValue();
+            Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
             // TODO: need to get settings from settings in preview GUI
-            Image previewImage = new Image(inputDir, fileFormat, pxSizeMicron, 3, 0, 1, 2, 3);
 
             int selectionChecker = list.getSelectedIndex();
+
+            Image previewImage = new Image(inputDir, fileFormat,3, 0, 1, 2, 3);
 
             if (selectionChecker != -1){
 
@@ -738,12 +738,19 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            previewImage.calibrate();
+                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            selectedImage.setCalibration(calibration);
                             IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicron);
+                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
 
                         } else {
 
+                            // Here I just make sure that the calibration is really from the original
+                            // in case the override metadata option has been set and unset before
+                            ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                            Calibration originalCalibration = imageForCalibration.getCalibration();
+                            selectedImage.setCalibration(originalCalibration);
+                            imageForCalibration.close();
                             IJ.log("Metadata will not be overwritten");
 
                         }
@@ -768,13 +775,15 @@ public class PreviewGui extends JPanel {
 
                         // segment background and show for validation
                         setDisplayRange = true;
+
                         ImagePlus originalImage = previewImage.openImage(selectedFile);
 
                         if (calibrationSetting) {
 
-                            previewImage.calibrate();
+                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            originalImage.setCalibration(calibration);
                             IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicron);
+                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
 
                         } else {
 
@@ -808,9 +817,10 @@ public class PreviewGui extends JPanel {
 
                     if (calibrationSetting) {
 
-                        previewImage.calibrate();
+                        Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                        originalImage.setCalibration(calibration);
                         IJ.log("Metadata will be overwritten.");
-                        IJ.log("Pixel size set to: " + pxSizeMicron);
+                        IJ.log("Pixel size set to: " + pxSizeMicronSetting);
 
                     } else {
 

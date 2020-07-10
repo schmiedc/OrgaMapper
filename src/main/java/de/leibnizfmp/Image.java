@@ -32,16 +32,6 @@ public class Image {
     public final String format;
 
     /**
-     * sizeUnit : String, unit of pixel size
-     */
-    private String sizeUnit;
-
-    /**
-     * pxSizeCalib : double, pixel size
-     */
-    private double pxSizeCalib;
-
-    /**
      * numChannel : int, number of channels
      */
     private final int numChannel;
@@ -125,7 +115,7 @@ public class Image {
      *
      * @return the scale/calibration of the image
      */
-    Calibration calibrate(){
+    static Calibration calibrate(String sizeUnit, double pxSizeCalib){
 
         Calibration imageScale = new Calibration();
         imageScale.setXUnit(sizeUnit);
@@ -172,13 +162,11 @@ public class Image {
      * @param organelleChannel identity of channel 3
      * @param measureChannel  identity of channel 4
      */
-    public Image(String inputDir, String imageFormat, double pxSize, int numberChannels,
+    public Image(String inputDir, String imageFormat, int numberChannels,
                  int whichSeriesNum, int nucleusChannel, int cytoplasmChannel, int organelleChannel, int measureChannel ){
 
         directory = inputDir;
         format = imageFormat;
-        sizeUnit = "micron";
-        pxSizeCalib = pxSize;
         numChannel = numberChannels;
         seriesID = whichSeriesNum;
         nucleus = nucleusChannel;
@@ -188,13 +176,11 @@ public class Image {
 
     }
 
-    public Image(String inputDir, String imageFormat, double pxSize, int numberChannels,
+    public Image(String inputDir, String imageFormat, int numberChannels,
                  int whichSeriesNum, int nucleusChannel, int cytoplasmChannel, int organelleChannel){
 
         directory = inputDir;
         format = imageFormat;
-        sizeUnit = "micron";
-        pxSizeCalib = pxSize;
         numChannel = numberChannels;
         seriesID = whichSeriesNum;
         nucleus = nucleusChannel;
