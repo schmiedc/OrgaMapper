@@ -16,8 +16,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static ij.WindowManager.getCurrentWindow;
-
 public class PreviewGui extends JPanel {
 
     // threshold method list
@@ -59,9 +57,16 @@ public class PreviewGui extends JPanel {
     private double rollingBallRadiusCellArea;
     private int manualThresholdCellArea;
 
+    SpinnerModel doubleSpinKernelCellArea;
+    SpinnerModel doubleSpinRollBallCellArea;
+    SpinnerModel doubleSpinThresholdCellArea;
+
     // settings for cell separator
     private double sigmaGaussCellSep;
     private double prominenceCellSep;
+
+    SpinnerModel doubleSpinGaussCellSep;
+    SpinnerModel doubleSpinProminenceCellSep;
 
     // settings for cell filter size
     private double minCellSize;
@@ -69,9 +74,19 @@ public class PreviewGui extends JPanel {
     private double lowCircCellSize;
     private double highCircCelLSize;
 
+    SpinnerModel doubleSpinMinSizeCellFilter;
+    SpinnerModel doubleSpinMaxSizeCellFilter;
+    SpinnerModel doubleSpinLowCircCellFilter;
+    SpinnerModel doubleSpinHighCircCellFilter;
+    JCheckBox checkFilterCellFilter;
+
     // settings for organelle detection
     private double sigmaLoGOrga;
     private double prominenceOrga;
+
+    SpinnerModel doubleSpinnerLoGOragenelle;
+    SpinnerModel doubleSpinnerProminenceOrganelle;
+    JCheckBox checkFilterOrganelle;
 
     // image settings
     private boolean calibrationSetting;
@@ -277,22 +292,22 @@ public class PreviewGui extends JPanel {
         titleSegmentation = BorderFactory.createTitledBorder(blackline, "Processing and threshold: ");
         segmentationBox.setBorder(titleSegmentation);
 
-        SpinnerModel doubleSpinKernelSizeNuc = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
+        doubleSpinKernelCellArea = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
         String spinBackLabel1 = "Median filter size: ";
         String spinBackUnit1 = "px";
-        Box spinnerBack1 = addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelSizeNuc, spinBackUnit1);
+        Box spinnerBack1 = addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelCellArea, spinBackUnit1);
         segmentationBox.add(spinnerBack1);
 
-        SpinnerModel doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(rollingBallRadiusCellArea, 0.0, 10000, 1.0);
+        doubleSpinRollBallCellArea = new SpinnerNumberModel(rollingBallRadiusCellArea, 0.0, 10000, 1.0);
         String spinBackLabel2 = "Rolling ball radius: ";
         String spinBackUnit2 = "px";
-        Box spinnerBack2 = addLabeledSpinnerUnit(spinBackLabel2, doubleSpinrollingBallRadiusNuc, spinBackUnit2);
+        Box spinnerBack2 = addLabeledSpinnerUnit(spinBackLabel2, doubleSpinRollBallCellArea, spinBackUnit2);
         segmentationBox.add(spinnerBack2);
 
-        SpinnerModel doubleSpinThreshold = new SpinnerNumberModel(manualThresholdCellArea, 0.0, 65536, 1.0);
+        doubleSpinThresholdCellArea = new SpinnerNumberModel(manualThresholdCellArea, 0.0, 65536, 1.0);
         String spinBackLabel3 = "Global Threshold: ";
         String spinBackUnit3 = "A.U.";
-        Box spinnerBack3 = addLabeledSpinnerUnit(spinBackLabel3, doubleSpinThreshold, spinBackUnit3);
+        Box spinnerBack3 = addLabeledSpinnerUnit(spinBackLabel3, doubleSpinThresholdCellArea, spinBackUnit3);
         segmentationBox.add(spinnerBack3);
 
         cellSegBox.add(segmentationBox);
@@ -305,16 +320,16 @@ public class PreviewGui extends JPanel {
         titleSeparation = BorderFactory.createTitledBorder(blackline, "Settings for separating cells: ");
         separationBox.setBorder(titleSeparation);
 
-        SpinnerModel doubleSpinGaussCellSep = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
+        doubleSpinGaussCellSep = new SpinnerNumberModel(sigmaGaussCellSep, 0.0, 50.0, 1.0);
         String spinGaussCellSep = "Gauss sigma: ";
         String spinGaussCellSepUnit = "px";
         Box spinnerGaussCellSep = addLabeledSpinnerUnit(spinGaussCellSep, doubleSpinGaussCellSep, spinGaussCellSepUnit);
         separationBox.add(spinnerGaussCellSep);
 
-        SpinnerModel doubleSpinnerProminenceSpot = new SpinnerNumberModel(prominenceCellSep, 0.0,1000.0, 0.0001);
+        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,1000.0, 0.0001);
         String spinLabelProminence = "Prominence: ";
         String spinUnitProminence = "A.U.";
-        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelProminence, doubleSpinnerProminenceSpot, spinUnitProminence);
+        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
         separationBox.add(spinSpot2);
 
         cellSegBox.add(separationBox);
@@ -326,40 +341,40 @@ public class PreviewGui extends JPanel {
         titleFilter = BorderFactory.createTitledBorder(blackline, "Filter: size");
         filterBox.setBorder(titleFilter);
 
-        SpinnerModel doubleSpinMinSize = new SpinnerNumberModel(minCellSize,0.0,1000000,10.0);
+        doubleSpinMinSizeCellFilter = new SpinnerNumberModel(minCellSize,0.0,1000000,10.0);
         String minSizeLabel = "Select min. size: ";
         String minUnitLabel = "µm²";
-        Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSize, minUnitLabel );
+        Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSizeCellFilter, minUnitLabel );
         filterBox.add(spinnerNuc4);
 
-        SpinnerModel doubleSpinMaxSize = new SpinnerNumberModel(maxCellSize,0.0,1000000,10.0);
+        doubleSpinMaxSizeCellFilter = new SpinnerNumberModel(maxCellSize,0.0,1000000,10.0);
         String maxSizeLabel = "Select max. size: ";
         String maxUnitLabel = "µm²";
-        Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSize, maxUnitLabel);
+        Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSizeCellFilter, maxUnitLabel);
         filterBox.add(spinnerNuc5);
 
-        SpinnerModel doubleSpinLowCirc = new SpinnerNumberModel(lowCircCellSize,0.0,1.0,0.1);
+        doubleSpinLowCircCellFilter = new SpinnerNumberModel(lowCircCellSize,0.0,1.0,0.1);
         String minCircLabel = "Select minimal circularity: ";
         String minCircUnit = "";
-        Box lowCircBox = addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCirc, minCircUnit);
+        Box lowCircBox = addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCircCellFilter, minCircUnit);
         filterBox.add(lowCircBox);
 
-        SpinnerModel doubleSpinHighCirc = new SpinnerNumberModel(highCircCelLSize,0.0,1.0,0.1);
+        doubleSpinHighCircCellFilter = new SpinnerNumberModel(highCircCelLSize,0.0,1.0,0.1);
         String highCircLabel = "Select maximal circularity: ";
         String highCircUnit = "";
-        Box highCircBox = addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCirc, highCircUnit);
+        Box highCircBox = addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCircCellFilter, highCircUnit);
         filterBox.add(highCircBox);
 
         cellSegBox.add(filterBox);
 
-        JCheckBox checkFilter = new JCheckBox("Filter by nuclei?");
-        checkFilter.setSelected(true);
-        checkFilter.setToolTipText("Only affects visualization");
-        cellSegBox.add(checkFilter);
+        checkFilterCellFilter = new JCheckBox("Filter by nuclei?");
+        checkFilterCellFilter.setSelected(true);
+        checkFilterCellFilter.setToolTipText("Only affects visualization");
+        cellSegBox.add(checkFilterCellFilter);
 
         // setup Buttons
         JButton previewButton = new JButton("Preview");
-        //previewButton.addActionListener(new MyPreviewCellListener());
+        previewButton.addActionListener(new MyPreviewCellListener());
         cellSegBox.add(previewButton);
 
     }
@@ -374,28 +389,30 @@ public class PreviewGui extends JPanel {
         detectionBox.setBorder(titleDetection);
 
         // Spinner for some number input
-        SpinnerModel doubleSpinnerLoGSpot = new SpinnerNumberModel(sigmaLoGOrga, 0.0,20.0, 0.1);
+        doubleSpinnerLoGOragenelle = new SpinnerNumberModel(sigmaLoGOrga, 0.0,20.0, 0.1);
         String spinLabelSpot1 = "LoG sigma: ";
         String spinUnitSpot1 = "px";
-        Box spinSpot1 = addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGSpot, spinUnitSpot1);
+        Box spinSpot1 = addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGOragenelle, spinUnitSpot1);
         detectionBox.add(spinSpot1);
 
-        SpinnerModel doubleSpinnerProminenceSpot = new SpinnerNumberModel(prominenceOrga, 0.0,1000.0, 0.0001);
+
+        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,1000.0, 0.0001);
         String spinLabelSpot2 = "Prominence: ";
         String spinUnitSpot2 = "A.U.";
-        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelSpot2, doubleSpinnerProminenceSpot, spinUnitSpot2);
+        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
         detectionBox.add(spinSpot2);
 
         organelleBox.add(detectionBox);
 
-        JCheckBox checkFilter = new JCheckBox("Filter in nucleus?");
-        checkFilter.setToolTipText("Only affects visualization");
-        checkFilter.setSelected(true);
-        organelleBox.add(checkFilter);
+
+        checkFilterOrganelle = new JCheckBox("Filter in nucleus?");
+        checkFilterOrganelle.setToolTipText("Only affects visualization");
+        checkFilterOrganelle.setSelected(true);
+        organelleBox.add(checkFilterOrganelle);
 
         // setup Buttons
         JButton previewButton = new JButton("Preview");
-        //previewButton.addActionListener(new MyPreviewOrganelleListener());
+        previewButton.addActionListener(new MyPreviewOrganelleListener());
         organelleBox.add(previewButton);
 
     }
@@ -686,10 +703,9 @@ public class PreviewGui extends JPanel {
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
-            // TODO: need to get settings from settings in preview GUI
-
             int selectionChecker = list.getSelectedIndex();
 
+            // TODO: need to get settings from settings in preview GUI
             Image previewImage = new Image(inputDir, fileFormat,3, 0, 1, 2, 3);
 
             if (selectionChecker != -1){
@@ -851,6 +867,315 @@ public class PreviewGui extends JPanel {
 
 
         }
+    }
+
+    private class MyPreviewCellListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent a) {
+
+            IJ.log("Starting preview for cell segmentation");
+
+            Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+            float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+            Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+            Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+            int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+            Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+            Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+            Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+            Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+            Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+            Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+            boolean cellFilterCheck = checkFilterCellFilter.isSelected();
+
+            boolean calibrationSetting = checkCalibration.isSelected();
+            Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+            int selectionChecker = list.getSelectedIndex();
+
+            // TODO: need to get settings from settings in preview GUI
+            Image previewImage = new Image(inputDir, fileFormat,3, 0, 1, 2, 3);
+
+            if (selectionChecker != -1){
+
+                String selectedFile = (String) list.getSelectedValue();
+                IJ.log("Selected File: " + selectedFile);
+
+                // check if there are windows open already
+                int openImages = WindowManager.getImageCount();
+
+                // if there are image windows open check if they are of the list and of the selected image
+                if  ( openImages != 0 ) {
+
+                    IJ.log("There are images open!");
+
+                    String[] openImage = WindowManager.getImageTitles();
+                    ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
+
+                    FileList fileUtility = new FileList(fileFormat);
+                    ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
+
+                    boolean selectedFileChecker = false;
+
+                    for (String image : openInputImages) {
+
+                        if (image.equals(selectedFile)) {
+
+                            IJ.log(selectedFile + " is already open");
+                            selectedFileChecker = true;
+
+                        } else {
+
+                            IJ.selectWindow(image);
+                            IJ.run("Close");
+
+                        }
+
+                    }
+
+                    if (selectedFileChecker) {
+
+                        IJ.log("Selected file is already open");
+                        IJ.selectWindow(selectedFile);
+                        ImagePlus selectedImage = WindowManager.getCurrentImage();
+                        setDisplayRange = false;
+
+                        if (calibrationSetting) {
+
+                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            selectedImage.setCalibration(calibration);
+                            IJ.log("Metadata will be overwritten.");
+                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                        } else {
+
+                            // Here I just make sure that the calibration is really from the original
+                            // in case the override metadata option has been set and unset before
+                            ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                            Calibration originalCalibration = imageForCalibration.getCalibration();
+                            selectedImage.setCalibration(originalCalibration);
+                            imageForCalibration.close();
+                            IJ.log("Metadata will not be overwritten");
+
+                        }
+
+                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                        visualizer.visualizeCellSegments(selectedImage, previewImage, cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat, cellSepGaussCellSep, cellSepProminence, cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, setDisplayRange);
+
+                    } else {
+
+                        IJ.log("The selected image is not open");
+
+                        // segment background and show for validation
+                        setDisplayRange = true;
+
+                        ImagePlus originalImage = previewImage.openImage(selectedFile);
+
+                        if (calibrationSetting) {
+
+                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            originalImage.setCalibration(calibration);
+                            IJ.log("Metadata will be overwritten.");
+                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                        } else {
+
+                            IJ.log("Metadata will not be overwritten");
+
+                        }
+
+                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                        visualizer.visualizeCellSegments(originalImage, previewImage, cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat, cellSepGaussCellSep, cellSepProminence, cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, setDisplayRange);
+
+                    }
+
+                } else {
+
+                    IJ.log("There are no images open!");
+
+                    // segment background and show for validation
+                    ImagePlus originalImage = previewImage.openImage(selectedFile);
+                    setDisplayRange = true;
+
+                    if (calibrationSetting) {
+
+                        Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                        originalImage.setCalibration(calibration);
+                        IJ.log("Metadata will be overwritten.");
+                        IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                    } else {
+
+                        IJ.log("Metadata will not be overwritten");
+
+                    }
+
+                    SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                    visualizer.visualizeCellSegments(originalImage, previewImage, cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat, cellSepGaussCellSep, cellSepProminence, cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, setDisplayRange);
+                }
+
+            } else {
+
+                IJ.error("Please choose a file in the file list!");
+
+            }
+
+
+        }
+    }
+
+    private class MyPreviewOrganelleListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent a) {
+
+            IJ.log("Starting preview for cell segmentation");
+
+            Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+            Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+            boolean organellteFilterCheck = checkFilterOrganelle.isSelected();
+
+            boolean calibrationSetting = checkCalibration.isSelected();
+            Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+            int selectionChecker = list.getSelectedIndex();
+
+            // TODO: need to get settings from settings in preview GUI
+            Image previewImage = new Image(inputDir, fileFormat,3, 0, 1, 2, 3);
+
+            if (selectionChecker != -1){
+
+                String selectedFile = (String) list.getSelectedValue();
+                IJ.log("Selected File: " + selectedFile);
+
+                // check if there are windows open already
+                int openImages = WindowManager.getImageCount();
+
+                // if there are image windows open check if they are of the list and of the selected image
+                if  ( openImages != 0 ) {
+
+                    IJ.log("There are images open!");
+
+                    String[] openImage = WindowManager.getImageTitles();
+                    ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
+
+                    FileList fileUtility = new FileList(fileFormat);
+                    ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
+
+                    boolean selectedFileChecker = false;
+
+                    for (String image : openInputImages) {
+
+                        if (image.equals(selectedFile)) {
+
+                            IJ.log(selectedFile + " is already open");
+                            selectedFileChecker = true;
+
+                        } else {
+
+                            IJ.selectWindow(image);
+                            IJ.run("Close");
+
+                        }
+
+                    }
+
+                    if (selectedFileChecker) {
+
+                        IJ.log("Selected file is already open");
+                        IJ.selectWindow(selectedFile);
+                        ImagePlus selectedImage = WindowManager.getCurrentImage();
+                        setDisplayRange = false;
+
+                        if (calibrationSetting) {
+
+                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            selectedImage.setCalibration(calibration);
+                            IJ.log("Metadata will be overwritten.");
+                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                        } else {
+
+                            // Here I just make sure that the calibration is really from the original
+                            // in case the override metadata option has been set and unset before
+                            ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                            Calibration originalCalibration = imageForCalibration.getCalibration();
+                            selectedImage.setCalibration(originalCalibration);
+                            imageForCalibration.close();
+                            IJ.log("Metadata will not be overwritten");
+
+                        }
+
+                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                        visualizer.visualizeSpots(selectedImage, previewImage, organelleLoGSigma, organelleProminence, setDisplayRange);
+
+                    } else {
+
+                        IJ.log("The selected image is not open");
+
+                        // segment background and show for validation
+                        setDisplayRange = true;
+
+                        ImagePlus originalImage = previewImage.openImage(selectedFile);
+
+                        if (calibrationSetting) {
+
+                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            originalImage.setCalibration(calibration);
+                            IJ.log("Metadata will be overwritten.");
+                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                        } else {
+
+                            IJ.log("Metadata will not be overwritten");
+
+                        }
+
+                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                        visualizer.visualizeSpots(originalImage, previewImage, organelleLoGSigma, organelleProminence, setDisplayRange);
+
+                    }
+
+                } else {
+
+                    IJ.log("There are no images open!");
+
+                    // segment background and show for validation
+                    ImagePlus originalImage = previewImage.openImage(selectedFile);
+                    setDisplayRange = true;
+
+                    if (calibrationSetting) {
+
+                        Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                        originalImage.setCalibration(calibration);
+                        IJ.log("Metadata will be overwritten.");
+                        IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                    } else {
+
+                        IJ.log("Metadata will not be overwritten");
+
+                    }
+
+                    SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                    visualizer.visualizeSpots(originalImage, previewImage, organelleLoGSigma, organelleProminence, setDisplayRange);
+
+                }
+
+            } else {
+
+                IJ.error("Please choose a file in the file list!");
+
+            }
+
+
+        }
+
+
     }
 }
 
