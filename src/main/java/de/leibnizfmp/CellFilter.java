@@ -25,12 +25,13 @@ public class CellFilter {
         int minSizePx = Image.calculateSizePx( pxSizeFromImage, minCellSize);
         int maxSizePx = Image.calculateSizePx( pxSizeFromImage, maxCellSize);
 
-
         ImageCalculator calculator = new ImageCalculator();
         ImagePlus individualCells = calculator.run("Multiply 32-bit", backgroundMask, separatedCells);
         ImageProcessor cellMask = individualCells.getProcessor().convertToByteProcessor();
 
 
+        IJ.log("Filter cells by size: " + minCellSize + "-" + maxCellSize + " µm²");
+        IJ.log("Filter cells by circ.: " + lowCirc + "-" + highCirc);
         // show masks = 4096
         ParticleAnalyzer analyzer = new ParticleAnalyzer(4096,0,null,
                 minSizePx, maxSizePx, lowCirc, highCirc );
@@ -46,6 +47,7 @@ public class CellFilter {
         ImagePlus individualCellsFinal = new ImagePlus ("individualCells", filteredMaskProcessor );
 
         individualCellsFinal.setCalibration( calibration );
+        IJ.log("Cell Filter by size and circ. done");
 
         return individualCellsFinal;
 
@@ -53,13 +55,7 @@ public class CellFilter {
 
     static RoiManager filterByNuclei(ImagePlus cellMask, ImagePlus nucleiMask ) {
 
-        // aim to measure in each cell (ROI Manager) the number of nuclei
-        // 0 and more than 1 get rejected
-        // return a mask that is filtered
-
-        Calibration calibration = cellMask.getCalibration();
-
-
+        IJ.log("Filtering cells by nuclei number");
         ParticleAnalyzer cellAnalyzer = new ParticleAnalyzer(2048, 0, null,
                 0, Image.calculateMaxArea( cellMask.getWidth(), cellMask.getHeight() ) );
 
@@ -98,6 +94,8 @@ public class CellFilter {
             nucRoiManager.reset();
 
         }
+
+        IJ.log("Cell Filter by nuclei number done");
 
         return cellRoiManager;
 

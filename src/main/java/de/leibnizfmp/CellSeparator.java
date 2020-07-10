@@ -1,5 +1,6 @@
 package de.leibnizfmp;
 
+import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import ij.plugin.Filters3D;
@@ -21,17 +22,19 @@ public class CellSeparator {
 
         Calibration calibration = nucleus.getCalibration();
 
+        IJ.log("Gauss filter with sigma: " + sigmaGauss);
         ImageCalculator calculator = new ImageCalculator();
         ImagePlus nucleusCytoplasm = calculator.run("Add 32-bit", nucleus, cytoplasm);
         ImageProcessor nucleusCytoplasmProcessor = nucleusCytoplasm.getProcessor().convertToShort(true);
-
         nucleusCytoplasmProcessor.blurGaussian(sigmaGauss);
 
+        IJ.log("Detecting segmented particles with prominence: " + prominence);
         MaximumFinder findMaxima = new MaximumFinder();
         ByteProcessor segmentedParticles = findMaxima.findMaxima(nucleusCytoplasmProcessor, prominence, 2, true);
 
         ImagePlus segmentedParticlesImage = new ImagePlus("segmentedParticle", segmentedParticles);
         segmentedParticlesImage.setCalibration( calibration );
+        IJ.log("Watershed done");
 
         return segmentedParticlesImage;
     }

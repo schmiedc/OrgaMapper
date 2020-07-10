@@ -26,6 +26,7 @@ public class SegmentationVisualizer {
                         double prominence,
                         boolean setDisplayRange) {
 
+        IJ.log("Starting visualization for organelle detection...");
         originalImage.setOverlay(null);
 
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
@@ -43,7 +44,7 @@ public class SegmentationVisualizer {
         originalImage.setRoi(roi);
         originalImage.show();
 
-        IJ.log("Visualizing " + detections.npoints + " lysosome(s)");
+
 
         if (setDisplayRange) {
 
@@ -55,6 +56,8 @@ public class SegmentationVisualizer {
             originalImage.setDisplayRange(newLower, newUpper);
 
         }
+
+        IJ.log("Organelle visualization done: " + detections.npoints + " detection(s)");
 
 
     }
@@ -86,7 +89,7 @@ public class SegmentationVisualizer {
                                  double highCirc,
                                  boolean setDisplayRange) {
 
-        IJ.log("Starting nucleus segmentation visualization");
+        IJ.log("Starting visualization for nucleus segmentation ");
         originalImage.setOverlay(null);
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
@@ -152,11 +155,14 @@ public class SegmentationVisualizer {
                                double highCirc,
                                boolean setDisplayRange) {
 
-        originalImage.setOverlay(null);
+        IJ.log("Starting visualization for nucleus segmentation ");
 
+        originalImage.setOverlay(null);
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
         ImagePlus cytoplasm = imp_channels[imageObject.cytoplasm - 1];
+        nucleus.setOverlay(null);
+        cytoplasm.setOverlay(null);
 
         ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
 
@@ -171,6 +177,7 @@ public class SegmentationVisualizer {
         cellAnalyzer.analyze( filteredCells );
 
         originalImage.setC( imageObject.cytoplasm );
+        originalImage.setOverlay(null);
         manager.moveRoisToOverlay(originalImage);
         Overlay overlay = originalImage.getOverlay();
         overlay.drawLabels(false);
@@ -186,6 +193,7 @@ public class SegmentationVisualizer {
         }
 
         originalImage.show();
+        IJ.log("Cell visualization done");
 
         manager.reset();
         manager.close();
