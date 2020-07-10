@@ -14,11 +14,11 @@ public class SegmentationVisualizer {
 
     /**
      * visualization of the spot segmentation
-     * @param originalImage   selected image for vis
-     * @param sigmaLoG        sigma for LoG
-     * @param prominence      prominence for spot detection
-     * @param organelleFilterCheck check if detections need to be filtered by nuclei masks
-     * @param setDisplayRange sets the display range for vis
+     * @param originalImage             selected image for vis
+     * @param sigmaLoG                  sigma for LoG
+     * @param prominence                prominence for spot detection
+     * @param organelleFilterCheck      check if detections need to be filtered by nuclei masks
+     * @param setDisplayRange           sets the display range for vis
      * @param kernelSizeNuc             sigma gaussian blur for background segmentation
      * @param rollingBallRadiusNuc      rolling ball radius for background subtraction
      * @param thresholdNuc              global intensity threshold for background segmentation
