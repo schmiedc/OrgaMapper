@@ -2,6 +2,7 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import fiji.util.gui.GenericDialogPlus;
+import ij.Prefs;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -174,24 +175,34 @@ class InputGuiFiji {
                             // reads settings file
                             readMyXml.xmlReader(settingsFileString);
 
-                            // TODO: write new XML reader from InputGUI
-                            // Constructs the preview GUI with the loaded settings from the settings file
-                            //PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString),
-                            //        checkTrailingSlash(outputFileString),
-                            //       fileList, readMyXml.readProjMethod, readMyXml.readSigmaLoG, readMyXml.readProminence,
-                            //        readMyXml.readSigmaSpots, readMyXml.readRollingSpots,
-                            //        readMyXml.readThresholdSpots, readMyXml.readSpotErosion,
-                              //      readMyXml.readRadiusGradient,
-                              //      readMyXml.readMinSizeSpot, readMyXml.readMaxSizeSpot,
-                             //       readMyXml.readLowCirc,readMyXml.readHighCirc,
-                             //       readMyXml.readSigmaBackground, readMyXml.readThresholdBackground,
-                             //       readMyXml.readMinSizeBack, readMyXml.readMaxSizeBack,
-                             //       readMyXml.readStimFrame, readMyXml.readCalibrationSetting,
-                             //       readMyXml.readPxSizeMicron, readMyXml.readFrameRate
-                            //);
+                            /*
+                             TODO: write new XML reader from InputGUI
+                             Constructs the preview GUI with the loaded settings from the settings file
+                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString),
+                                    checkTrailingSlash(outputFileString),
+                                   fileList, readMyXml.readProjMethod, readMyXml.readSigmaLoG, readMyXml.readProminence,
+                                    readMyXml.readSigmaSpots, readMyXml.readRollingSpots,
+                                    readMyXml.readThresholdSpots, readMyXml.readSpotErosion,
+                                  readMyXml.readRadiusGradient,
+                                  readMyXml.readMinSizeSpot, readMyXml.readMaxSizeSpot,
+                                   readMyXml.readLowCirc,readMyXml.readHighCirc,
+                                   readMyXml.readSigmaBackground, readMyXml.readThresholdBackground,
+                                   readMyXml.readMinSizeBack, readMyXml.readMaxSizeBack,
+                                   readMyXml.readStimFrame, readMyXml.readCalibrationSetting,
+                                   readMyXml.readPxSizeMicron, readMyXml.readFrameRate
+                            );
+                            */
+
+                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString), checkTrailingSlash(outputFileString), fileList, fileFormat,
+                                    readMyXml.readKernelSizeNuc, readMyXml.readRollingBallRadiusNuc, readMyXml.readThresholdNuc, readMyXml.readErosionNuc, readMyXml.readMinSizeNuc, readMyXml.readMaxSizeNuc, readMyXml.readLowCircNuc, readMyXml.readHighCircNuc,
+                                    readMyXml.readKernelSizeCellArea, readMyXml.readRollBallRadiusCellArea, readMyXml.readManualThresholdCellArea,
+                                    readMyXml.readSigmaGaussCellSep, readMyXml.readProminenceCellSep,
+                                    readMyXml.readMinCellSize, readMyXml.readMaxCellSize, readMyXml.readLowCircCellSize, readMyXml.readHighCircCelLSize,
+                                    readMyXml.readSigmaLoGOrga, readMyXml.readProminenceOrga,
+                                    readMyXml.readCalibrationSetting, readMyXml.readPxSizeMicron, readMyXml.readNucleusChannel, readMyXml.readCytoplasmChannel, readMyXml.readOrganelleChannel, readMyXml.readMeasure);
 
                             // instantiates previewGui
-                            //previewGui.setUpGui();
+                            previewGui.setUpGui();
 
                         } catch (ParserConfigurationException ex) {
 
