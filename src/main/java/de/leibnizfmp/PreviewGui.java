@@ -5,16 +5,23 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.measure.Calibration;
 import org.scijava.util.ArrayUtils;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class PreviewGui extends JPanel {
 
@@ -96,6 +103,8 @@ public class PreviewGui extends JPanel {
     private int organelleChannel;
     private int measure;
 
+    private static File settingsFile = null;
+
     private String fileFormat;
     private boolean setDisplayRange = false;
 
@@ -143,7 +152,6 @@ public class PreviewGui extends JPanel {
 
         // file selection scroller
         JScrollPane scroller = setUpFileList(fileList);
-
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setPreferredSize(new Dimension(290, 100));
 
@@ -152,11 +160,11 @@ public class PreviewGui extends JPanel {
 
         // setup Buttons
         JButton  saveButton = new JButton("Save settings");
-        //saveButton.addActionListener(new MySaveListener());
+        saveButton.addActionListener(new MySaveListener());
         saveLoadBox.add(saveButton);
 
         JButton loadButton = new JButton("Load settings");
-        //loadButton.addActionListener(new MyLoadListener());
+        loadButton.addActionListener(new MyLoadListener());
         saveLoadBox.add(loadButton);
 
         JButton resetButton = new JButton("Reset Processing Settings");
@@ -164,7 +172,7 @@ public class PreviewGui extends JPanel {
         saveLoadBox.add(resetButton);
 
         JButton resetDirButton = new JButton("Reset Directories");
-        //resetDirButton.addActionListener(new MyResetDirectoryListener());
+        resetDirButton.addActionListener(new MyResetDirectoryListener());
         saveLoadBox.add(resetDirButton);
 
         // add boxes to panel and frame
@@ -440,6 +448,57 @@ public class PreviewGui extends JPanel {
         JButton batchButton = new JButton("Batch Process");
         //batchButton.addActionListener(new MyBatchListener());
         boxSettings.add(batchButton);
+
+    }
+
+    private void saveSettings( String name ) {
+
+        IJ.log( "saving settings" );
+
+        Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+        float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+        Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+        Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+        int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+        Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+        Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+        Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+        Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+        Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+        Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+
+        Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+        float nucFilterSize = nucFilterSizeDouble.floatValue();
+        Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+        String nucThreshold = (String) thresholdListBack.getSelectedItem();
+        Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+        int nucErosion = nucErosionDouble.intValue();
+        Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+        Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+        Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+        Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+        Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+        Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+
+        boolean calibrationSetting = checkCalibration.isSelected();
+        Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+
+        int nucChannel = nucleusChannel;
+        int cytoChannel = cytoplasmChannel;
+        int orgaChannel = organelleChannel;
+        int measureChannel = measure;
+        String fileFormatSetting = fileFormat;
+
+        XmlHandler writeToXml = new XmlHandler();
+
+        writeToXml.xmlWriter(outputDir, name, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
+                cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
+                cellSepGaussCellSep, cellSepProminence,
+                cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc,
+                organelleLoGSigma, organelleProminence,
+                calibrationSetting, pxSizeMicronSetting, nucChannel, cytoChannel, orgaChannel, measureChannel, fileFormatSetting);
 
     }
 
@@ -1219,6 +1278,168 @@ public class PreviewGui extends JPanel {
         }
 
 
+    }
+
+    private class MySaveListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent a) {
+            String fileName = new SimpleDateFormat( "yyyy-MM-dd'T'HHmmss'-settings.xml'").format( new Date() );
+
+            saveSettings( fileName );
+        }
+    }
+
+    private class MyLoadListener extends Component implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+
+            FileNameExtensionFilter xmlfilter = new FileNameExtensionFilter(
+                    "xml files (*.xml)", "xml");
+
+            JFileChooser settingsFileChooser = new JFileChooser();
+            settingsFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            settingsFileChooser.setFileFilter(xmlfilter);
+
+            int option = settingsFileChooser.showOpenDialog(this);
+
+            if (option == JFileChooser.APPROVE_OPTION) {
+
+                settingsFile = settingsFileChooser.getSelectedFile();
+                String settingsFileString = settingsFile.toString();
+                IJ.log("Loading xml: " + settingsFileString);
+
+                try {
+
+                    XmlHandler readMyXml = new XmlHandler();
+                    readMyXml.xmlReader(settingsFileString);
+
+                    // nucleus segmentation settings
+                    kernelSizeNuc = readMyXml.readKernelSizeNuc;
+                    rollingBallRadiusNuc = readMyXml.readRollingBallRadiusNuc;
+                    thresholdNuc = readMyXml.readThresholdNuc;
+                    erosionNuc = readMyXml.readErosionNuc;
+                    minSizeNuc = readMyXml.readMinSizeNuc;
+                    maxSizeNuc = readMyXml.readMaxSizeNuc;
+                    lowCircNuc = readMyXml.readLowCircNuc;
+                    highCircNuc = readMyXml.readHighCircNuc;
+
+                    // cell area segmentation settings
+                    kernelSizeCellArea = readMyXml.readKernelSizeCellArea;
+                    rollingBallRadiusCellArea = readMyXml.readRollBallRadiusCellArea;
+                    manualThresholdCellArea = readMyXml.readManualThresholdCellArea;
+
+                    // cell separation settings
+                    sigmaGaussCellSep = readMyXml.readSigmaGaussCellSep;
+                    prominenceCellSep = readMyXml.readProminenceCellSep;
+
+                    // cell filter settings
+                    minCellSize = readMyXml.readMinCellSize;
+                    maxCellSize = readMyXml.readMaxCellSize;
+                    lowCircCellSize =  readMyXml.readLowCircCellSize;
+                    highCircCelLSize =  readMyXml.readHighCircCelLSize;
+
+                    // organelle detection settings
+                    sigmaLoGOrga =  readMyXml.readSigmaLoGOrga ;
+                    prominenceOrga =  readMyXml.readProminenceOrga;
+
+                    // metadata settings
+                    calibrationSetting = readMyXml.readCalibrationSetting;
+                    pxSizeMicron = readMyXml.readPxSizeMicron;
+
+                    nucleusChannel = readMyXml.readNucleusChannel;
+                    cytoplasmChannel = readMyXml.readCytoplasmChannel;
+                    organelleChannel = readMyXml.readOrganelleChannel;
+                    measure = readMyXml.readMeasure;
+
+                    fileFormat = readMyXml.readFileFormat;
+
+
+                } catch (ParserConfigurationException ex) {
+
+                    ex.printStackTrace();
+                    IJ.log("ERROR: XML reader, Parser Configuration exception");
+                    IJ.error("Please select a valid .xml or leave empty");
+                    settingsFile = null;
+
+                } catch (IOException ex) {
+
+                    ex.printStackTrace();
+                    IJ.log("ERROR: XML reader, IOException");
+                    IJ.error("Please select a valid .xml or leave empty");
+                    settingsFile = null;
+
+                } catch (SAXException ex) {
+
+                    ex.printStackTrace();
+                    IJ.log("ERROR: XML reader, SAXException");
+                    IJ.error("Please select a valid .xml or leave empty");
+                    settingsFile = null;
+
+                }
+
+
+                // create tabbed panes
+                nucSegBox.removeAll();
+                setUpNucleiTab();
+                tabbedPane.addTab("Nuclei", nucSegBox);
+
+                cellSegBox.removeAll();
+                setUpCellsTab();
+                tabbedPane.addTab("Cells", cellSegBox);
+
+                organelleBox.removeAll();
+                setUpOrganellesTab();
+                tabbedPane.addTab("Organelles", organelleBox);
+
+                boxSettings.removeAll();
+                setUpSettingsTab();
+                batchBox.add(boxSettings);
+
+            } else {
+
+                settingsFile = null;
+                IJ.error("Invalid settings file");
+
+            }
+
+
+
+
+
+        }
+
+
+    }
+
+    private class MyResetDirectoryListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Boolean checkDir = IJ.showMessageWithCancel("Warning!", "Do you want to reset Directories? \n \n " +
+                    "Settings will remain the same!");
+
+            if ( checkDir ){
+
+                String fileName = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss'-settings.xml'").format(new Date());
+                saveSettings(fileName);
+
+                String settingFilePath = outputDir + File.separator + fileName;
+
+                theFrame.dispose();
+                InputGuiFiji start = new InputGuiFiji( settingFilePath, false);
+
+                start.createWindow();
+
+                IJ.log("Resetting directories...");
+
+            } else {
+
+                IJ.log("Directory reset canceled");
+
+            }
+
+        }
     }
 }
 

@@ -16,9 +16,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.function.DoubleUnaryOperator;
+
+import static java.lang.Double.parseDouble;
 
 /**
  * implements reading, writing of the xml settings file
@@ -26,43 +25,43 @@ import java.util.function.DoubleUnaryOperator;
 class XmlHandler {
 
     // settings for nucleus settings
-    float kernelSizeNuc;
-    double rollingBallRadiusNuc;
-    String thresholdNuc;
-    int erosionNuc;
-    double minSizeNuc;
-    double maxSizeNuc;
-    double lowCircNuc;
-    double highCircNuc;
+    float readKernelSizeNuc;
+    double readRollingBallRadiusNuc;
+    String readThresholdNuc;
+    int readErosionNuc;
+    double readMinSizeNuc;
+    double readMaxSizeNuc;
+    double readLowCircNuc;
+    double readHighCircNuc;
 
     // settings for cell area segmentation
-    float kernelSizeCellArea;
-    double rollingBallRadiusCellArea;
-    int manualThresholdCellArea;
+    float readKernelSizeCellArea;
+    double readRollBallRadiusCellArea;
+    int readManualThresholdCellArea;
 
     // settings for cell separator
-    double sigmaGaussCellSep;
-    double prominenceCellSep;
+    double readSigmaGaussCellSep;
+    double readProminenceCellSep;
 
     // settings for cell filter size
-    double minCellSize;
-    double maxCellSize;
-    double lowCircCellSize;
-    double highCircCelLSize;
+    double readMinCellSize;
+    double readMaxCellSize;
+    double readLowCircCellSize;
+    double readHighCircCelLSize;
 
     // settings for organelle detection
-    double sigmaLoGOrga;
-    double prominenceOrga;
+    double readSigmaLoGOrga;
+    double readProminenceOrga;
 
     // image settings
-    boolean calibrationSetting;
-    double pxSizeMicron;
-    int nucleusChannel;
-    int cytoplasmChannel;
-    int organelleChannel;
-    int measure;
+    boolean readCalibrationSetting;
+    double readPxSizeMicron;
+    int readNucleusChannel;
+    int readCytoplasmChannel;
+    int readOrganelleChannel;
+    int readMeasure;
 
-    String fileFormat;
+    String readFileFormat;
 
     /**
      * reads the xml settings file
@@ -82,32 +81,32 @@ class XmlHandler {
         Document doc = builder.parse(xmlFile);
 
         // get nodes of tag name
-        kernelSizeNuc = Float.parseFloat(doc.getElementsByTagName("kernelSizeNuc").item(0).getTextContent());
-        rollingBallRadiusNuc = Double.parseDouble(doc.getElementsByTagName("rollingBallRadiusNuc").item(0).getTextContent());
-        thresholdNuc= String.valueOf(Double.parseDouble(doc.getElementsByTagName("thresholdNuc").item(0).getTextContent()));
-        erosionNuc = Integer.parseInt(doc.getElementsByTagName("erosionNuc").item(0).getTextContent());
-        minSizeNuc = Double.parseDouble(doc.getElementsByTagName("minSizeNuc").item(0).getTextContent());
-        maxSizeNuc= Double.parseDouble(doc.getElementsByTagName("maxSizeNuc").item(0).getTextContent());
-        lowCircNuc = Double.parseDouble(doc.getElementsByTagName("lowCircNuc").item(0).getTextContent());
-        highCircNuc = Integer.parseInt(doc.getElementsByTagName("highCircNuc").item(0).getTextContent());
-        kernelSizeCellArea = Float.parseFloat(doc.getElementsByTagName("kernelSizeCellArea").item(0).getTextContent());
-        rollingBallRadiusCellArea = Double.parseDouble(doc.getElementsByTagName("rollingBallRadiusCellArea").item(0).getTextContent());
-        manualThresholdCellArea = Integer.parseInt(doc.getElementsByTagName("manualThresholdCellArea").item(0).getTextContent());
-        sigmaGaussCellSep = Double.parseDouble(doc.getElementsByTagName("sigmaGaussCellSep").item(0).getTextContent());
-        prominenceCellSep = Double.parseDouble(doc.getElementsByTagName("sigmaBackground").item(0).getTextContent());
-        minCellSize = Double.parseDouble(doc.getElementsByTagName("minCellSize").item(0).getTextContent());
-        maxCellSize = Double.parseDouble(doc.getElementsByTagName("maxCellSize").item(0).getTextContent());
-        lowCircCellSize = Double.parseDouble(doc.getElementsByTagName("lowCircCellSize").item(0).getTextContent());
-        highCircCelLSize = Double.parseDouble(doc.getElementsByTagName("highCircCelLSize").item(0).getTextContent());
-        sigmaLoGOrga = Double.parseDouble(doc.getElementsByTagName("sigmaLoGOrga").item(0).getTextContent());
-        prominenceOrga = Double.parseDouble(doc.getElementsByTagName("prominenceOrga").item(0).getTextContent());
-        calibrationSetting = Boolean.parseBoolean(doc.getElementsByTagName("calibrationSetting").item(0).getTextContent());
-        pxSizeMicron = Double.parseDouble(doc.getElementsByTagName("pxSizeMicron").item(0).getTextContent());
-        nucleusChannel = Integer.parseInt(doc.getElementsByTagName("nucleusChannel").item(0).getTextContent());
-        cytoplasmChannel = Integer.parseInt(doc.getElementsByTagName("cytoplasmChannel").item(0).getTextContent());
-        organelleChannel= Integer.parseInt(doc.getElementsByTagName("organelleChannel").item(0).getTextContent());
-        measure = Integer.parseInt(doc.getElementsByTagName("measure").item(0).getTextContent());
-        fileFormat = doc.getElementsByTagName("fileFormat").item(0).getTextContent();
+        readKernelSizeNuc = Float.parseFloat(doc.getElementsByTagName("kernelSizeNuc").item(0).getTextContent());
+        readRollingBallRadiusNuc = parseDouble(doc.getElementsByTagName("rollingBallRadiusNuc").item(0).getTextContent());
+        readThresholdNuc = doc.getElementsByTagName("thresholdNuc").item(0).getTextContent();
+        readErosionNuc = Integer.parseInt(doc.getElementsByTagName("erosionNuc").item(0).getTextContent());
+        readMinSizeNuc = parseDouble(doc.getElementsByTagName("minSizeNuc").item(0).getTextContent());
+        readMaxSizeNuc = parseDouble(doc.getElementsByTagName("maxSizeNuc").item(0).getTextContent());
+        readLowCircNuc = parseDouble(doc.getElementsByTagName("lowCircNuc").item(0).getTextContent());
+        readHighCircNuc = parseDouble(doc.getElementsByTagName("highCircNuc").item(0).getTextContent());
+        readKernelSizeCellArea = Float.parseFloat(doc.getElementsByTagName("kernelSizeCellArea").item(0).getTextContent());
+        readRollBallRadiusCellArea = parseDouble(doc.getElementsByTagName("rollingBallRadiusCellArea").item(0).getTextContent());
+        readManualThresholdCellArea = Integer.parseInt(doc.getElementsByTagName("manualThresholdCellArea").item(0).getTextContent());
+        readSigmaGaussCellSep = parseDouble(doc.getElementsByTagName("sigmaGaussCellSep").item(0).getTextContent());
+        readProminenceCellSep = parseDouble(doc.getElementsByTagName("prominenceCellSep").item(0).getTextContent());
+        readMinCellSize = parseDouble(doc.getElementsByTagName("minCellSize").item(0).getTextContent());
+        readMaxCellSize = parseDouble(doc.getElementsByTagName("maxCellSize").item(0).getTextContent());
+        readLowCircCellSize = parseDouble(doc.getElementsByTagName("lowCircCellSize").item(0).getTextContent());
+        readHighCircCelLSize = parseDouble(doc.getElementsByTagName("highCircCellSize").item(0).getTextContent());
+        readSigmaLoGOrga = parseDouble(doc.getElementsByTagName("sigmaLoGOrga").item(0).getTextContent());
+        readProminenceOrga = parseDouble(doc.getElementsByTagName("prominenceOrga").item(0).getTextContent());
+        readCalibrationSetting = Boolean.parseBoolean(doc.getElementsByTagName("calibrationSettings").item(0).getTextContent());
+        readPxSizeMicron = parseDouble(doc.getElementsByTagName("pxSizeMicron").item(0).getTextContent());
+        readNucleusChannel = Integer.parseInt(doc.getElementsByTagName("nucleusChannel").item(0).getTextContent());
+        readCytoplasmChannel = Integer.parseInt(doc.getElementsByTagName("cytoplasmChannel").item(0).getTextContent());
+        readOrganelleChannel = Integer.parseInt(doc.getElementsByTagName("organelleChannel").item(0).getTextContent());
+        readMeasure = Integer.parseInt(doc.getElementsByTagName("measureChannel").item(0).getTextContent());
+        readFileFormat = doc.getElementsByTagName("fileFormat").item(0).getTextContent();
 
         IJ.log("Loaded settings file from: " + filePath);
 
@@ -313,7 +312,7 @@ class XmlHandler {
             setmeasureChannel.setTextContent(measureChannel);
             rootElement.appendChild(setmeasureChannel);
 
-            Element setFileFormat = doc.createElement("FileFormat");
+            Element setFileFormat = doc.createElement("fileFormat");
             setFileFormat.setTextContent(getFileFormat);
             rootElement.appendChild(setFileFormat);
 
