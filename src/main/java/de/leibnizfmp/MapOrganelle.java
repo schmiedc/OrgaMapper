@@ -149,11 +149,11 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
             System.out.println(file);
         }
 
-        //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif");
-        //guiTest.setUpGui();
+        PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif");
+        guiTest.setUpGui();
 
-        InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
-        guiTest.createWindow();
+        //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
+        //guiTest.createWindow();
 
     }
 
