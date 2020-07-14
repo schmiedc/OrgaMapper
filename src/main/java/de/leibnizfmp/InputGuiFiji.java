@@ -21,6 +21,7 @@ class InputGuiFiji {
 
     String defaultInputDirectory;
     String defaultOutputDirectory;
+    int defaultChannelNumber;
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
@@ -32,11 +33,13 @@ class InputGuiFiji {
 
         defaultInputDirectory = "Choose Directory";
         defaultOutputDirectory = "Choose Directory";
+        defaultChannelNumber = 3;
         defaultFileFormat = ".tif";
         defaultSettingsFile = "Choose a File or leave empty";
         settingsFile = null;
         showSettingsSwitch = true;
     }
+
 
     /**
      * Constructor to change only the directories
@@ -45,10 +48,11 @@ class InputGuiFiji {
      * @param settingsFileString name of the xml file that stores the analysis settings
      * @param showSettings boolean that switches the settingsFile dialog on or off
      */
-    InputGuiFiji(String settingsFileString, Boolean showSettings) {
+    InputGuiFiji(String settingsFileString, int channelNumber, Boolean showSettings) {
 
         defaultInputDirectory = "Choose Directory";
         defaultOutputDirectory = "Choose Directory";
+        defaultChannelNumber = channelNumber;
         defaultFileFormat = ".tif";
         defaultSettingsFile = settingsFileString;
         settingsFile = new File(settingsFileString);
@@ -67,10 +71,11 @@ class InputGuiFiji {
      * @param fileFormat fileFormat
      * @param settingsFileString location of test settingsFile
      */
-    InputGuiFiji(String inputDir, String outputDir, String fileFormat, String settingsFileString ) {
+    InputGuiFiji(String inputDir, String outputDir, int channelNumber, String fileFormat, String settingsFileString ) {
 
         defaultInputDirectory = inputDir;
         defaultOutputDirectory = outputDir;
+        defaultChannelNumber = channelNumber;
         defaultFileFormat = fileFormat;
         defaultSettingsFile = settingsFileString;
         settingsFile = null;
@@ -98,11 +103,12 @@ class InputGuiFiji {
 
         gdPlus.addDirectoryField("Input directory: ", defaultInputDirectory, 50);
         gdPlus.addDirectoryField("Output directory: ", defaultOutputDirectory, 50);
+        gdPlus.addNumericField("Numbers of Channels: ", defaultChannelNumber, 0, 50, "");
         gdPlus.addStringField("File ending: ", defaultFileFormat, 50);
 
         if ( !showSettingsSwitch ) {
 
-            IJ.log("Hidding Settings File option");
+            IJ.log("Hiding Settings File option");
 
         } else {
 
@@ -121,6 +127,8 @@ class InputGuiFiji {
 
             File inputDirectory = new File(defaultInputDirectory = gdPlus.getNextString());
             File outputDirectory = new File(defaultOutputDirectory = gdPlus.getNextString());
+
+            int channelNumber= (int) gdPlus.getNextNumber();
 
             // TODO: needs a way to sanity check the file format or put in warning when weird files are chosen
             String fileFormat = gdPlus.getNextString();
@@ -175,7 +183,7 @@ class InputGuiFiji {
                             // reads settings file
                             readMyXml.xmlReader(settingsFileString);
 
-                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString), checkTrailingSlash(outputFileString), fileList, fileFormat,
+                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString), checkTrailingSlash(outputFileString), fileList, fileFormat, channelNumber,
                                     readMyXml.readKernelSizeNuc, readMyXml.readRollingBallRadiusNuc, readMyXml.readThresholdNuc, readMyXml.readErosionNuc, readMyXml.readMinSizeNuc, readMyXml.readMaxSizeNuc, readMyXml.readLowCircNuc, readMyXml.readHighCircNuc,
                                     readMyXml.readKernelSizeCellArea, readMyXml.readRollBallRadiusCellArea, readMyXml.readManualThresholdCellArea,
                                     readMyXml.readSigmaGaussCellSep, readMyXml.readProminenceCellSep,
@@ -215,7 +223,7 @@ class InputGuiFiji {
 
                         // constructs previewGui from default settings since no valid settings file was given
                         PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString),
-                                checkTrailingSlash(outputFileString), fileList, fileFormat);
+                                checkTrailingSlash(outputFileString), fileList, fileFormat, channelNumber);
 
                         // instantiates previewGui
                         previewGui.setUpGui();

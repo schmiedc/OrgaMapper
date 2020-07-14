@@ -139,6 +139,7 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
 
         String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
         String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
+        int channelNumber = 3;
         String fileEnding = ".tif";
         String settings = "setting";
 
@@ -149,11 +150,11 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
             System.out.println(file);
         }
 
-        PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif");
-        guiTest.setUpGui();
+        //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif", 3);
+        //guiTest.setUpGui();
 
-        //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
-        //guiTest.createWindow();
+        InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
+        guiTest.createWindow();
 
     }
 

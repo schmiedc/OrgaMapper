@@ -98,6 +98,7 @@ public class PreviewGui extends JPanel {
     // image settings
     private boolean calibrationSetting;
     private double pxSizeMicron;
+    private  int channelNumber;
     private int nucleusChannel;
     private int cytoplasmChannel;
     private int organelleChannel;
@@ -416,7 +417,6 @@ public class PreviewGui extends JPanel {
 
         organelleBox.add(detectionBox);
 
-
         checkFilterOrganelle = new JCheckBox("Filter in nucleus?");
         checkFilterOrganelle.setToolTipText("Only affects visualization");
         checkFilterOrganelle.setSelected(false);
@@ -445,18 +445,18 @@ public class PreviewGui extends JPanel {
         checkCalibration.setSelected(calibrationSetting);
         boxSettings.add(checkCalibration);
 
+        // here we create a Array list for selecting different numbers for the channels
         ArrayList<String> channelString = new ArrayList<>();
         channelString.add( "select" );
         channelString.add( "ignore" );
 
-        int channelNumberTest;
-        channelNumberTest = 4;
-        for ( int channelIndex = 1; channelIndex <= channelNumberTest; channelIndex++ ) {
+        for ( int channelIndex = 1; channelIndex <= channelNumber; channelIndex++ ) {
 
             channelString.add( Integer.toString( channelIndex ) );
 
         }
 
+        // convert ArrayList to String Array
         String[] channelStringArray = channelString.toArray( new String[ channelString.size() ]);
 
         nucleusChannelList = new JComboBox<>( channelStringArray );
@@ -683,12 +683,13 @@ public class PreviewGui extends JPanel {
     }
 
 
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format) {
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
         fileList = filesToProcess;
         fileFormat = format;
+        channelNumber = 3;
 
         // settings for nucleus settings
         kernelSizeNuc = 5;
@@ -729,7 +730,7 @@ public class PreviewGui extends JPanel {
 
     }
 
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format,
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber,
                  float getKernelSizeNuc,
                  double getRollingBallRadiusNuc,
                  String getThresholdNuc,
@@ -760,6 +761,7 @@ public class PreviewGui extends JPanel {
         outputDir = outputDirectory;
         fileList = filesToProcess;
         fileFormat = format;
+        channelNumber = getChannelNumber;
 
         // settings for nucleus settings
         kernelSizeNuc = getKernelSizeNuc;
@@ -820,13 +822,16 @@ public class PreviewGui extends JPanel {
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
-            // TODO: channel selection sanity check - each channel is selected only once
             // TODO: option for measureing in another channel
             String nucChannel = (String) nucleusChannelList.getSelectedItem();
             String cytoChannel = (String) cytoplasmChannelList.getSelectedItem();
             String orgaChannel = (String) organelleChannelList.getSelectedItem();
             String measureChannel = (String) measureChannelList.getSelectedItem();
 
+            assert nucChannel != null;
+            assert cytoChannel != null;
+            assert  orgaChannel != null;
+            assert measureChannel != null;
             boolean channelCheck = ChannelChecker.checkChannelSetting(nucChannel, cytoChannel, orgaChannel);
 
             int selectionChecker = list.getSelectedIndex();
@@ -837,8 +842,8 @@ public class PreviewGui extends JPanel {
                 int cytoChannelNumber = Integer.parseInt( cytoChannel );
                 int orgaChannelNumber = Integer.parseInt( orgaChannel );
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
-
-                // TODO: need to get settings from settings in preview GUI
+                
+                // TODO: get series number? is this necessary how?
                 Image previewImage = new Image(inputDir, fileFormat, 3, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                 if (selectionChecker != -1) {
@@ -1498,7 +1503,7 @@ public class PreviewGui extends JPanel {
                 String settingFilePath = outputDir + File.separator + fileName;
 
                 theFrame.dispose();
-                InputGuiFiji start = new InputGuiFiji( settingFilePath, false);
+                InputGuiFiji start = new InputGuiFiji( settingFilePath, channelNumber, false);
 
                 start.createWindow();
 

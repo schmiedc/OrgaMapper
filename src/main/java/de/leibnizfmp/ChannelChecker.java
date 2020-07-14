@@ -9,7 +9,6 @@ public class ChannelChecker {
 
         boolean nucChannelChecker;
 
-        assert nucChannel != null;
         if (nucChannel.equals( "ignore" ) || nucChannel.equals( "select" ) ) {
 
             IJ.log("Invalid nucleus channel setting!");
@@ -22,7 +21,6 @@ public class ChannelChecker {
 
         boolean cytoChannelChecker;
 
-        assert cytoChannel != null;
         if (cytoChannel.equals( "ignore" ) || cytoChannel.equals( "select" ) ) {
 
             IJ.log("Invalid cytoplasm channel setting!");
@@ -37,7 +35,6 @@ public class ChannelChecker {
 
         boolean orgaChannelChecker;
 
-        assert orgaChannel!= null;
         if (orgaChannel.equals( "ignore" ) || orgaChannel.equals( "select" ) ) {
 
             IJ.log("Invalid organelle channel setting!");
@@ -69,7 +66,7 @@ public class ChannelChecker {
     static int channelNumber(String channel) {
 
         int channelNumber;
-        assert channel != null;
+
         if (channel.equals( "ignore" ) || channel.equals( "select" ) ) {
 
             IJ.error("No measure channel selected.");

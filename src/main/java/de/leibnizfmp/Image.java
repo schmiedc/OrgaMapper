@@ -154,7 +154,6 @@ public class Image {
      *
      * @param inputDir source directory
      * @param imageFormat image format
-     * @param pxSize pixel size in micron
      * @param numberChannels number of Channels
      * @param whichSeriesNum the series ID
      * @param nucleusChannel identity of channel 1
