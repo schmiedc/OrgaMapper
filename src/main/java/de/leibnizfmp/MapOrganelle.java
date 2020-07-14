@@ -9,85 +9,28 @@
 package de.leibnizfmp;
 
 import ij.IJ;
-import ij.ImagePlus;
-import ij.Prefs;
-import ij.gui.Overlay;
-import ij.plugin.frame.RoiManager;
 import net.imagej.ImageJ;
-
-import ij.plugin.ChannelSplitter;
-import loci.common.DebugTools;
-import loci.formats.meta.IMetadata;
-import net.imagej.Dataset;
-import net.imagej.ops.OpService;
+import ij.Prefs;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.ui.UIService;
-
-import loci.formats.FormatException;
-import loci.formats.ImageReader;
-import loci.formats.MetadataTools;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  *
  */
-@Plugin(type = Command.class, menuPath = "Plugins>Map Organelle")
-public class MapOrganelle<T extends RealType<T>> implements Command {
-    //
-    // Feel free to add more parameters here...
-    //
-
-    @Parameter
-    private Dataset currentData;
-
-    @Parameter
-    private UIService uiService;
-
-    @Parameter
-    private OpService opService;
+@Plugin(type = Command.class, menuPath = "Plugins>Cellular Imaging>Map Organelle")
+public class MapOrganelle<T extends RealType<T>>  implements Command {
 
     @Override
     public void run() {
 
-        // test paths
-        String workingDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/";
-        String inputDir = "/Plugin_InputTest/";
-        //String inputDir = "/TestDataSet_LysoPos/";
-        String outputDir = "/Plugin_OutputTest/";
-        String testFile =  "HeLa_control_1_WellA1_Seq0000.nd2 - HeLa_control_1_WellA1_Seq0000.nd2 (series 01).tif";
-        //String testFile = "HeLa_scr.nd2";
-        String testInput = workingDir + inputDir;
-        String inputPath = workingDir + inputDir + testFile;
+        Prefs.blackBackground = true;
 
-        Image testImage = new Image(testInput, ".nd2", 1, 3, 0, 1, 2, 3);
-        ImagePlus imp = testImage.openWithBF(testFile);
+        IJ.log("Starting map-organelle plugin");
 
-        try {
-
-            DebugTools.setRootLevel("OFF");
-
-            // get the meta data from multiseries file
-            ImageReader reader = new ImageReader();
-            IMetadata omeMeta = MetadataTools.createOMEXMLMetadata();
-            reader.setMetadataStore(omeMeta);
-            reader.setId(inputPath);
-            int nSeries = reader.getSeriesCount();
-            reader.close();
-
-        } catch (FormatException e) {
-
-            IJ.error("Sorry, an error occurred: " + e.getMessage());
-            e.printStackTrace();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            IJ.error("Sorry, an error occurred: " + e.getMessage());
-        }
+        InputGuiFiji start = new InputGuiFiji();
+        start.createWindow();
 
     }
 
@@ -100,33 +43,39 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
      * @throws Exception
      */
     public static void main(final String... args) throws Exception {
+
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
-
         Prefs.blackBackground = true;
-        //new MapOrganelle().run();
+        ij.command().run(MapOrganelle.class, true);
 
-        String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-        //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
-        String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
-        int channelNumber = 3;
-        String fileEnding = ".tif";
-        //String fileEnding = ".nd2";
-        String settings = "setting";
 
-        FileList getFileList = new FileList(fileEnding);
-        ArrayList<String> fileList = getFileList.getFileList(testInDir);
+        boolean runTest = false;
 
-        for (String file : fileList) {
-            System.out.println(file);
+        if ( runTest ) {
+
+            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
+            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
+            String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
+            int channelNumber = 3;
+            String fileEnding = ".tif";
+            //String fileEnding = ".nd2";
+            String settings = "setting";
+
+            FileList getFileList = new FileList(fileEnding);
+            ArrayList<String> fileList = getFileList.getFileList(testInDir);
+
+            for (String file : fileList) {
+                System.out.println(file);
+            }
+
+            PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif", 3);
+            guiTest.setUpGui();
+
+            //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
+            //guiTest.createWindow();
+
         }
-
-        PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif", 3);
-        guiTest.setUpGui();
-
-        //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
-        //guiTest.createWindow();
-
 
 
     }
