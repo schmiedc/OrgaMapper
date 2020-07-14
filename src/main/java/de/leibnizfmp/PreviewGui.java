@@ -504,6 +504,7 @@ public class PreviewGui extends JPanel {
         boxSettings.add(measureChannelBox);
 
         JButton batchButton = new JButton("Batch Process");
+        // TODO: option for measuring in another channel
         //batchButton.addActionListener(new MyBatchListener());
         boxSettings.add(batchButton);
 
@@ -822,7 +823,6 @@ public class PreviewGui extends JPanel {
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
-            // TODO: option for measureing in another channel
             String nucChannel = (String) nucleusChannelList.getSelectedItem();
             String cytoChannel = (String) cytoplasmChannelList.getSelectedItem();
             String orgaChannel = (String) organelleChannelList.getSelectedItem();
@@ -844,7 +844,7 @@ public class PreviewGui extends JPanel {
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
                 // TODO: get series number? is this necessary how?
-                Image previewImage = new Image(inputDir, fileFormat, 3, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
+                Image previewImage = new Image(inputDir, fileFormat, channelNumber, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                 if (selectionChecker != -1) {
 
@@ -1044,91 +1044,141 @@ public class PreviewGui extends JPanel {
 
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+
+            String nucChannel = (String) nucleusChannelList.getSelectedItem();
+            String cytoChannel = (String) cytoplasmChannelList.getSelectedItem();
+            String orgaChannel = (String) organelleChannelList.getSelectedItem();
+            String measureChannel = (String) measureChannelList.getSelectedItem();
+
+            assert nucChannel != null;
+            assert cytoChannel != null;
+            assert  orgaChannel != null;
+            assert measureChannel != null;
+            boolean channelCheck = ChannelChecker.checkChannelSetting(nucChannel, cytoChannel, orgaChannel);
+
             int selectionChecker = list.getSelectedIndex();
 
-            // TODO: need to get settings from settings in preview GUI
-            Image previewImage = new Image(inputDir, fileFormat,3, 0, 1, 2, 3);
+            if ( channelCheck ) {
 
-            if (selectionChecker != -1){
+                int nucChannelNumber = Integer.parseInt(nucChannel);
+                int cytoChannelNumber = Integer.parseInt(cytoChannel);
+                int orgaChannelNumber = Integer.parseInt(orgaChannel);
+                int measureChannelNumber = ChannelChecker.channelNumber(measureChannel);
 
-                String selectedFile = (String) list.getSelectedValue();
-                IJ.log("Selected File: " + selectedFile);
+                // TODO: get series number? is this necessary how?
+                Image previewImage = new Image(inputDir, fileFormat, channelNumber, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
-                // check if there are windows open already
-                int openImages = WindowManager.getImageCount();
+                if (selectionChecker != -1) {
 
-                // if there are image windows open check if they are of the list and of the selected image
-                if  ( openImages != 0 ) {
+                    String selectedFile = (String) list.getSelectedValue();
+                    IJ.log("Selected File: " + selectedFile);
 
-                    IJ.log("There are images open!");
+                    // check if there are windows open already
+                    int openImages = WindowManager.getImageCount();
 
-                    String[] openImage = WindowManager.getImageTitles();
-                    ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
+                    // if there are image windows open check if they are of the list and of the selected image
+                    if (openImages != 0) {
 
-                    FileList fileUtility = new FileList(fileFormat);
-                    ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
+                        IJ.log("There are images open!");
 
-                    boolean selectedFileChecker = false;
+                        String[] openImage = WindowManager.getImageTitles();
+                        ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
 
-                    for (String image : openInputImages) {
+                        FileList fileUtility = new FileList(fileFormat);
+                        ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
 
-                        if (image.equals(selectedFile)) {
+                        boolean selectedFileChecker = false;
 
-                            IJ.log(selectedFile + " is already open");
-                            selectedFileChecker = true;
+                        for (String image : openInputImages) {
 
-                        } else {
+                            if (image.equals(selectedFile)) {
 
-                            IJ.selectWindow(image);
-                            IJ.run("Close");
+                                IJ.log(selectedFile + " is already open");
+                                selectedFileChecker = true;
 
-                        }
+                            } else {
 
-                    }
+                                IJ.selectWindow(image);
+                                IJ.run("Close");
 
-                    if (selectedFileChecker) {
-
-                        IJ.log("Selected file is already open");
-                        IJ.selectWindow(selectedFile);
-                        ImagePlus selectedImage = WindowManager.getCurrentImage();
-                        setDisplayRange = false;
-
-                        if (calibrationSetting) {
-
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
-                            selectedImage.setCalibration(calibration);
-                            IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
-
-                        } else {
-
-                            // Here I just make sure that the calibration is really from the original
-                            // in case the override metadata option has been set and unset before
-                            ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
-                            Calibration originalCalibration = imageForCalibration.getCalibration();
-                            selectedImage.setCalibration(originalCalibration);
-                            imageForCalibration.close();
-                            IJ.log("Metadata will not be overwritten");
+                            }
 
                         }
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                        if (selectedFileChecker) {
 
-                        visualizer.visualizeCellSegments(selectedImage, previewImage,
-                                cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
-                                cellSepGaussCellSep, cellSepProminence,
-                                cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
-                                setDisplayRange,
-                                nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                            IJ.log("Selected file is already open");
+                            IJ.selectWindow(selectedFile);
+                            ImagePlus selectedImage = WindowManager.getCurrentImage();
+                            setDisplayRange = false;
+
+                            if (calibrationSetting) {
+
+                                Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                                selectedImage.setCalibration(calibration);
+                                IJ.log("Metadata will be overwritten.");
+                                IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                            } else {
+
+                                // Here I just make sure that the calibration is really from the original
+                                // in case the override metadata option has been set and unset before
+                                ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                                Calibration originalCalibration = imageForCalibration.getCalibration();
+                                selectedImage.setCalibration(originalCalibration);
+                                imageForCalibration.close();
+                                IJ.log("Metadata will not be overwritten");
+
+                            }
+
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeCellSegments(selectedImage, previewImage,
+                                    cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
+                                    cellSepGaussCellSep, cellSepProminence,
+                                    cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
+                                    setDisplayRange,
+                                    nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+
+                        } else {
+
+                            IJ.log("The selected image is not open");
+
+                            // segment background and show for validation
+                            setDisplayRange = true;
+
+                            ImagePlus originalImage = previewImage.openImage(selectedFile);
+
+                            if (calibrationSetting) {
+
+                                Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                                originalImage.setCalibration(calibration);
+                                IJ.log("Metadata will be overwritten.");
+                                IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                            } else {
+
+                                IJ.log("Metadata will not be overwritten");
+
+                            }
+
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeCellSegments(originalImage, previewImage,
+                                    cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
+                                    cellSepGaussCellSep, cellSepProminence,
+                                    cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
+                                    setDisplayRange,
+                                    nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                        }
 
                     } else {
 
-                        IJ.log("The selected image is not open");
+                        IJ.log("There are no images open!");
 
                         // segment background and show for validation
-                        setDisplayRange = true;
-
                         ImagePlus originalImage = previewImage.openImage(selectedFile);
+                        setDisplayRange = true;
 
                         if (calibrationSetting) {
 
@@ -1151,47 +1201,16 @@ public class PreviewGui extends JPanel {
                                 cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
                                 setDisplayRange,
                                 nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+
                     }
 
                 } else {
 
-                    IJ.log("There are no images open!");
-
-                    // segment background and show for validation
-                    ImagePlus originalImage = previewImage.openImage(selectedFile);
-                    setDisplayRange = true;
-
-                    if (calibrationSetting) {
-
-                        Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
-                        originalImage.setCalibration(calibration);
-                        IJ.log("Metadata will be overwritten.");
-                        IJ.log("Pixel size set to: " + pxSizeMicronSetting);
-
-                    } else {
-
-                        IJ.log("Metadata will not be overwritten");
-
-                    }
-
-                    SegmentationVisualizer visualizer = new SegmentationVisualizer();
-
-                    visualizer.visualizeCellSegments(originalImage, previewImage,
-                            cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
-                            cellSepGaussCellSep, cellSepProminence,
-                            cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
-                            setDisplayRange,
-                            nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                    IJ.error("Please choose a file in the file list!");
 
                 }
 
-            } else {
-
-                IJ.error("Please choose a file in the file list!");
-
             }
-
-
         }
     }
 
@@ -1218,88 +1237,137 @@ public class PreviewGui extends JPanel {
 
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+
+            String nucChannel = (String) nucleusChannelList.getSelectedItem();
+            String cytoChannel = (String) cytoplasmChannelList.getSelectedItem();
+            String orgaChannel = (String) organelleChannelList.getSelectedItem();
+            String measureChannel = (String) measureChannelList.getSelectedItem();
+
+            assert nucChannel != null;
+            assert cytoChannel != null;
+            assert  orgaChannel != null;
+            assert measureChannel != null;
+            boolean channelCheck = ChannelChecker.checkChannelSetting(nucChannel, cytoChannel, orgaChannel);
+
             int selectionChecker = list.getSelectedIndex();
 
-            // TODO: need to get settings from settings in preview GUI
-            Image previewImage = new Image(inputDir, fileFormat,3, 0, 1, 2, 3);
+            if ( channelCheck ) {
 
-            if (selectionChecker != -1){
+                int nucChannelNumber = Integer.parseInt( nucChannel );
+                int cytoChannelNumber = Integer.parseInt( cytoChannel );
+                int orgaChannelNumber = Integer.parseInt( orgaChannel );
+                int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
-                String selectedFile = (String) list.getSelectedValue();
-                IJ.log("Selected File: " + selectedFile);
+                // TODO: get series number? is this necessary how?
 
-                // check if there are windows open already
-                int openImages = WindowManager.getImageCount();
+                Image previewImage = new Image(inputDir, fileFormat,channelNumber, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
-                // if there are image windows open check if they are of the list and of the selected image
-                if  ( openImages != 0 ) {
+                if (selectionChecker != -1){
 
-                    IJ.log("There are images open!");
+                    String selectedFile = (String) list.getSelectedValue();
+                    IJ.log("Selected File: " + selectedFile);
 
-                    String[] openImage = WindowManager.getImageTitles();
-                    ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
+                    // check if there are windows open already
+                    int openImages = WindowManager.getImageCount();
 
-                    FileList fileUtility = new FileList(fileFormat);
-                    ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
+                    // if there are image windows open check if they are of the list and of the selected image
+                    if  ( openImages != 0 ) {
 
-                    boolean selectedFileChecker = false;
+                        IJ.log("There are images open!");
 
-                    for (String image : openInputImages) {
+                        String[] openImage = WindowManager.getImageTitles();
+                        ArrayList<String> openImageList = new ArrayList<>(Arrays.asList(openImage));
 
-                        if (image.equals(selectedFile)) {
+                        FileList fileUtility = new FileList(fileFormat);
+                        ArrayList<String> openInputImages = fileUtility.intersection(openImageList, fileList);
 
-                            IJ.log(selectedFile + " is already open");
-                            selectedFileChecker = true;
+                        boolean selectedFileChecker = false;
 
-                        } else {
+                        for (String image : openInputImages) {
 
-                            IJ.selectWindow(image);
-                            IJ.run("Close");
+                            if (image.equals(selectedFile)) {
 
-                        }
+                                IJ.log(selectedFile + " is already open");
+                                selectedFileChecker = true;
 
-                    }
+                            } else {
 
-                    if (selectedFileChecker) {
+                                IJ.selectWindow(image);
+                                IJ.run("Close");
 
-                        IJ.log("Selected file is already open");
-                        IJ.selectWindow(selectedFile);
-                        ImagePlus selectedImage = WindowManager.getCurrentImage();
-                        setDisplayRange = false;
-
-                        if (calibrationSetting) {
-
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
-                            selectedImage.setCalibration(calibration);
-                            IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
-
-                        } else {
-
-                            // Here I just make sure that the calibration is really from the original
-                            // in case the override metadata option has been set and unset before
-                            ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
-                            Calibration originalCalibration = imageForCalibration.getCalibration();
-                            selectedImage.setCalibration(originalCalibration);
-                            imageForCalibration.close();
-                            IJ.log("Metadata will not be overwritten");
+                            }
 
                         }
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                        if (selectedFileChecker) {
 
-                        visualizer.visualizeSpots(selectedImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
-                                setDisplayRange,
-                                nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                            IJ.log("Selected file is already open");
+                            IJ.selectWindow(selectedFile);
+                            ImagePlus selectedImage = WindowManager.getCurrentImage();
+                            setDisplayRange = false;
+
+                            if (calibrationSetting) {
+
+                                Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                                selectedImage.setCalibration(calibration);
+                                IJ.log("Metadata will be overwritten.");
+                                IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                            } else {
+
+                                // Here I just make sure that the calibration is really from the original
+                                // in case the override metadata option has been set and unset before
+                                ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                                Calibration originalCalibration = imageForCalibration.getCalibration();
+                                selectedImage.setCalibration(originalCalibration);
+                                imageForCalibration.close();
+                                IJ.log("Metadata will not be overwritten");
+
+                            }
+
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeSpots(selectedImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
+                                    setDisplayRange,
+                                    nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+
+                        } else {
+
+                            IJ.log("The selected image is not open");
+
+                            // segment background and show for validation
+                            setDisplayRange = true;
+
+                            ImagePlus originalImage = previewImage.openImage(selectedFile);
+
+                            if (calibrationSetting) {
+
+                                Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                                originalImage.setCalibration(calibration);
+                                IJ.log("Metadata will be overwritten.");
+                                IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+
+                            } else {
+
+                                IJ.log("Metadata will not be overwritten");
+
+                            }
+
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeSpots(originalImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
+                                    setDisplayRange,
+                                    nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+
+                        }
 
                     } else {
 
-                        IJ.log("The selected image is not open");
+                        IJ.log("There are no images open!");
 
                         // segment background and show for validation
-                        setDisplayRange = true;
-
                         ImagePlus originalImage = previewImage.openImage(selectedFile);
+                        setDisplayRange = true;
 
                         if (calibrationSetting) {
 
@@ -1324,39 +1392,10 @@ public class PreviewGui extends JPanel {
 
                 } else {
 
-                    IJ.log("There are no images open!");
-
-                    // segment background and show for validation
-                    ImagePlus originalImage = previewImage.openImage(selectedFile);
-                    setDisplayRange = true;
-
-                    if (calibrationSetting) {
-
-                        Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
-                        originalImage.setCalibration(calibration);
-                        IJ.log("Metadata will be overwritten.");
-                        IJ.log("Pixel size set to: " + pxSizeMicronSetting);
-
-                    } else {
-
-                        IJ.log("Metadata will not be overwritten");
-
-                    }
-
-                    SegmentationVisualizer visualizer = new SegmentationVisualizer();
-
-                    visualizer.visualizeSpots(originalImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
-                            setDisplayRange,
-                            nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                    IJ.error("Please choose a file in the file list!");
 
                 }
-
-            } else {
-
-                IJ.error("Please choose a file in the file list!");
-
             }
-
         }
 
     }
