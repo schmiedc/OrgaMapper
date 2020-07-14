@@ -89,22 +89,36 @@ public class Image {
 
         ImporterOptions options = null;
         try {
+            IJ.log("Try opening with BF");
             options = new ImporterOptions();
+
         } catch (IOException e) {
+
             IJ.error("Bio-formats I/O: " + e.getMessage());
             e.printStackTrace();
+
         }
+
+        IJ.log("Setup of BF");
         options.setId(directory + File.separator + inputFile);
         options.setSeriesOn(seriesID,true);
         ImagePlus[] imp = new ImagePlus[0];
+
         try {
+
+            IJ.log("Open Image with BF");
             imp = BF.openImagePlus(options);
+
         } catch (FormatException e) {
+
             IJ.error("Bio-formats format exception: " + e.getMessage());
             e.printStackTrace();
+
         } catch (IOException e) {
+
             IJ.error("Bio-formats cannot open file: " + e.getMessage());
             e.printStackTrace();
+
         }
 
         return imp[0];

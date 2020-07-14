@@ -67,39 +67,6 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         Image testImage = new Image(testInput, ".nd2", 1, 3, 0, 1, 2, 3);
         ImagePlus imp = testImage.openWithBF(testFile);
 
-        ImagePlus[] imp_channels = ChannelSplitter.split(imp);
-        ImagePlus nucleus = imp_channels[testImage.nucleus - 1];
-        ImagePlus cytoplasm = imp_channels[testImage.cytoplasm - 1];
-        ImagePlus organelle = imp_channels[testImage.organelle - 1];
-
-        ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus, 5, 50, "Otsu", 2, 10, 20000, 0.0, 1.00);
-        nucleusMask.show();
-
-        //ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, 10, 50, 200);
-        //backgroundMask.show();
-
-        //ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, 15, 500);
-        //separatedCells.show();
-
-        //ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, 100, 150000, 0.00, 1.00);
-        //filteredCells.show();
-
-        //RoiManager filteredCellRois = CellFilter.filterByNuclei(filteredCells, nucleusMask);
-
-        //imp.setC( testImage.cytoplasm );
-        //filteredCellRois.moveRoisToOverlay(imp);
-        //Overlay overlay = imp.getOverlay();
-        //overlay.drawLabels(false);
-        //imp.show();
-
-        //ImagePlus detectedLysosomes = LysosomeDetector.detectLysosomes(organelle, 2, 2);
-        //ImagePlus filteredDetections = DetectionFilter.filterByNuclei(nucleusMask, detectedLysosomes);
-
-        SegmentationVisualizer segmentationVisualizer = new SegmentationVisualizer();
-        //segmentationVisualizer.visualizeSpots(imp, testImage, 2, 2, true);
-        //segmentationVisualizer.visualizeNucleiSegments(imp, testImage,2,50, "Otsu", 2, 100, 20000, 0.5, 1.00, false);
-        //segmentationVisualizer.visualizeCellSegments(imp, testImage, 10, 50, 200, 15, 500, 100, 150000, 0.00, 1.00, true);
-
         try {
 
             DebugTools.setRootLevel("OFF");
@@ -113,8 +80,10 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
             reader.close();
 
         } catch (FormatException e) {
+
             IJ.error("Sorry, an error occurred: " + e.getMessage());
             e.printStackTrace();
+
         } catch (IOException e) {
             e.printStackTrace();
             IJ.error("Sorry, an error occurred: " + e.getMessage());
@@ -138,9 +107,11 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
         //new MapOrganelle().run();
 
         String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
+        //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
         String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
         int channelNumber = 3;
         String fileEnding = ".tif";
+        //String fileEnding = ".nd2";
         String settings = "setting";
 
         FileList getFileList = new FileList(fileEnding);
@@ -150,11 +121,13 @@ public class MapOrganelle<T extends RealType<T>> implements Command {
             System.out.println(file);
         }
 
-        //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif", 3);
-        //guiTest.setUpGui();
+        PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif", 3);
+        guiTest.setUpGui();
 
-        InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
-        guiTest.createWindow();
+        //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
+        //guiTest.createWindow();
+
+
 
     }
 

@@ -901,7 +901,7 @@ public class PreviewGui extends JPanel {
 
                                 // Here I just make sure that the calibration is really from the original
                                 // in case the override metadata option has been set and unset before
-                                ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                                ImagePlus imageForCalibration = previewImage.openWithBF(selectedFile);
                                 Calibration originalCalibration = imageForCalibration.getCalibration();
                                 selectedImage.setCalibration(originalCalibration);
                                 imageForCalibration.close();
@@ -930,7 +930,7 @@ public class PreviewGui extends JPanel {
                             // segment background and show for validation
                             setDisplayRange = true;
 
-                            ImagePlus originalImage = previewImage.openImage(selectedFile);
+                            ImagePlus originalImage = previewImage.openWithBF(selectedFile);
 
                             if (calibrationSetting) {
 
@@ -966,7 +966,7 @@ public class PreviewGui extends JPanel {
                         IJ.log("There are no images open!");
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openImage(selectedFile);
+                        ImagePlus originalImage = previewImage.openWithBF(selectedFile);
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
@@ -1123,7 +1123,7 @@ public class PreviewGui extends JPanel {
 
                                 // Here I just make sure that the calibration is really from the original
                                 // in case the override metadata option has been set and unset before
-                                ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                                ImagePlus imageForCalibration = previewImage.openWithBF(selectedFile);
                                 Calibration originalCalibration = imageForCalibration.getCalibration();
                                 selectedImage.setCalibration(originalCalibration);
                                 imageForCalibration.close();
@@ -1147,7 +1147,7 @@ public class PreviewGui extends JPanel {
                             // segment background and show for validation
                             setDisplayRange = true;
 
-                            ImagePlus originalImage = previewImage.openImage(selectedFile);
+                            ImagePlus originalImage = previewImage.openWithBF(selectedFile);
 
                             if (calibrationSetting) {
 
@@ -1177,7 +1177,7 @@ public class PreviewGui extends JPanel {
                         IJ.log("There are no images open!");
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openImage(selectedFile);
+                        ImagePlus originalImage = previewImage.openWithBF(selectedFile);
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
@@ -1259,7 +1259,6 @@ public class PreviewGui extends JPanel {
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
                 // TODO: get series number? is this necessary how?
-
                 Image previewImage = new Image(inputDir, fileFormat,channelNumber, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                 if (selectionChecker != -1){
@@ -1317,7 +1316,7 @@ public class PreviewGui extends JPanel {
 
                                 // Here I just make sure that the calibration is really from the original
                                 // in case the override metadata option has been set and unset before
-                                ImagePlus imageForCalibration = previewImage.openImage(selectedFile);
+                                ImagePlus imageForCalibration = previewImage.openWithBF(selectedFile);
                                 Calibration originalCalibration = imageForCalibration.getCalibration();
                                 selectedImage.setCalibration(originalCalibration);
                                 imageForCalibration.close();
@@ -1338,7 +1337,7 @@ public class PreviewGui extends JPanel {
                             // segment background and show for validation
                             setDisplayRange = true;
 
-                            ImagePlus originalImage = previewImage.openImage(selectedFile);
+                            ImagePlus originalImage = previewImage.openWithBF(selectedFile);
 
                             if (calibrationSetting) {
 
@@ -1366,7 +1365,7 @@ public class PreviewGui extends JPanel {
                         IJ.log("There are no images open!");
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openImage(selectedFile);
+                        ImagePlus originalImage = previewImage.openWithBF(selectedFile);
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
