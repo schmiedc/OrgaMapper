@@ -822,75 +822,21 @@ public class PreviewGui extends JPanel {
 
             // TODO: channel selection sanity check - each channel is selected only once
             // TODO: option for measureing in another channel
-
             String nucChannel = (String) nucleusChannelList.getSelectedItem();
-
-            boolean nucChannelChecker = false;
-            int nucChannelNumber;
-            assert nucChannel != null;
-            if (nucChannel.equals( "ignore" ) || nucChannel.equals( "select" ) ) {
-
-                IJ.log("Invalid nucleus channel setting!");
-                nucChannelNumber = 0;
-
-            } else {
-
-                nucChannelNumber = Integer.parseInt( nucChannel );
-                nucChannelChecker = true;
-            }
-
             String cytoChannel = (String) cytoplasmChannelList.getSelectedItem();
-
-            boolean cytoChannelChecker = false;
-            int cytoChannelNumber;
-            assert cytoChannel != null;
-            if (cytoChannel.equals( "ignore" ) || cytoChannel.equals( "select" ) ) {
-
-                IJ.log("Invalid cytoplasm channel setting!");
-                cytoChannelNumber = 0;
-
-            } else {
-
-                cytoChannelNumber = Integer.parseInt( cytoChannel );
-                cytoChannelChecker = true;
-
-            }
-
-
             String orgaChannel = (String) organelleChannelList.getSelectedItem();
-
-            boolean orgaChannelChecker = false;
-            int orgaChannelNumber;
-            assert orgaChannel!= null;
-            if (orgaChannel.equals( "ignore" ) || orgaChannel.equals( "select" ) ) {
-
-                IJ.log("Invalid organelle channel setting!");
-                orgaChannelNumber = 0;
-
-            } else {
-
-                orgaChannelNumber = Integer.parseInt(orgaChannel);
-                orgaChannelChecker = true;
-            }
-
             String measureChannel = (String) measureChannelList.getSelectedItem();
 
-            int measureChannelNumber;
-            assert measureChannel != null;
-            if (measureChannel.equals( "ignore" ) || measureChannel.equals( "select" ) ) {
-
-                IJ.error("No measure channel selected.");
-                measureChannelNumber = 0;
-
-            } else {
-
-                measureChannelNumber = Integer.parseInt( measureChannel );
-
-            }
+            boolean channelCheck = ChannelChecker.checkChannelSetting(nucChannel, cytoChannel, orgaChannel);
 
             int selectionChecker = list.getSelectedIndex();
 
-            if (nucChannelChecker && cytoChannelChecker && orgaChannelChecker) {
+            if ( channelCheck ) {
+
+                int nucChannelNumber = Integer.parseInt( nucChannel );
+                int cytoChannelNumber = Integer.parseInt( cytoChannel );
+                int orgaChannelNumber = Integer.parseInt( orgaChannel );
+                int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
                 // TODO: need to get settings from settings in preview GUI
                 Image previewImage = new Image(inputDir, fileFormat, 3, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
