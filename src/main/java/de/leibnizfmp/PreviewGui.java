@@ -842,7 +842,7 @@ public class PreviewGui extends JPanel {
                 int cytoChannelNumber = Integer.parseInt( cytoChannel );
                 int orgaChannelNumber = Integer.parseInt( orgaChannel );
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
-                
+
                 // TODO: get series number? is this necessary how?
                 Image previewImage = new Image(inputDir, fileFormat, 3, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
