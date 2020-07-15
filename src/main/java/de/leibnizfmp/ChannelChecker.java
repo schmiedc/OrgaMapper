@@ -69,7 +69,7 @@ public class ChannelChecker {
 
         if (channel.equals( "ignore" ) || channel.equals( "select" ) ) {
 
-            IJ.error("No measure channel selected.");
+            IJ.log("No measure channel selected.");
             channelNumber = 0;
 
         } else {
