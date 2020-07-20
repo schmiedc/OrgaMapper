@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class SelectionChecker {
 
-    boolean checkSelectedFile(String selectedFile, String fileFormat, ArrayList<String> fileList) {
+    static boolean checkSelectedFile(String selectedFile, String fileFormat, ArrayList<String> fileList) {
 
         IJ.log("Selected File: " + selectedFile);
 
