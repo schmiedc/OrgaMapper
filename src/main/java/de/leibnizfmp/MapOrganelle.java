@@ -67,11 +67,11 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
                 System.out.println(file);
             }
 
-            PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 3);
-            guiTest.setUpGui();
+            //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 3);
+            //guiTest.setUpGui();
 
-            //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
-            //guiTest.createWindow();
+            InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
+            guiTest.createWindow();
 
         } else {
 

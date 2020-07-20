@@ -130,7 +130,6 @@ class InputGuiFiji {
 
             int channelNumber= (int) gdPlus.getNextNumber();
 
-            // TODO: needs a way to sanity check the file format or put in warning when weird files are chosen
             String fileFormat = gdPlus.getNextString();
 
             if ( showSettingsSwitch ) {
@@ -161,7 +160,7 @@ class InputGuiFiji {
                 String outputFileString = outputDirectory.toString();
 
                 // generates the file list that is fed to the preview GUI
-                ArrayList<String> fileList = getFileList.getFileList(checkTrailingSlash(inputFileString));
+                ArrayList<String> fileList = getFileList.getFileMultiSeriesList(checkTrailingSlash(inputFileString));
 
                 if (fileList.isEmpty()) {
 

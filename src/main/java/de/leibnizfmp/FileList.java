@@ -115,7 +115,6 @@ public class FileList {
                 String nameWithoutExt = testFile.substring(0, testFile.lastIndexOf("."));
 
                 String seriesName = nameWithoutExt + "_S" + seriesIndex;
-                IJ.log(seriesName);
                 fileNameList.add(seriesName);
             }
 
