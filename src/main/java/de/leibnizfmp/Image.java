@@ -88,7 +88,9 @@ public class Image {
         IJ.log("Opening file: " + inputFile);
 
         ImporterOptions options = null;
+
         try {
+
             IJ.log("Try opening with BF");
             options = new ImporterOptions();
 

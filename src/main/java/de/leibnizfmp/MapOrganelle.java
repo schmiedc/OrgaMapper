@@ -48,22 +48,20 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
 
-
-
         boolean runTest = true;
 
         if ( runTest ) {
 
-            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
+            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
+            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
             String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
             int channelNumber = 3;
-            String fileEnding = ".tif";
-            //String fileEnding = ".nd2";
+            //String fileEnding = ".tif";
+            String fileEnding = ".nd2";
             String settings = "setting";
 
             FileList getFileList = new FileList(fileEnding);
-            ArrayList<String> fileList = getFileList.getFileList(testInDir);
+            ArrayList<String> fileList = getFileList.getFileMultiSeriesList(testInDir);
 
             for (String file : fileList) {
                 System.out.println(file);
