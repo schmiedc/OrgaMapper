@@ -47,8 +47,9 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
+        ij.command().run(MapOrganelle.class, true);
 
-        boolean runTest = true;
+        boolean runTest = false;
 
         if ( runTest ) {
 
@@ -73,12 +74,7 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
             InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
             guiTest.createWindow();
 
-        } else {
-
-            ij.command().run(MapOrganelle.class, true);
-
         }
-
 
     }
 
