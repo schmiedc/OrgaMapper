@@ -1,11 +1,8 @@
 package de.leibnizfmp;
 
 import ij.IJ;
-import ij.io.FileSaver;
 import loci.formats.FormatException;
 import loci.formats.ImageReader;
-import loci.plugins.BF;
-import loci.plugins.in.ImporterOptions;
 
 import java.io.File;
 import java.io.IOException;

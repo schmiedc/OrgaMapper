@@ -67,7 +67,7 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
                 System.out.println(file);
             }
 
-            PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, ".tif", 3);
+            PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 3);
             guiTest.setUpGui();
 
             //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);

@@ -844,11 +844,15 @@ public class PreviewGui extends JPanel {
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
                 // TODO: get series number? is this necessary how?
-                Image previewImage = new Image(inputDir, fileFormat, channelNumber, 0, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
+                String selectedFile = (String) list.getSelectedValue();
+                int stringLength = selectedFile.length();
+                String seriesNumberString;
+                seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
+                int seriesNumber = Integer.parseInt(seriesNumberString);
+
+                Image previewImage = new Image(inputDir, fileFormat, channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                 if (selectionChecker != -1) {
-
-                    String selectedFile = (String) list.getSelectedValue();
 
                     boolean selectedFileChecker = SelectionChecker.checkSelectedFile(selectedFile, fileFormat, fileList);
 
@@ -871,7 +875,8 @@ public class PreviewGui extends JPanel {
                             IJ.log("Metadata will not be overwritten, loading from original.");
                             // Here I just make sure that the calibration is really from the original
                             // in case the override metadata option has been set and unset before
-                            ImagePlus imageForCalibration = previewImage.openWithBF(selectedFile);
+                            ImagePlus imageForCalibration = previewImage.openWithMultiseriesBF(selectedFile);
+
                             Calibration originalCalibration = imageForCalibration.getCalibration();
                             selectedImage.setCalibration(originalCalibration);
                             imageForCalibration.close();
@@ -898,7 +903,7 @@ public class PreviewGui extends JPanel {
                         IJ.log("Selected file: " + selectedFile);
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openWithBF(selectedFile);
+                        ImagePlus originalImage = previewImage.openWithMultiseriesBF(selectedFile);
                         setDisplayRange = true;
 
                         if (calibrationSetting) {

@@ -127,6 +127,62 @@ public class Image {
     }
 
     /**
+     * opens the image using bio-formats importer
+     *
+     * @param selectedFile name of image
+     * @return and ImagePlus object
+     */
+    ImagePlus openWithMultiseriesBF(String selectedFile) {
+
+        String nameWithoutExt = selectedFile.substring(0, selectedFile.lastIndexOf("_S"));
+
+        String inputFile = nameWithoutExt + format;
+
+        IJ.log("Opening file: " + inputFile);
+
+        ImporterOptions options = null;
+
+        try {
+
+            IJ.log("Try opening with BF");
+            options = new ImporterOptions();
+
+        } catch (IOException e) {
+
+            IJ.error("Bio-formats I/O: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        IJ.log("Setup of BF");
+        options.setId(directory + File.separator + inputFile);
+        options.setSeriesOn(seriesID,true);
+        ImagePlus[] imp = new ImagePlus[0];
+
+        try {
+
+            IJ.log("Open Image with BF");
+            imp = BF.openImagePlus(options);
+
+        } catch (FormatException e) {
+
+            IJ.error("Bio-formats format exception: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            IJ.error("Bio-formats cannot open file: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        ImagePlus resultImage = imp[0];
+        resultImage.setTitle(nameWithoutExt + "_S" + seriesID);
+
+        return resultImage;
+    }
+
+    /**
      * sets the calibration of the image
      *
      * @return the scale/calibration of the image
