@@ -12,14 +12,17 @@ public class DetectionFilter {
     static ImagePlus filterByNuclei(ImagePlus nuclei, ImagePlus detections ) {
 
         Calibration calibration = nuclei.getCalibration();
-        nuclei.getProcessor().invert();
+        ImagePlus nucleiMask = nuclei.duplicate();
+        nucleiMask.getProcessor().invert();
 
         ImageCalculator calculator = new ImageCalculator();
-        ImagePlus filteredDetections = calculator.run("Multiply 32-bit", detections, nuclei);
+        ImagePlus filteredDetections = calculator.run("Multiply 32-bit", detections, nucleiMask);
         ImageProcessor filteredDetectionsProcessor = filteredDetections.getProcessor().convertToShort(true);
         ImagePlus filteredDetectionsImage = new ImagePlus( "filteredDetections", filteredDetectionsProcessor );
 
         filteredDetectionsImage.setCalibration(calibration);
+
+        nucleiMask.close();
 
         return filteredDetectionsImage ;
 

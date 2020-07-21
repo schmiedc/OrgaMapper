@@ -227,10 +227,10 @@ public class SegmentationVisualizer {
 
         if (cellFilterCheck) {
 
-            ImagePlus neucleiMask= NucleusSegmenter.segmentNuclei(nucleus, kernelSizeNuc, rollingBallRadiusNuc, thresholdNuc, erosionNuc, minSizeNuc, maxSizeNuc, lowCircNuc, highCircNuc);
+            ImagePlus nucleiMask = NucleusSegmenter.segmentNuclei(nucleus, kernelSizeNuc, rollingBallRadiusNuc, thresholdNuc, erosionNuc, minSizeNuc, maxSizeNuc, lowCircNuc, highCircNuc);
             RoiManager manager;
             IJ.log("Cell masks will be shown with nuclei number filter applied");
-            manager = CellFilter.filterByNuclei(filteredCells, neucleiMask);
+            manager = CellFilter.filterByNuclei(filteredCells, nucleiMask);
 
             originalImage.setC( imageObject.cytoplasm );
             originalImage.setOverlay(null);

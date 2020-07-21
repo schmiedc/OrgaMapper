@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class PreviewGui extends JPanel {
@@ -660,7 +659,7 @@ public class PreviewGui extends JPanel {
 
                 // settings for organelle detection
                 sigmaLoGOrga = 2;
-                prominenceOrga = 2;
+                prominenceOrga = 200;
 
                 // create tabbed panes
                 nucSegBox.removeAll();
@@ -690,7 +689,7 @@ public class PreviewGui extends JPanel {
         outputDir = outputDirectory;
         fileList = filesToProcess;
         fileFormat = format;
-        channelNumber = 3;
+        channelNumber = getChannelNumber;
 
         // settings for nucleus settings
         kernelSizeNuc = 5;
@@ -1353,7 +1352,7 @@ public class PreviewGui extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Boolean checkDir = IJ.showMessageWithCancel("Warning!", "Do you want to reset Directories? \n \n " +
+            boolean checkDir = IJ.showMessageWithCancel("Warning!", "Do you want to reset Directories? \n \n " +
                     "Settings will remain the same!");
 
             if ( checkDir ){

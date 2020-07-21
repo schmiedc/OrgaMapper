@@ -57,6 +57,7 @@ public class NucleusSegmenter {
 
         IJ.log("Erode mask " + erosion + "x");
         ByteProcessor unfilteredMaskByteProcessor = filteredMask.getProcessor().convertToByteProcessor();
+        // TODO erosion problems
         unfilteredMaskByteProcessor.erode(erosion, 0);
         unfilteredMaskByteProcessor.invertLut();
 
