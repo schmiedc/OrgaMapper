@@ -26,6 +26,7 @@ import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -58,9 +59,9 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
-        ij.command().run(MapOrganelle.class, true);
+        //ij.command().run(MapOrganelle.class, true);
 
-        boolean runTest = false;
+        boolean runTest = true;
 
         if ( runTest ) {
 
@@ -258,6 +259,12 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
             // now write to file
             Files.write(Paths.get(testOutDir + "/cellMeasurements.csv"), cellFile.toString().getBytes());
 
+            ArrayList<ArrayList<ArrayList<String>>> results = new ArrayList<>();
+            results.add(distanceList);
+            results.add(cellList);
+
+            System.out.println( Arrays.deepToString( distanceList.toArray() ) );
+            System.out.println( Arrays.deepToString( results.get(0).toArray() ) );
 
 
 

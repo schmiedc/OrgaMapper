@@ -1062,8 +1062,7 @@ public class PreviewGui extends JPanel {
 
                             Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
                             originalImage.setCalibration(calibration);
-                            IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+                            IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
                         } else {
 
@@ -1160,8 +1159,7 @@ public class PreviewGui extends JPanel {
 
                             Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
                             selectedImage.setCalibration(calibration);
-                            IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+                            IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
                         } else {
 
@@ -1194,8 +1192,7 @@ public class PreviewGui extends JPanel {
 
                             Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
                             originalImage.setCalibration(calibration);
-                            IJ.log("Metadata will be overwritten.");
-                            IJ.log("Pixel size set to: " + pxSizeMicronSetting);
+                            IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
                         } else {
 
