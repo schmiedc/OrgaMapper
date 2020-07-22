@@ -504,7 +504,7 @@ public class PreviewGui extends JPanel {
 
         JButton batchButton = new JButton("Batch Process");
         // TODO: option for measuring in another channel
-        //batchButton.addActionListener(new MyBatchListener());
+        batchButton.addActionListener(new MyBatchListener());
         boxSettings.add(batchButton);
 
     }
@@ -718,7 +718,7 @@ public class PreviewGui extends JPanel {
 
         // settings for organelle detection
         sigmaLoGOrga = 2;
-        prominenceOrga = 2;
+        prominenceOrga = 200;
 
         // image settings
         calibrationSetting = false;
@@ -1373,6 +1373,91 @@ public class PreviewGui extends JPanel {
             }
 
         }
+    }
+
+    private class MyBatchListener implements ActionListener {
+
+        @Override
+        public  void actionPerformed(ActionEvent e) {
+
+            IJ.log("Starting preview for nuclei segmentation");
+
+
+            // dataset settings
+            String nucChannel = (String) nucleusChannelList.getSelectedItem();
+            String cytoChannel = (String) cytoplasmChannelList.getSelectedItem();
+            String orgaChannel = (String) organelleChannelList.getSelectedItem();
+            String measureChannel = (String) measureChannelList.getSelectedItem();
+
+            boolean calibrationSetting = checkCalibration.isSelected();
+            Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+
+            // settings for nuclei segmentation
+            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+            float nucFilterSize = nucFilterSizeDouble.floatValue();
+            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+            int nucErosion= nucErosionDouble.intValue();
+            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+            // settings for cell segmentation
+            Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+            float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+            Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+            Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+            int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+            Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+            Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+            Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+            Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+            Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+            Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+
+            // settings for organelle detection
+            Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+            Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+
+            assert nucChannel != null;
+            assert cytoChannel != null;
+            assert  orgaChannel != null;
+            assert measureChannel != null;
+            boolean channelCheck = ChannelChecker.checkChannelSetting(nucChannel, cytoChannel, orgaChannel);
+
+            int numberOfFiles = fileList.size();
+
+            if ( channelCheck && numberOfFiles != 0 ) {
+
+                int nucChannelNumber = Integer.parseInt(nucChannel);
+                int cytoChannelNumber = Integer.parseInt(cytoChannel);
+                int orgaChannelNumber = Integer.parseInt(orgaChannel);
+                int measureChannelNumber = ChannelChecker.channelNumber(measureChannel);
+
+                BatchProcessor processing = new BatchProcessor(inputDir, outputDir, fileList, fileFormat, channelNumber,
+                        nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber,
+                        calibrationSetting, pxSizeMicronSetting,
+                        nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
+                        cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat, cellSepGaussCellSep, cellSepProminence,
+                        cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, organelleLoGSigma, organelleProminence);
+
+                processing.processImage();
+
+            } else if (numberOfFiles == 0) {
+
+                IJ.log("No files found for processing");
+
+            } else {
+
+                IJ.log("Channel error: check channel settings");
+
+            }
+
+        }
+
     }
 }
 
