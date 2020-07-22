@@ -55,6 +55,8 @@ public class CellFilter {
 
     static RoiManager filterByNuclei(ImagePlus cellMask, ImagePlus nucleiMask ) {
 
+        ImagePlus nucleiMaskDup = nucleiMask.duplicate();
+
         IJ.log("Filtering cells by nuclei number");
         ParticleAnalyzer cellAnalyzer = new ParticleAnalyzer(2048, 0, null,
                 0, Image.calculateMaxArea( cellMask.getWidth(), cellMask.getHeight() ) );
@@ -76,8 +78,8 @@ public class CellFilter {
             RoiManager nucRoiManager = new RoiManager(false);
             ParticleAnalyzer.setRoiManager( nucRoiManager );
 
-            cellRoiManager.select(nucleiMask, roiIndex);
-            nucAnalyzer.analyze( nucleiMask );
+            cellRoiManager.select(nucleiMaskDup, roiIndex);
+            nucAnalyzer.analyze( nucleiMaskDup );
 
             if ( nucRoiManager.getCount() == 1) {
 
@@ -96,6 +98,8 @@ public class CellFilter {
         }
 
         IJ.log("Cell Filter by nuclei number done");
+
+        nucleiMaskDup.close();
 
         return cellRoiManager;
 

@@ -64,12 +64,12 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
 
         if ( runTest1 || runTest2 ) {
 
-            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
+            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
+            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
             String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
             int channelNumber = 3;
-            String fileEnding = ".tif";
-            //String fileEnding = ".nd2";
+            //String fileEnding = ".tif";
+            String fileEnding = ".nd2";
             String settings = "setting";
 
             FileList getFileList = new FileList(fileEnding);
@@ -79,20 +79,20 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
                 System.out.println(file);
             }
 
-            ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 2));
+            ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 1));
 
 
             if ( runTest1 ) {
 
 
-                PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 3);
-                guiTest.setUpGui();
+                //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 3);
+                //guiTest.setUpGui();
 
                 //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
                 //guiTest.createWindow();
 
-                //BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
-                //processBatch.processImage();
+                BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
+                processBatch.processImage();
 
 
             } else if (runTest2) {

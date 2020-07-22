@@ -117,7 +117,7 @@ public class BatchProcessor {
             ArrayList<ArrayList<ArrayList<String>>> resultLists = measureCell(manager, nucleusMask, detectionsFiltered, fileNameWOtExt, seriesNumber);
 
             ArrayList<ArrayList<String>> distanceMeasure = resultLists.get(0);
-            ArrayList<ArrayList<String>> cellMeasure = resultLists.get(0);
+            ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
 
             distanceMeasureAll.addAll(distanceMeasure);
             cellMeasureAll.addAll(cellMeasure);
@@ -176,7 +176,6 @@ public class BatchProcessor {
 
             }
 
-
             ArrayList<String> cellValueList = new ArrayList<>();
             cellValueList.add(fileNameWOtExt);
             cellValueList.add(String.valueOf(seriesNumber));
@@ -189,7 +188,7 @@ public class BatchProcessor {
 
             cellList.add(cellValueList);
 
-            nucleusMaskDup.close();
+            //nucleusMaskDup.close();
             detectionDup.close();
 
             IJ.log("Distance & cell measurements finished");
