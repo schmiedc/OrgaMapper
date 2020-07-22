@@ -2,7 +2,6 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import fiji.util.gui.GenericDialogPlus;
-import ij.Prefs;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -71,6 +70,7 @@ class InputGuiFiji {
      * @param fileFormat fileFormat
      * @param settingsFileString location of test settingsFile
      */
+    @Deprecated
     InputGuiFiji(String inputDir, String outputDir, int channelNumber, String fileFormat, String settingsFileString ) {
 
         defaultInputDirectory = inputDir;

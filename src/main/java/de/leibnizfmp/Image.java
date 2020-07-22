@@ -67,6 +67,7 @@ public class Image {
      * @param inputFile name of image
      * @return and ImagePlus object
      */
+    @Deprecated
     ImagePlus openImage(String inputFile) {
 
         // open a example pHlorin image
@@ -83,6 +84,7 @@ public class Image {
      * @param inputFile name of image
      * @return and ImagePlus object
      */
+    @Deprecated
     ImagePlus openWithBF(String inputFile) {
 
         IJ.log("Opening file: " + inputFile);
@@ -102,6 +104,7 @@ public class Image {
         }
 
         IJ.log("Setup of BF");
+        assert options != null;
         options.setId(directory + File.separator + inputFile);
         options.setSeriesOn(seriesID,true);
         ImagePlus[] imp = new ImagePlus[0];
@@ -155,6 +158,7 @@ public class Image {
         }
 
         IJ.log("Setup of BF");
+        assert options != null;
         options.setId(directory + File.separator + inputFile);
         options.setSeriesOn(seriesID,true);
         ImagePlus[] imp = new ImagePlus[0];
@@ -187,11 +191,11 @@ public class Image {
      *
      * @return the scale/calibration of the image
      */
-    static Calibration calibrate(String sizeUnit, double pxSizeCalib){
+    static Calibration calibrate(double pxSizeCalib){
 
         Calibration imageScale = new Calibration();
-        imageScale.setXUnit(sizeUnit);
-        imageScale.setYUnit(sizeUnit);
+        imageScale.setXUnit("µm");
+        imageScale.setYUnit("µm");
 
         imageScale.pixelHeight = pxSizeCalib;
         imageScale.pixelWidth = pxSizeCalib;
@@ -247,6 +251,7 @@ public class Image {
 
     }
 
+    @Deprecated
     public Image(String inputDir, String imageFormat, int numberChannels,
                  int whichSeriesNum, int nucleusChannel, int cytoplasmChannel, int organelleChannel){
 

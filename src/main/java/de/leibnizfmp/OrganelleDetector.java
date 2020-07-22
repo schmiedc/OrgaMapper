@@ -2,7 +2,6 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;

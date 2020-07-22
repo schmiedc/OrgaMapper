@@ -9,24 +9,13 @@
 package de.leibnizfmp;
 
 import ij.IJ;
-import ij.ImagePlus;
-import ij.gui.Roi;
-import ij.plugin.ChannelSplitter;
-import ij.plugin.filter.EDM;
-import ij.plugin.filter.MaximumFinder;
-import ij.plugin.frame.RoiManager;
-import ij.process.ImageProcessor;
 import net.imagej.ImageJ;
 import ij.Prefs;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
-
-import java.awt.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 /**
  *
@@ -61,7 +50,7 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         Prefs.blackBackground = true;
         ij.command().run(MapOrganelle.class, true);
 
-        boolean runTest1 = true;
+        boolean runTest1 = false;
         boolean runTest2 = false;
 
         if ( runTest1 || runTest2 ) {

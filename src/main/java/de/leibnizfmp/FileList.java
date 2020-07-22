@@ -25,6 +25,7 @@ public class FileList {
      * @param inputDir input directory
      * @return list containing file names as string for processing
      */
+    @Deprecated
     ArrayList<String> getFileList(String inputDir) {
 
         List<String> results = null;
@@ -47,9 +48,9 @@ public class FileList {
         }
 
         // casts list to arrayList
-        ArrayList<String> filesToProcess = new ArrayList<>(results);
+        assert results != null;
 
-        return filesToProcess;
+        return new ArrayList<>(results);
 
     }
 
@@ -85,9 +86,7 @@ public class FileList {
         assert fileList != null;
         List<String> fileNameList = new ArrayList<>();
 
-        for (int series = 0; series < fileList.size(); series++) {
-
-            String testFile = fileList.get(series);
+        for (String testFile : fileList) {
 
             ImageReader reader = new ImageReader();
             try {
@@ -121,11 +120,8 @@ public class FileList {
         }
 
         // casts list to arrayList
-        assert fileNameList != null;
 
-        ArrayList<String> filesToProcess = new ArrayList<>(fileNameList);
-
-        return filesToProcess;
+        return new ArrayList<>(fileNameList);
 
     }
 

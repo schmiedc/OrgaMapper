@@ -32,9 +32,9 @@ public class PreviewGui extends JPanel {
     };
 
     // basic settings
-    private String inputDir;
-    private String outputDir;
-    private ArrayList<String> fileList;
+    private final String inputDir;
+    private final String outputDir;
+    private final ArrayList<String> fileList;
 
     // list of files
     private JList list;
@@ -97,7 +97,7 @@ public class PreviewGui extends JPanel {
     // image settings
     private boolean calibrationSetting;
     private double pxSizeMicron;
-    private  int channelNumber;
+    private final int channelNumber;
     private int nucleusChannel;
     private int cytoplasmChannel;
     private int organelleChannel;
@@ -124,7 +124,7 @@ public class PreviewGui extends JPanel {
 
 
     // tabbed pane
-    private JTabbedPane tabbedPane = new JTabbedPane();
+    private final JTabbedPane tabbedPane = new JTabbedPane();
     JFrame theFrame;
 
     private Border blackline;
@@ -456,7 +456,7 @@ public class PreviewGui extends JPanel {
         }
 
         // convert ArrayList to String Array
-        String[] channelStringArray = channelString.toArray( new String[ channelString.size() ]);
+        String[] channelStringArray = channelString.toArray(new String[0]);
 
         nucleusChannelList = new JComboBox<>( channelStringArray );
         JLabel nucleusChannelLabel  = new JLabel("Nucleus channel:" );
@@ -863,7 +863,7 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            Calibration calibration = Image.calibrate(pxSizeMicronSetting);
                             selectedImage.setCalibration(calibration);
                             IJ.log("Metadata will be overwritten.");
                             IJ.log("Pixel size set to: " + pxSizeMicronSetting);
@@ -906,7 +906,7 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            Calibration calibration = Image.calibrate(pxSizeMicronSetting);
                             originalImage.setCalibration(calibration);
                             IJ.log("Metadata will be overwritten.");
                             IJ.log("Pixel size set to: " + pxSizeMicronSetting);
@@ -1023,7 +1023,7 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            Calibration calibration = Image.calibrate(pxSizeMicronSetting);
                             selectedImage.setCalibration(calibration);
                             IJ.log("Metadata will be overwritten.");
                             IJ.log("Pixel size set to: " + pxSizeMicronSetting);
@@ -1060,7 +1060,7 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            Calibration calibration = Image.calibrate(pxSizeMicronSetting);
                             originalImage.setCalibration(calibration);
                             IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
@@ -1157,7 +1157,7 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            Calibration calibration = Image.calibrate(pxSizeMicronSetting);
                             selectedImage.setCalibration(calibration);
                             IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
@@ -1190,7 +1190,7 @@ public class PreviewGui extends JPanel {
 
                         if (calibrationSetting) {
 
-                            Calibration calibration = Image.calibrate("µm", pxSizeMicronSetting);
+                            Calibration calibration = Image.calibrate(pxSizeMicronSetting);
                             originalImage.setCalibration(calibration);
                             IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 

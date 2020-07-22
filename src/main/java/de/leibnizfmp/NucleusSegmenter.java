@@ -3,7 +3,6 @@ package de.leibnizfmp;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.Prefs;
 import ij.measure.Calibration;
 import ij.plugin.Filters3D;
 import ij.plugin.filter.BackgroundSubtracter;

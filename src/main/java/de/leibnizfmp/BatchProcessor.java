@@ -78,7 +78,7 @@ public class BatchProcessor {
 
             if (calibrationSetting) {
 
-                Calibration calibration = Image.calibrate("µm", pxSizeMicron);
+                Calibration calibration = Image.calibrate(pxSizeMicron);
                 image.setCalibration(calibration);
                 IJ.log("Pixel size overwritten by: " + pxSizeMicron);
 

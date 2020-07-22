@@ -3,7 +3,6 @@ package de.leibnizfmp;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
-import ij.plugin.Filters3D;
 import ij.plugin.ImageCalculator;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
