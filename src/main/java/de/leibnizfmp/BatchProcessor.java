@@ -5,6 +5,7 @@ import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
+import ij.plugin.filter.Binary;
 import ij.plugin.filter.EDM;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.frame.RoiManager;
@@ -141,7 +142,6 @@ public class BatchProcessor {
             IJ.log("Analyzing Cell: " + cellIndex);
 
             ImagePlus nucleusMaskDup = nucleusMask.duplicate();
-            // TODO Fill holes
             ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
 
             // get the EDM of cell outside of nucleus

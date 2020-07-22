@@ -6,6 +6,7 @@ import ij.ImageStack;
 import ij.measure.Calibration;
 import ij.plugin.Filters3D;
 import ij.plugin.filter.BackgroundSubtracter;
+import ij.plugin.filter.Binary;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -56,9 +57,32 @@ public class NucleusSegmenter {
 
         IJ.log("Erode mask " + erosion + "x");
         ByteProcessor unfilteredMaskByteProcessor = filteredMask.getProcessor().convertToByteProcessor();
-        // TODO erosion problems
-        unfilteredMaskByteProcessor.erode(erosion, 0);
         unfilteredMaskByteProcessor.invertLut();
+        //unfilteredMaskByteProcessor.invert();
+
+        Binary binaryProcessorFill = new Binary();
+        binaryProcessorFill.setup("fill holes", filteredMask );
+        binaryProcessorFill.run(unfilteredMaskByteProcessor);
+
+        if ( erosion > 0 ) {
+
+            IJ.log("Applying erosion: " + erosion + "x");
+
+            Binary binaryProcessorErode = new Binary();
+            binaryProcessorErode.setup("erode", filteredMask);
+
+            for ( int i = 0; i < erosion; i++) {
+
+                binaryProcessorErode.run(unfilteredMaskByteProcessor);
+
+            }
+
+        } else {
+
+            IJ.log("No erosion applied");
+
+        }
+
 
         ImagePlus erodedFilteredMask = new ImagePlus("nucleiMask", unfilteredMaskByteProcessor);
 

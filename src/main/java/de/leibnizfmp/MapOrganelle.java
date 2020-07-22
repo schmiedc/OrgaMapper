@@ -9,11 +9,20 @@
 package de.leibnizfmp;
 
 import ij.IJ;
+import ij.ImagePlus;
+import ij.io.FileSaver;
+import ij.measure.Calibration;
+import ij.plugin.ChannelSplitter;
+import ij.plugin.filter.Binary;
+import ij.process.ByteProcessor;
+import ij.process.ImageProcessor;
 import net.imagej.ImageJ;
 import ij.Prefs;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
+import vib.oldregistration.RegistrationAlgorithm;
+
 import java.util.ArrayList;
 
 
@@ -48,9 +57,9 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
-        ij.command().run(MapOrganelle.class, true);
+        //ij.command().run(MapOrganelle.class, true);
 
-        boolean runTest1 = false;
+        boolean runTest1 = true;
         boolean runTest2 = false;
 
         if ( runTest1 || runTest2 ) {
@@ -70,6 +79,8 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
                 System.out.println(file);
             }
 
+            ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 2));
+
 
             if ( runTest1 ) {
 
@@ -80,12 +91,55 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
                 //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
                 //guiTest.createWindow();
 
+                //BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
+                //processBatch.processImage();
+
+
             } else if (runTest2) {
 
-                ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 2));
+                // image settings
+                int nucleusChannel = 1;
+                int cytoplasmChannel = 2;
+                int organelleChannel = 3;
+                int measureChannel = 0;
 
-                BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
-                processBatch.processImage();
+                // settings for nucleus settings
+                float kernelSizeNuc = 5;
+                double rollingBallRadiusNuc = 50;
+                String thresholdNuc = "Otsu";
+                int erosionNuc = 2;
+                double minSizeNuc = 100;
+                double maxSizeNuc = 20000;
+                double lowCircNuc = 0.0;
+                double highCircNuc = 1.00;
+
+                String fileName = fileList.get(0);
+
+                // get file names
+                String fileNameWOtExt = fileName.substring(0, fileName.lastIndexOf("_S"));
+                // get series number from file name
+                int stringLength = fileName.length();
+                String seriesNumberString;
+                seriesNumberString = fileName.substring( fileName.lastIndexOf("_S") + 2 , stringLength );
+                int seriesNumber = Integer.parseInt(seriesNumberString);
+
+                // open image
+                Image processingImage = new Image(testInDir, fileEnding, channelNumber, seriesNumber, nucleusChannel, cytoplasmChannel, organelleChannel, measureChannel);
+                ImagePlus image = processingImage.openWithMultiseriesBF( fileName );
+
+                // open individual channels
+                ImagePlus[] imp_channels = ChannelSplitter.split(image);
+                ImagePlus nucleus = imp_channels[processingImage.nucleus - 1];
+                ImagePlus cytoplasm = imp_channels[processingImage.cytoplasm - 1];
+                ImagePlus organelle = imp_channels[processingImage.organelle - 1];
+                nucleus.setOverlay(null);
+
+                // get nucleus masks
+                ImagePlus  nucleusMask = NucleusSegmenter.segmentNuclei(nucleus, kernelSizeNuc, rollingBallRadiusNuc, thresholdNuc, erosionNuc, minSizeNuc, maxSizeNuc, lowCircNuc, highCircNuc);
+                nucleusMask.show();
+
+                FileSaver save = new FileSaver(nucleusMask);
+                save.saveAsTiff(testOutDir + "/nucleusMask.tif");
 
             }
 
