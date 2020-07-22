@@ -3,6 +3,7 @@ package de.leibnizfmp;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
+import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.filter.Binary;
@@ -10,8 +11,11 @@ import ij.plugin.filter.EDM;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.frame.RoiManager;
 import ij.process.ImageProcessor;
+import ij.process.ImageStatistics;
+import imagescience.feature.Statistics;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -114,7 +118,7 @@ public class BatchProcessor {
             ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
             ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
 
-            ArrayList<ArrayList<ArrayList<String>>> resultLists = measureCell(manager, nucleusMask, detectionsFiltered, fileNameWOtExt, seriesNumber);
+            ArrayList<ArrayList<ArrayList<String>>> resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, manager, fileNameWOtExt, seriesNumber);
 
             ArrayList<ArrayList<String>> distanceMeasure = resultLists.get(0);
             ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
@@ -130,9 +134,13 @@ public class BatchProcessor {
 
     }
 
-    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager, ImagePlus nucleusMask, ImagePlus detectionsFiltered, String fileNameWOtExt, int seriesNumber) {
+    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager, ImagePlus nucleusMask, ImagePlus detectionsFiltered, ImagePlus organelleChannel, RoiManager cellROIs, String fileNameWOtExt, int seriesNumber) {
 
         IJ.log("Starting measurements");
+
+        double pxHeight = nucleusMask.getCalibration().pixelHeight;
+        double pxWidth = nucleusMask.getCalibration().pixelWidth;
+        double pxSize = pxHeight * pxWidth;
 
         ArrayList<ArrayList<String>> distanceList = new ArrayList<>();
         ArrayList<ArrayList<String>> cellList = new ArrayList<>();
@@ -148,8 +156,13 @@ public class BatchProcessor {
             nucProcessor.setValue(0.0);
             nucProcessor.fillOutside(manager.getRoi(cellIndex));
             nucProcessor.invert();
+            nucProcessor.convertToByteProcessor();
             EDM edmProcessor = new EDM();
-            ImageProcessor nucEDM = edmProcessor.make16bitEDM(nucProcessor);
+            edmProcessor.setup("", nucleusMaskDup);
+            ImageProcessor nucEDM = edmProcessor.makeFloatEDM(nucProcessor, 0, false);
+
+            FileSaver saver = new FileSaver(new ImagePlus( "nucEDM", nucEDM ));
+            saver.saveAsTiff(outputDir + File.separator + "nucEDM_" + cellIndex + ".tif");
 
             // organelle detection in nucleus and within cell area
             ImagePlus detectionDup = detectionsFiltered.duplicate();
@@ -163,14 +176,19 @@ public class BatchProcessor {
 
             for ( int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
 
-                double pixelValue =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
+                double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
+                double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
+
+
 
                 ArrayList<String> valueList = new ArrayList<>();
                 valueList.add(fileNameWOtExt);
                 valueList.add(String.valueOf(seriesNumber));
                 valueList.add(String.valueOf(cellIndex));
                 valueList.add(String.valueOf(detectIndex));
-                valueList.add(String.valueOf(pixelValue));
+                valueList.add(String.valueOf(detectionPosition));
+                valueList.add(String.valueOf(detectionPosition * pxHeight));
+                valueList.add(String.valueOf(detectionValue));
 
                 distanceList.add(valueList);
 
@@ -180,10 +198,13 @@ public class BatchProcessor {
             cellValueList.add(fileNameWOtExt);
             cellValueList.add(String.valueOf(seriesNumber));
             cellValueList.add(String.valueOf(cellIndex));
-
             Roi cellRoi = manager.getRoi(cellIndex);
-
             cellValueList.add(String.valueOf(cellRoi.getFeretsDiameter()));
+
+            // cell area
+            ImageStatistics cellStat = cellRoi.getStatistics();
+            cellValueList.add(String.valueOf( cellStat.area * pxSize ));
+
             cellValueList.add(String.valueOf(detectionPolygons.npoints));
 
             cellList.add(cellValueList);
@@ -211,7 +232,7 @@ public class BatchProcessor {
 
         final String lineSeparator = "\n";
 
-        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Organelle,Distance");
+        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Organelle,DistanceRaw,DistanceCal,ValueOrganelle");
         distanceFile.append(lineSeparator);
 
         // now append your data in a loop
@@ -226,6 +247,10 @@ public class BatchProcessor {
             distanceFile.append(stringArrayList.get(3));
             distanceFile.append(",");
             distanceFile.append(stringArrayList.get(4));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(5));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(6));
             distanceFile.append(lineSeparator);
 
         }
@@ -241,7 +266,7 @@ public class BatchProcessor {
 
         }
 
-        StringBuilder cellFile = new StringBuilder("Name, Series, Cell, Ferets, NumDetections");
+        StringBuilder cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections");
         cellFile.append(lineSeparator);
 
         for (ArrayList<String> strings : cellList) {
@@ -255,6 +280,8 @@ public class BatchProcessor {
             cellFile.append(strings.get(3));
             cellFile.append(",");
             cellFile.append(strings.get(4));
+            cellFile.append(",");
+            cellFile.append(strings.get(5));
             cellFile.append(lineSeparator);
 
         }

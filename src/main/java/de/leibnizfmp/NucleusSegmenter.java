@@ -2,12 +2,11 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
 import ij.measure.Calibration;
-import ij.plugin.Filters3D;
 import ij.plugin.filter.BackgroundSubtracter;
 import ij.plugin.filter.Binary;
 import ij.plugin.filter.ParticleAnalyzer;
+import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
@@ -23,16 +22,21 @@ public class NucleusSegmenter {
     static ImagePlus segmentNuclei(ImagePlus image, float kernelSize, double rollingBallRadius, String threshold, int erosion,
                             double minSize, double maxSize, double lowCirc, double highCirc ) {
 
+
+
         // extract calibration and convert size filter from micron to px
         Calibration calibration = image.getCalibration();
         Double pxSizeFromImage = calibration.pixelWidth;
         int minSizePx = Image.calculateSizePx( pxSizeFromImage, minSize);
         int maxSizePx = Image.calculateSizePx( pxSizeFromImage, maxSize);
+
         IJ.log("Median filter with radius: " + kernelSize);
-        ImageStack filteredStack = Filters3D.filter(image.getImageStack(), Filters3D.MEDIAN, kernelSize, kernelSize, kernelSize);
+        ImagePlus nucImageDup = image.duplicate();
+        RankFilters medianFilter = new RankFilters();
+        medianFilter.rank(nucImageDup.getProcessor(), kernelSize, 4);
 
         IJ.log("Background subtraction radius: " + rollingBallRadius);
-        ImageProcessor filteredProcessor = filteredStack.getProcessor(1);
+        ImageProcessor filteredProcessor = nucImageDup.getProcessor();
         BackgroundSubtracter subtracted= new BackgroundSubtracter();
         subtracted.rollingBallBackground(filteredProcessor, rollingBallRadius,
                 false, false, true, false, false);
