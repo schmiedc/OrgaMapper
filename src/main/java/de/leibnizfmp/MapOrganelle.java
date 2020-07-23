@@ -11,17 +11,12 @@ package de.leibnizfmp;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
-import ij.plugin.filter.Binary;
-import ij.process.ByteProcessor;
-import ij.process.ImageProcessor;
 import net.imagej.ImageJ;
 import ij.Prefs;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
-import vib.oldregistration.RegistrationAlgorithm;
 
 import java.util.ArrayList;
 
@@ -57,9 +52,9 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
-        //ij.command().run(MapOrganelle.class, true);
+        ij.command().run(MapOrganelle.class, true);
 
-        boolean runTest1 = true;
+        boolean runTest1 = false;
         boolean runTest2 = false;
 
         if ( runTest1 || runTest2 ) {
