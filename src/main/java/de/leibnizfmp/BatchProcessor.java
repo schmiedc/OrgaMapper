@@ -6,12 +6,14 @@ import ij.gui.Roi;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
+import ij.plugin.RGBStackMerge;
 import ij.plugin.filter.EDM;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.frame.RoiManager;
 import ij.process.ImageProcessor;
 import ij.process.ImageStatistics;
+import ij.process.LUT;
 
 import java.awt.*;
 import java.io.File;
@@ -91,7 +93,6 @@ public class BatchProcessor {
                 IJ.log("Metadata will not be overwritten");
 
             }
-
 
             // open individual channels
             ImagePlus[] imp_channels = ChannelSplitter.split(image);
@@ -201,8 +202,8 @@ public class BatchProcessor {
             ImageProcessor nucEDM = edmProcessor.makeFloatEDM(nucProcessor, 0, false);
 
             // TODO: remove or keep saving of individual EDMs?
-            FileSaver saver = new FileSaver(new ImagePlus( "nucEDM", nucEDM ));
-            saver.saveAsTiff(outputDir + File.separator + "nucEDM_" + cellIndex + ".tif");
+            //FileSaver saver = new FileSaver(new ImagePlus( "nucEDM", nucEDM ));
+            //saver.saveAsTiff(outputDir + File.separator + "nucEDM_" + cellIndex + ".tif");
 
             // organelle detection in nucleus and within cell area
             ImagePlus detectionDup = detectionsFiltered.duplicate();
@@ -354,6 +355,50 @@ public class BatchProcessor {
         }
 
         IJ.log("Measurements saved");
+    }
+
+    void saveResultImages(String fileName, ImagePlus nucleusMask, ImagePlus cytoplasm, RoiManager manager, ImagePlus nucleus) {
+
+        String saveDir = outputDir + File.separator + fileName;
+        try {
+
+            Files.createDirectories(Paths.get(saveDir));
+
+        } catch (IOException e) {
+
+            IJ.log("Unable to create output directory");
+            e.printStackTrace();
+        }
+
+        ImagePlus[] cellSegmentation = new ImagePlus[2];
+        nucleusMask.setLut(LUT.createLutFromColor(Color.magenta));
+        nucleusMask.getProcessor().convertToByteProcessor();
+        cellSegmentation[0] = nucleusMask;
+
+        cytoplasm.setLut(LUT.createLutFromColor(Color.green));
+        cytoplasm.getProcessor().convertToByteProcessor();
+        cellSegmentation[1] = cytoplasm;
+
+        ImagePlus cellSegResult = RGBStackMerge.mergeChannels(cellSegmentation, false);
+        manager.moveRoisToOverlay(cellSegResult);
+
+        FileSaver cellSaver = new FileSaver(cellSegResult);
+        cellSaver.saveAsPng( saveDir + File.separator + "cellSegmentation.png");
+
+
+        nucleus.setLut(LUT.createLutFromColor(Color.gray));
+        ParticleAnalyzer nucAnalyzer = new ParticleAnalyzer(2048, 0, null,
+                0, Image.calculateMaxArea( nucleusMask.getWidth(), nucleusMask.getHeight() ) );
+
+        RoiManager nucRoiManager = new RoiManager(false);
+        ParticleAnalyzer.setRoiManager( nucRoiManager );
+        nucAnalyzer.analyze( nucleusMask );
+
+        nucRoiManager.moveRoisToOverlay(nucleus);
+
+        FileSaver nucSaver = new FileSaver(nucleus);
+        nucSaver.saveAsPng( saveDir + File.separator + "nucSegmentation.png");
+
     }
     
     BatchProcessor( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber) {
