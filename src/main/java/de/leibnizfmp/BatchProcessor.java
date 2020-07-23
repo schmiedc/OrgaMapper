@@ -2,6 +2,8 @@ package de.leibnizfmp;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.Overlay;
+import ij.gui.PointRoi;
 import ij.gui.Roi;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -127,6 +129,8 @@ public class BatchProcessor {
 
             distanceMeasureAll.addAll(distanceMeasure);
             cellMeasureAll.addAll(cellMeasure);
+
+            saveResultImages(fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
         }
         
@@ -357,7 +361,7 @@ public class BatchProcessor {
         IJ.log("Measurements saved");
     }
 
-    void saveResultImages(String fileName, ImagePlus nucleusMask, ImagePlus cytoplasm, RoiManager manager, ImagePlus nucleus) {
+    void saveResultImages(String fileName, ImagePlus nucleusMask, ImagePlus cytoplasm, RoiManager manager, ImagePlus nucleus, ImagePlus organelle, ImagePlus detectionImage) {
 
         String saveDir = outputDir + File.separator + fileName;
         try {
@@ -370,21 +374,24 @@ public class BatchProcessor {
             e.printStackTrace();
         }
 
+        Calibration cytocalib = cytoplasm.getCalibration();
+
         ImagePlus[] cellSegmentation = new ImagePlus[2];
         nucleusMask.setLut(LUT.createLutFromColor(Color.magenta));
-        nucleusMask.getProcessor().convertToByteProcessor();
         cellSegmentation[0] = nucleusMask;
 
         cytoplasm.setLut(LUT.createLutFromColor(Color.green));
-        cytoplasm.getProcessor().convertToByteProcessor();
         cellSegmentation[1] = cytoplasm;
 
         ImagePlus cellSegResult = RGBStackMerge.mergeChannels(cellSegmentation, false);
+        cellSegResult.setCalibration(cytocalib);
         manager.moveRoisToOverlay(cellSegResult);
 
         FileSaver cellSaver = new FileSaver(cellSegResult);
         cellSaver.saveAsPng( saveDir + File.separator + "cellSegmentation.png");
 
+
+        Calibration nucCalib = nucleus.getCalibration();
 
         nucleus.setLut(LUT.createLutFromColor(Color.gray));
         ParticleAnalyzer nucAnalyzer = new ParticleAnalyzer(2048, 0, null,
@@ -394,10 +401,31 @@ public class BatchProcessor {
         ParticleAnalyzer.setRoiManager( nucRoiManager );
         nucAnalyzer.analyze( nucleusMask );
 
+        nucleusMask.setCalibration(nucCalib);
         nucRoiManager.moveRoisToOverlay(nucleus);
 
         FileSaver nucSaver = new FileSaver(nucleus);
         nucSaver.saveAsPng( saveDir + File.separator + "nucSegmentation.png");
+
+        Calibration detectCalib = detectionImage.getCalibration();
+        ImagePlus detectionsResult = DetectionFilter.filterByCells(detectionImage, manager);
+
+        // get detections as polygons and put on image as roi
+        MaximumFinder maxima = new MaximumFinder();
+        ImageProcessor getMaxima = detectionsResult.getProcessor().convertToByteProcessor();
+        java.awt.Polygon detections = maxima.getMaxima(getMaxima, 1, false);
+        PointRoi roi = new PointRoi(detections);
+
+        organelle.setLut(LUT.createLutFromColor(Color.gray));
+        Overlay detectionOverlay = new Overlay();
+        detectionOverlay.add(roi);
+        organelle.setOverlay(detectionOverlay);
+        nucRoiManager.moveRoisToOverlay(organelle);
+        organelle.setCalibration(detectCalib);
+        manager.moveRoisToOverlay(organelle);
+
+        FileSaver organelleSave = new FileSaver(organelle);
+        organelleSave.saveAsTiff(saveDir + File.separator + "detections.png");
 
     }
     
