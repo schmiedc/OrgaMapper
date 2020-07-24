@@ -325,7 +325,7 @@ public class BatchProcessor {
             // intensity in detection channel
             organelleChannel.setRoi( manager.getRoi(cellIndex) );
             cellValueList.add( String.valueOf(organelleChannel.getProcessor().getStats().mean ) );
-            cellList.add(cellValueList);
+
 
             if ( backgroundMean >= 0 ) {
 
@@ -337,15 +337,24 @@ public class BatchProcessor {
 
             }
 
-            if ( backgroundMeasure >= 0 ) {
+            if ( measureChannel > 0) {
 
-                cellValueList.add( String.valueOf(backgroundMeasure));
+                measureChannelImage.setRoi( manager.getRoi(cellIndex) );
+                cellValueList.add( String.valueOf(measureChannelImage.getProcessor().getStats().mean ) );
 
-            } else {
+                if ( backgroundMeasure >= 0 ) {
 
-                cellValueList.add( "NaN" );
+                    cellValueList.add( String.valueOf(backgroundMeasure));
+
+                } else {
+
+                    cellValueList.add( "NaN" );
+
+                }
 
             }
+
+            cellList.add(cellValueList);
 
             //nucleusMaskDup.close();
             detectionDup.close();
@@ -450,7 +459,7 @@ public class BatchProcessor {
 
         final String lineSeparator = "\n";
 
-        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt, PeakMeasureInt");
+        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
         distanceFile.append(lineSeparator);
 
         // now append your data in a loop
@@ -486,7 +495,7 @@ public class BatchProcessor {
 
         }
 
-        StringBuilder cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections, MeanValueOrga, MeanBackgroundOrga, MeanBackgroundMeasure");
+        StringBuilder cellFile = new StringBuilder("Name,Series, ell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
         cellFile.append(lineSeparator);
 
         for (ArrayList<String> strings : cellList) {
@@ -508,6 +517,8 @@ public class BatchProcessor {
             cellFile.append(strings.get(7));
             cellFile.append(",");
             cellFile.append(strings.get(8));
+            cellFile.append(",");
+            cellFile.append(strings.get(9));
             cellFile.append(lineSeparator);
 
         }
@@ -609,7 +620,7 @@ public class BatchProcessor {
         nucleusChannel = 1;
         cytoplasmChannel = 2;
         organelleChannel = 3;
-        measureChannel = 0;
+        measureChannel = 4;
         calibrationSetting = false;
         pxSizeMicron = 0.1567095;
 
