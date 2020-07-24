@@ -195,7 +195,7 @@ public class PreviewGui extends JPanel {
     private JScrollPane setUpFileList(ArrayList<String> fileList) {
 
         // setup List
-        list = new JList(fileList.toArray());
+        list = new  JList(fileList.toArray());
 
         // create a new scroll pane
         JScrollPane scroller = new JScrollPane(list);
@@ -220,7 +220,7 @@ public class PreviewGui extends JPanel {
         Box segmentationBox = new Box(BoxLayout.Y_AXIS);
         TitledBorder titleSegmentation;
         blackline = BorderFactory.createLineBorder(Color.black);
-        titleSegmentation = BorderFactory.createTitledBorder(blackline, "Processing and threshold: ");
+        titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
         segmentationBox.setBorder(titleSegmentation);
 
         doubleSpinKernelSizeNuc = new SpinnerNumberModel(kernelSizeNuc, 0.0, 50.0, 1.0);
@@ -260,29 +260,29 @@ public class PreviewGui extends JPanel {
         Box filterBox = new Box(BoxLayout.Y_AXIS);
         TitledBorder titleFilter;
         blackline = BorderFactory.createLineBorder(Color.black);
-        titleFilter = BorderFactory.createTitledBorder(blackline, "Filter: size and circ.");
+        titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
         filterBox.setBorder(titleFilter);
 
         doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,1000000,10.0);
-        String minSizeLabel = "Select min. size: ";
+        String minSizeLabel = "Minimum size: ";
         String minUnitLabel = "µm²";
         Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSize, minUnitLabel );
         filterBox.add(spinnerNuc4);
 
         doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,1000000,10.0);
-        String maxSizeLabel = "Select max. size: ";
+        String maxSizeLabel = "Maximum size: ";
         String maxUnitLabel = "µm²";
         Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSize, maxUnitLabel);
         filterBox.add(spinnerNuc5);
 
         doubleSpinLowCirc = new SpinnerNumberModel(lowCircNuc,0.0,1.0,0.1);
-        String minCircLabel = "Select minimal circularity: ";
+        String minCircLabel = "Minimum circularity: ";
         String minCircUnit = "";
         Box lowCircBox = addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCirc, minCircUnit);
         filterBox.add(lowCircBox);
 
         doubleSpinHighCirc = new SpinnerNumberModel(highCircNuc,0.0,1.0,0.1);
-        String highCircLabel = "Select maximal circularity: ";
+        String highCircLabel = "Maximum circularity: ";
         String highCircUnit = "";
         Box highCircBox = addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCirc, highCircUnit);
         filterBox.add(highCircBox);
@@ -302,7 +302,7 @@ public class PreviewGui extends JPanel {
         Box segmentationBox = new Box(BoxLayout.Y_AXIS);
         TitledBorder titleSegmentation;
         blackline = BorderFactory.createLineBorder(Color.black);
-        titleSegmentation = BorderFactory.createTitledBorder(blackline, "Processing and threshold: ");
+        titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
         segmentationBox.setBorder(titleSegmentation);
 
         doubleSpinKernelCellArea = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
@@ -330,19 +330,19 @@ public class PreviewGui extends JPanel {
         Box separationBox = new Box(BoxLayout.Y_AXIS);
         TitledBorder titleSeparation;
         blackline = BorderFactory.createLineBorder(Color.black);
-        titleSeparation = BorderFactory.createTitledBorder(blackline, "Settings for separating cells: ");
+        titleSeparation = BorderFactory.createTitledBorder(blackline, "Watershed settings: ");
         separationBox.setBorder(titleSeparation);
 
         doubleSpinGaussCellSep = new SpinnerNumberModel(sigmaGaussCellSep, 0.0, 50.0, 1.0);
-        String spinGaussCellSep = "Gauss sigma: ";
+        String spinGaussCellSep = "Gaussian sigma: ";
         String spinGaussCellSepUnit = "px";
         Box spinnerGaussCellSep = addLabeledSpinnerUnit(spinGaussCellSep, doubleSpinGaussCellSep, spinGaussCellSepUnit);
         separationBox.add(spinnerGaussCellSep);
 
-        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,1000.0, 0.0001);
+        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,1000.0, 0.1);
         String spinLabelProminence = "Prominence: ";
         String spinUnitProminence = "A.U.";
-        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
+        Box spinSpot2 = addLabeledSpinnerUnit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
         separationBox.add(spinSpot2);
 
         cellSegBox.add(separationBox);
@@ -351,40 +351,39 @@ public class PreviewGui extends JPanel {
         Box filterBox = new Box(BoxLayout.Y_AXIS);
         TitledBorder titleFilter;
         blackline = BorderFactory.createLineBorder(Color.black);
-        titleFilter = BorderFactory.createTitledBorder(blackline, "Filter: size");
+        titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
         filterBox.setBorder(titleFilter);
 
         doubleSpinMinSizeCellFilter = new SpinnerNumberModel(minCellSize,0.0,1000000,10.0);
-        String minSizeLabel = "Select min. size: ";
+        String minSizeLabel = "Minimum size: ";
         String minUnitLabel = "µm²";
         Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSizeCellFilter, minUnitLabel );
         filterBox.add(spinnerNuc4);
 
         doubleSpinMaxSizeCellFilter = new SpinnerNumberModel(maxCellSize,0.0,1000000,10.0);
-        String maxSizeLabel = "Select max. size: ";
+        String maxSizeLabel = "Maximum size: ";
         String maxUnitLabel = "µm²";
         Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSizeCellFilter, maxUnitLabel);
         filterBox.add(spinnerNuc5);
 
         doubleSpinLowCircCellFilter = new SpinnerNumberModel(lowCircCellSize,0.0,1.0,0.1);
-        String minCircLabel = "Select minimal circularity: ";
+        String minCircLabel = "Minimum circularity: ";
         String minCircUnit = "";
         Box lowCircBox = addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCircCellFilter, minCircUnit);
         filterBox.add(lowCircBox);
 
         doubleSpinHighCircCellFilter = new SpinnerNumberModel(highCircCelLSize,0.0,1.0,0.1);
-        String highCircLabel = "Select maximal circularity: ";
+        String highCircLabel = "Maximum circularity: ";
         String highCircUnit = "";
         Box highCircBox = addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCircCellFilter, highCircUnit);
         filterBox.add(highCircBox);
 
-        cellSegBox.add(filterBox);
-
         checkFilterCellFilter = new JCheckBox("Filter by nuclei?");
         checkFilterCellFilter.setSelected(false);
         checkFilterCellFilter.setToolTipText("Only affects visualization");
-        cellSegBox.add(checkFilterCellFilter);
+        filterBox.add(checkFilterCellFilter);
 
+        cellSegBox.add(filterBox);
         // setup Buttons
         JButton previewButton = new JButton("Preview");
         previewButton.addActionListener(new MyPreviewCellListener());
@@ -398,7 +397,7 @@ public class PreviewGui extends JPanel {
         Box detectionBox = new Box(BoxLayout.Y_AXIS);
         TitledBorder titleDetection;
         blackline = BorderFactory.createLineBorder(Color.black);
-        titleDetection = BorderFactory.createTitledBorder(blackline, "Detect: number & position of spots");
+        titleDetection = BorderFactory.createTitledBorder(blackline, "Detect number & position of spots");
         detectionBox.setBorder(titleDetection);
 
         // Spinner for some number input
@@ -408,10 +407,10 @@ public class PreviewGui extends JPanel {
         Box spinSpot1 = addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGOragenelle, spinUnitSpot1);
         detectionBox.add(spinSpot1);
 
-        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,1000.0, 0.0001);
+        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,1000.0, 0.1);
         String spinLabelSpot2 = "Prominence: ";
         String spinUnitSpot2 = "A.U.";
-        Box spinSpot2 = addLabeledSpinner5Digit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
+        Box spinSpot2 = addLabeledSpinnerUnit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
         detectionBox.add(spinSpot2);
 
         organelleBox.add(detectionBox);
@@ -433,10 +432,10 @@ public class PreviewGui extends JPanel {
         JLabel settingsLabel = new JLabel("Specify experimental Settings: ");
         boxSettings.add(settingsLabel);
 
-        doubleSpinnerPixelSize = new SpinnerNumberModel(pxSizeMicron, 0.000,10.000, 0.001);
+        doubleSpinnerPixelSize = new SpinnerNumberModel(pxSizeMicron, 0.000,10.000, 0.00001);
         String pixelSizeLabel = "Pixel size: ";
         String pixelSizeUnit = "µm";
-        Box boxPixelSize = addLabeledSpinnerUnit(pixelSizeLabel,doubleSpinnerPixelSize, pixelSizeUnit);
+        Box boxPixelSize = addLabeledSpinner5Digit(pixelSizeLabel,doubleSpinnerPixelSize, pixelSizeUnit);
         boxSettings.add(boxPixelSize);
 
         checkCalibration = new JCheckBox("Override metadata?");
