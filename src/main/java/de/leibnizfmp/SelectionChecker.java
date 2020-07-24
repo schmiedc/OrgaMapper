@@ -16,7 +16,6 @@ public class SelectionChecker {
 
         boolean selectedFileChecker;
 
-
         // if there are image windows open check if they are of the list and of the selected image
         if  ( openImages != 0 ) {
 

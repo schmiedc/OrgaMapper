@@ -80,8 +80,6 @@ public class SegmentationVisualizer {
         originalImage.setRoi(roi);
         originalImage.show();
 
-
-
         if (setDisplayRange) {
 
             double rangeMin = originalImage.getDisplayRangeMin();
@@ -94,7 +92,6 @@ public class SegmentationVisualizer {
         }
 
         IJ.log("Organelle visualization done: " + detections.npoints + " detection(s)");
-
 
     }
 
@@ -222,8 +219,6 @@ public class SegmentationVisualizer {
         ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
 
         ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCellCirc, highCellCirc);
-
-
 
         if (cellFilterCheck) {
 

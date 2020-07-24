@@ -60,7 +60,6 @@ public class BatchProcessor {
     private final double sigmaLoGOrga;
     private final double prominenceOrga;
 
-
     void processImage() {
 
         IJ.log("Starting batch processing");
@@ -120,9 +119,41 @@ public class BatchProcessor {
             ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
             ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
 
-            double backgroundMean = measureDetectionBackground(backgroundMask, organelle);
+            // measure background in organelle channel
+            String saveDir = outputDir + File.separator + fileName;
+            try {
 
-            ArrayList<ArrayList<ArrayList<String>>> resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundMean);
+                Files.createDirectories(Paths.get(saveDir));
+
+            } catch (IOException e) {
+
+                IJ.log("Unable to create output directory");
+                e.printStackTrace();
+            }
+
+
+            double backgroundOrganelle = measureDetectionBackground(backgroundMask, organelle);
+
+            if ( measureChannel == 0) {
+
+                IJ.log("No measure channel selected");
+
+            } else {
+
+                ImagePlus measure = imp_channels[processingImage.measure - 1];
+                IJ.log("Measuring in channel: " + measureChannel);
+                double backgroundMeasure = measureDetectionBackground(backgroundMask, measure);
+                IJ.log("Background is: " + backgroundMeasure);
+
+
+
+                FileSaver measureSave = new FileSaver(measure);
+                measureSave.saveAsTiff(saveDir + File.separator + "measure.tif");
+
+            }
+
+            // measure organelle distance and intensity, cell properties
+            ArrayList<ArrayList<ArrayList<String>>> resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundOrganelle);
 
             ArrayList<ArrayList<String>> distanceMeasure = resultLists.get(0);
             ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
@@ -132,6 +163,10 @@ public class BatchProcessor {
 
             saveResultImages(fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
+
+            FileSaver backSave = new FileSaver(backgroundMask);
+            backSave.saveAsTiff(saveDir + File.separator + "background.tif");
+
         }
         
         saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir);
@@ -140,39 +175,68 @@ public class BatchProcessor {
 
     }
 
-    double measureDetectionBackground(ImagePlus background, ImagePlus organelle) {
+    double measureDetectionBackground(ImagePlus background, ImagePlus measureImage) {
 
-        background.getProcessor().invert();
+        IJ.log("Starting background measurements");
+
+        ImagePlus backgroundDup = background.duplicate();
+
+        backgroundDup.getProcessor().invert();
 
         ParticleAnalyzer cellAnalyzer = new ParticleAnalyzer(2048, 0, null,
-                500, Image.calculateMaxArea( background.getWidth(), background.getHeight() ) );
+                500, Image.calculateMaxArea( backgroundDup.getWidth(), backgroundDup.getHeight() ) );
 
         RoiManager backgroundRoiManager = new RoiManager(false);
         ParticleAnalyzer.setRoiManager( backgroundRoiManager );
 
-        cellAnalyzer.analyze( background );
-
+        cellAnalyzer.analyze( backgroundDup );
 
         double backgroundMean;
 
         if ( backgroundRoiManager.getCount() > 0 ) {
 
+            int imageWidth;
+            int imageHeight;
+
             double backgroundSum = 0;
+            double backgroundArea = 0;
 
-            for (int backROI = 0; backROI < backgroundRoiManager.getCount(); backROI++) {
+            imageWidth = measureImage.getWidth();
+            imageHeight = measureImage.getHeight();
 
-                organelle.setRoi(backgroundRoiManager.getRoi(backROI));
-                backgroundSum += organelle.getProcessor().getStats().mean;
+            ImageProcessor measureImageProcessor = measureImage.getProcessor();
+            ImageProcessor backgroundMaksProcessor = backgroundDup.getProcessor();
+
+            short[] measureImagePixels = (short[]) measureImageProcessor.getPixels();
+            byte[] backgroundMaskPixels  = (byte[]) backgroundMaksProcessor.getPixels();
+
+            for (int y = 0; y < imageHeight; y++) {
+
+                for (int x = 0; x < imageWidth; x++) {
+
+                    //IJ.log(String.valueOf(backgroundMaskPixels[x + y * imageWidth]));
+
+                    if ( backgroundMaskPixels[x + y * imageWidth] < 0 ) {
+
+                        backgroundSum += measureImagePixels[x + y * imageWidth];
+                        backgroundArea += 1;
+
+                    }
+
+                }
 
             }
 
-            backgroundMean = backgroundSum / backgroundRoiManager.getCount();
+            backgroundMean = backgroundSum / backgroundArea;
 
-        } else {
+       } else {
 
             backgroundMean = -1;
 
         }
+
+        backgroundDup.close();
+        backgroundRoiManager.reset();
 
         return backgroundMean;
 
@@ -204,10 +268,6 @@ public class BatchProcessor {
             EDM edmProcessor = new EDM();
             edmProcessor.setup("", nucleusMaskDup);
             ImageProcessor nucEDM = edmProcessor.makeFloatEDM(nucProcessor, 0, false);
-
-            // TODO: remove or keep saving of individual EDMs?
-            //FileSaver saver = new FileSaver(new ImagePlus( "nucEDM", nucEDM ));
-            //saver.saveAsTiff(outputDir + File.separator + "nucEDM_" + cellIndex + ".tif");
 
             // organelle detection in nucleus and within cell area
             ImagePlus detectionDup = detectionsFiltered.duplicate();
@@ -242,12 +302,15 @@ public class BatchProcessor {
             cellValueList.add(String.valueOf(seriesNumber));
             cellValueList.add(String.valueOf(cellIndex));
             Roi cellRoi = manager.getRoi(cellIndex);
+
+            // Ferets diameter
             cellValueList.add(String.valueOf(cellRoi.getFeretsDiameter()));
 
             // cell area
             ImageStatistics cellStat = cellRoi.getStatistics();
             cellValueList.add(String.valueOf( cellStat.area * pxSize ));
 
+            // detection number
             cellValueList.add(String.valueOf(detectionPolygons.npoints));
 
             // intensity in detection channel
@@ -288,7 +351,7 @@ public class BatchProcessor {
 
         final String lineSeparator = "\n";
 
-        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Organelle,DistanceRaw,DistanceCal,ValueOrganelle");
+        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt");
         distanceFile.append(lineSeparator);
 
         // now append your data in a loop
@@ -390,7 +453,6 @@ public class BatchProcessor {
         FileSaver cellSaver = new FileSaver(cellSegResult);
         cellSaver.saveAsPng( saveDir + File.separator + "cellSegmentation.png");
 
-
         Calibration nucCalib = nucleus.getCalibration();
 
         nucleus.setLut(LUT.createLutFromColor(Color.gray));
@@ -427,6 +489,8 @@ public class BatchProcessor {
         FileSaver organelleSave = new FileSaver(organelle);
         organelleSave.saveAsTiff(saveDir + File.separator + "detections.png");
 
+        nucRoiManager.reset();
+
     }
     
     BatchProcessor( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber) {
@@ -442,7 +506,7 @@ public class BatchProcessor {
         nucleusChannel = 1;
         cytoplasmChannel = 2;
         organelleChannel = 3;
-        measureChannel = 0;
+        measureChannel = 4;
         calibrationSetting = false;
         pxSizeMicron = 0.1567095;
 

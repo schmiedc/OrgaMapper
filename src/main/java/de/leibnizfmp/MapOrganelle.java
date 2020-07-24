@@ -52,15 +52,16 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
-        ij.command().run(MapOrganelle.class, true);
+        //ij.command().run(MapOrganelle.class, true);
 
-        boolean runTest1 = false;
+        boolean runTest1 = true;
         boolean runTest2 = false;
 
         if ( runTest1 || runTest2 ) {
 
             //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
+            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest_nd2/";
+            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/TestDataSet_2ndChannel/";
             String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_OutputTest";
             int channelNumber = 3;
             //String fileEnding = ".tif";
@@ -79,16 +80,19 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
 
             if ( runTest1 ) {
 
-
-                //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 3);
+                IJ.log("Run test 1");
+                //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileList, fileEnding, 4);
                 //guiTest.setUpGui();
 
                 //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, channelNumber,fileEnding, settings);
                 //guiTest.createWindow();
 
                 BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
+                IJ.log("Test 1 setup");
+
                 processBatch.processImage();
 
+                IJ.log("Test 1 done");
 
             } else if (runTest2) {
 
