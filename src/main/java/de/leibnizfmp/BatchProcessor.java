@@ -131,30 +131,26 @@ public class BatchProcessor {
                 e.printStackTrace();
             }
 
-
             double backgroundOrganelle = measureDetectionBackground(backgroundMask, organelle);
+
+            double backgroundMeasure = -1;
+            ArrayList<ArrayList<ArrayList<String>>> resultLists;
 
             if ( measureChannel == 0) {
 
                 IJ.log("No measure channel selected");
+                resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundOrganelle, backgroundMeasure, measureChannel, organelle);
 
             } else {
 
                 ImagePlus measure = imp_channels[processingImage.measure - 1];
                 IJ.log("Measuring in channel: " + measureChannel);
-                double backgroundMeasure = measureDetectionBackground(backgroundMask, measure);
-                IJ.log("Background is: " + backgroundMeasure);
-
-
-
-                FileSaver measureSave = new FileSaver(measure);
-                measureSave.saveAsTiff(saveDir + File.separator + "measure.tif");
+                backgroundMeasure = measureDetectionBackground(backgroundMask, measure);
+                resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundOrganelle, backgroundMeasure, measureChannel, measure);
 
             }
 
             // measure organelle distance and intensity, cell properties
-            ArrayList<ArrayList<ArrayList<String>>> resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundOrganelle);
-
             ArrayList<ArrayList<String>> distanceMeasure = resultLists.get(0);
             ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
 
@@ -163,13 +159,16 @@ public class BatchProcessor {
 
             saveResultImages(fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
-
-            FileSaver backSave = new FileSaver(backgroundMask);
-            backSave.saveAsTiff(saveDir + File.separator + "background.tif");
-
         }
-        
-        saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir);
+
+        if ( measureChannel == 0) {
+
+            saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir);
+
+        } else {
+
+            saveMeasurementsAdditional(distanceMeasureAll, cellMeasureAll, outputDir);
+        }
 
         IJ.log("== Batch processing finished ==");
 
@@ -214,8 +213,6 @@ public class BatchProcessor {
 
                 for (int x = 0; x < imageWidth; x++) {
 
-                    //IJ.log(String.valueOf(backgroundMaskPixels[x + y * imageWidth]));
-
                     if ( backgroundMaskPixels[x + y * imageWidth] < 0 ) {
 
                         backgroundSum += measureImagePixels[x + y * imageWidth];
@@ -242,7 +239,7 @@ public class BatchProcessor {
 
     }
 
-    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager, ImagePlus nucleusMask, ImagePlus detectionsFiltered, ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, double backgroundMean) {
+    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager, ImagePlus nucleusMask, ImagePlus detectionsFiltered, ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, double backgroundMean, double backgroundMeasure, int measureChannel, ImagePlus measureChannelImage) {
 
         IJ.log("Starting measurements");
 
@@ -284,6 +281,18 @@ public class BatchProcessor {
                 double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
                 double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
 
+                double detectionMeasureValue;
+
+                if (measureChannel == 0) {
+
+                    detectionMeasureValue = 0;
+
+                } else {
+
+                    detectionMeasureValue = measureChannelImage.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
+
+                }
+
                 ArrayList<String> valueList = new ArrayList<>();
                 valueList.add(fileNameWOtExt);
                 valueList.add(String.valueOf(seriesNumber));
@@ -292,7 +301,7 @@ public class BatchProcessor {
                 valueList.add(String.valueOf(detectionPosition));
                 valueList.add(String.valueOf(detectionPosition * pxHeight));
                 valueList.add(String.valueOf(detectionValue));
-
+                valueList.add(String.valueOf(detectionMeasureValue));
                 distanceList.add(valueList);
 
             }
@@ -318,9 +327,19 @@ public class BatchProcessor {
             cellValueList.add( String.valueOf(organelleChannel.getProcessor().getStats().mean ) );
             cellList.add(cellValueList);
 
-            if ( backgroundMean > 0 ) {
+            if ( backgroundMean >= 0 ) {
 
                 cellValueList.add( String.valueOf(backgroundMean));
+
+            } else {
+
+                cellValueList.add( "NaN" );
+
+            }
+
+            if ( backgroundMeasure >= 0 ) {
+
+                cellValueList.add( String.valueOf(backgroundMeasure));
 
             } else {
 
@@ -424,6 +443,90 @@ public class BatchProcessor {
         IJ.log("Measurements saved");
     }
 
+
+    void saveMeasurementsAdditional(ArrayList<ArrayList<String>>  distanceList, ArrayList<ArrayList<String>>  cellList, String outputDir ) {
+
+        IJ.log("Saving measurements to: " + outputDir);
+
+        final String lineSeparator = "\n";
+
+        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt, PeakMeasureInt");
+        distanceFile.append(lineSeparator);
+
+        // now append your data in a loop
+        for (ArrayList<String> stringArrayList : distanceList) {
+
+            distanceFile.append(stringArrayList.get(0));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(1));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(2));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(3));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(4));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(5));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(6));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(7));
+            distanceFile.append(lineSeparator);
+
+        }
+
+        // now write to file
+        try {
+            Files.write(Paths.get(outputDir + "/organelleDistance.csv"), distanceFile.toString().getBytes());
+
+        } catch (IOException e) {
+
+            IJ.log("Unable to write distance measurement!");
+            e.printStackTrace();
+
+        }
+
+        StringBuilder cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections, MeanValueOrga, MeanBackgroundOrga, MeanBackgroundMeasure");
+        cellFile.append(lineSeparator);
+
+        for (ArrayList<String> strings : cellList) {
+
+            cellFile.append(strings.get(0));
+            cellFile.append(",");
+            cellFile.append(strings.get(1));
+            cellFile.append(",");
+            cellFile.append(strings.get(2));
+            cellFile.append(",");
+            cellFile.append(strings.get(3));
+            cellFile.append(",");
+            cellFile.append(strings.get(4));
+            cellFile.append(",");
+            cellFile.append(strings.get(5));
+            cellFile.append(",");
+            cellFile.append(strings.get(6));
+            cellFile.append(",");
+            cellFile.append(strings.get(7));
+            cellFile.append(",");
+            cellFile.append(strings.get(8));
+            cellFile.append(lineSeparator);
+
+        }
+
+        // now write to file
+        try {
+
+            Files.write(Paths.get(outputDir + "/cellMeasurements.csv"), cellFile.toString().getBytes());
+
+        } catch (IOException e) {
+
+            IJ.log("Unable to write cell measurement!");
+            e.printStackTrace();
+
+        }
+
+        IJ.log("Measurements saved");
+    }
+
     void saveResultImages(String fileName, ImagePlus nucleusMask, ImagePlus cytoplasm, RoiManager manager, ImagePlus nucleus, ImagePlus organelle, ImagePlus detectionImage) {
 
         String saveDir = outputDir + File.separator + fileName;
@@ -506,7 +609,7 @@ public class BatchProcessor {
         nucleusChannel = 1;
         cytoplasmChannel = 2;
         organelleChannel = 3;
-        measureChannel = 4;
+        measureChannel = 0;
         calibrationSetting = false;
         pxSizeMicron = 0.1567095;
 
