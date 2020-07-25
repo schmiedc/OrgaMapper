@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * thus now enable to drag and drop folders
  * also the code is simpler in this version compared to the old InputGui
  */
+
 class InputGuiFiji {
 
     private File settingsFile;
@@ -24,7 +25,8 @@ class InputGuiFiji {
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
-
+    // TODO: Improve GUI:
+    // https://github.com/PreibischLab/multiview-reconstruction/blob/master/src/main/java/net/preibisch/mvrecon/fiji/plugin/queryXML/GenericLoadParseQueryXML.java
     /**
      * default constructor
      */
@@ -70,7 +72,6 @@ class InputGuiFiji {
      * @param fileFormat fileFormat
      * @param settingsFileString location of test settingsFile
      */
-    @Deprecated
     InputGuiFiji(String inputDir, String outputDir, int channelNumber, String fileFormat, String settingsFileString ) {
 
         defaultInputDirectory = inputDir;

@@ -209,7 +209,7 @@ class XmlHandler {
             Document doc = docBuilder.newDocument();
 
             // pHluorinSettings as root element
-            Element rootElement = doc.createElement("map Organelle Settings");
+            Element rootElement = doc.createElement("MapOrganelleSettings");
             doc.appendChild(rootElement);
 
             Element settingsKernelSizeNuc = doc.createElement("kernelSizeNuc");

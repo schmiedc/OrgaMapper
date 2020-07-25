@@ -633,27 +633,27 @@ public class PreviewGui extends JPanel {
 
                 // settings for nucleus settings
                 kernelSizeNuc = 5;
-                rollingBallRadiusNuc = 50;
+                rollingBallRadiusNuc = 150;
                 thresholdNuc = "Otsu";
-                erosionNuc = 2;
-                minSizeNuc = 100;
-                maxSizeNuc = 20000;
-                lowCircNuc = 0.0;
+                erosionNuc = 0;
+                minSizeNuc = 50;
+                maxSizeNuc = 500;
+                lowCircNuc = 0.5;
                 highCircNuc = 1.00;
 
                 // settings for cell area segmentation
                 kernelSizeCellArea = 10;
-                rollingBallRadiusCellArea = 50;
+                rollingBallRadiusCellArea = 150;
                 manualThresholdCellArea = 200;
 
                 // settings for cell separator
                 sigmaGaussCellSep = 15;
-                prominenceCellSep = 500;
+                prominenceCellSep = 1000;
 
                 // settings for cell filter size
-                minCellSize = 100;
-                maxCellSize = 150000;
-                lowCircCellSize = 0.0;
+                minCellSize = 500;
+                maxCellSize = 50000;
+                lowCircCellSize = 0.3;
                 highCircCelLSize = 1.0;
 
                 // settings for organelle detection
@@ -692,27 +692,27 @@ public class PreviewGui extends JPanel {
 
         // settings for nucleus settings
         kernelSizeNuc = 5;
-        rollingBallRadiusNuc = 50;
+        rollingBallRadiusNuc = 150;
         thresholdNuc = "Otsu";
-        erosionNuc = 2;
-        minSizeNuc = 100;
-        maxSizeNuc = 20000;
-        lowCircNuc = 0.0;
+        erosionNuc = 0;
+        minSizeNuc = 50;
+        maxSizeNuc = 500;
+        lowCircNuc = 0.5;
         highCircNuc = 1.00;
 
         // settings for cell area segmentation
         kernelSizeCellArea = 10;
-        rollingBallRadiusCellArea = 50;
+        rollingBallRadiusCellArea = 150;
         manualThresholdCellArea = 200;
 
         // settings for cell separator
         sigmaGaussCellSep = 15;
-        prominenceCellSep = 500;
+        prominenceCellSep = 1000;
 
         // settings for cell filter size
-        minCellSize = 100;
-        maxCellSize = 150000;
-        lowCircCellSize = 0.0;
+        minCellSize = 500;
+        maxCellSize = 50000;
+        lowCircCellSize = 0.3;
         highCircCelLSize = 1.0;
 
         // settings for organelle detection
