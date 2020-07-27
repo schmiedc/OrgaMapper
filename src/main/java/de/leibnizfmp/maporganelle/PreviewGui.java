@@ -1,4 +1,4 @@
-package de.leibnizfmp.mapOrganelle;
+package de.leibnizfmp.maporganelle;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -929,6 +929,8 @@ public class PreviewGui extends JPanel {
                                 nucLowCirc,
                                 nucHighCirc,
                                 setDisplayRange);
+
+                        IJ.showProgress(1);
                     }
 
                 } else {

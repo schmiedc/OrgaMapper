@@ -78,8 +78,8 @@
 	</ciManagement>
 
 	<properties>
-		<package-name>de.leibnizfmp</package-name>
-		<main-class>de.leibnizfmp.mapOrganelle.MapOrganelle</main-class>
+		<package-name>de.leibnizfmp.maporganelle</package-name>
+		<main-class>de.leibnizfmp.maporganelle.MapOrganelle</main-class>
 		<license.licenseName>MIT</license.licenseName>
 		<license.copyrightOwners>Christopher Schmied</license.copyrightOwners>
 		<scijava.app.directory>/data1/FMP_Docs/DevelopmentEnv/2020-06-30_fiji/</scijava.app.directory>

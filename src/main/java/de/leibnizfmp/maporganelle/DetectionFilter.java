@@ -1,4 +1,4 @@
-package de.leibnizfmp.mapOrganelle;
+package de.leibnizfmp.maporganelle;
 
 import ij.ImagePlus;
 import ij.measure.Calibration;
