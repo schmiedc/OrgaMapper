@@ -161,14 +161,7 @@ public class BatchProcessor {
 
         }
 
-        if ( measureChannel == 0) {
-
-            saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir);
-
-        } else {
-
-            saveMeasurementsAdditional(distanceMeasureAll, cellMeasureAll, outputDir);
-        }
+        saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir, measureChannel);
 
         IJ.log("== Batch processing finished ==");
 
@@ -373,14 +366,26 @@ public class BatchProcessor {
 
     }
 
-    void saveMeasurements(ArrayList<ArrayList<String>>  distanceList, ArrayList<ArrayList<String>>  cellList, String outputDir ) {
+    void saveMeasurements(ArrayList<ArrayList<String>> distanceList, ArrayList<ArrayList<String>> cellList, String outputDir, int measure) {
 
         IJ.log("Saving measurements to: " + outputDir);
 
         final String lineSeparator = "\n";
+        StringBuilder distanceFile;
 
-        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt");
-        distanceFile.append(lineSeparator);
+        if ( measure == 0 ) {
+
+            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt");
+            distanceFile.append(lineSeparator);
+
+        } else {
+
+            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
+            distanceFile.append(lineSeparator);
+
+        }
+
+
 
         // now append your data in a loop
         for (ArrayList<String> stringArrayList : distanceList) {
@@ -398,6 +403,14 @@ public class BatchProcessor {
             distanceFile.append(stringArrayList.get(5));
             distanceFile.append(",");
             distanceFile.append(stringArrayList.get(6));
+
+            if ( measure > 0  ) {
+
+                distanceFile.append(",");
+                distanceFile.append(stringArrayList.get(7));
+
+            }
+
             distanceFile.append(lineSeparator);
 
         }
@@ -413,90 +426,21 @@ public class BatchProcessor {
 
         }
 
-        StringBuilder cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections, MeanValueOrga, MeanBackgroundOrga");
-        cellFile.append(lineSeparator);
+        StringBuilder cellFile;
 
-        for (ArrayList<String> strings : cellList) {
+        if ( measure == 0 ) {
 
-            cellFile.append(strings.get(0));
-            cellFile.append(",");
-            cellFile.append(strings.get(1));
-            cellFile.append(",");
-            cellFile.append(strings.get(2));
-            cellFile.append(",");
-            cellFile.append(strings.get(3));
-            cellFile.append(",");
-            cellFile.append(strings.get(4));
-            cellFile.append(",");
-            cellFile.append(strings.get(5));
-            cellFile.append(",");
-            cellFile.append(strings.get(6));
-            cellFile.append(",");
-            cellFile.append(strings.get(7));
+            cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections, MeanValueOrga, MeanBackgroundOrga");
+            cellFile.append(lineSeparator);
+
+        } else {
+
+            cellFile = new StringBuilder("Name,Series, ell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
             cellFile.append(lineSeparator);
 
         }
 
-        // now write to file
-        try {
 
-            Files.write(Paths.get(outputDir + "/cellMeasurements.csv"), cellFile.toString().getBytes());
-
-        } catch (IOException e) {
-
-            IJ.log("Unable to write cell measurement!");
-            e.printStackTrace();
-
-        }
-
-        IJ.log("Measurements saved");
-    }
-
-
-    void saveMeasurementsAdditional(ArrayList<ArrayList<String>>  distanceList, ArrayList<ArrayList<String>>  cellList, String outputDir ) {
-
-        IJ.log("Saving measurements to: " + outputDir);
-
-        final String lineSeparator = "\n";
-
-        StringBuilder distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
-        distanceFile.append(lineSeparator);
-
-        // now append your data in a loop
-        for (ArrayList<String> stringArrayList : distanceList) {
-
-            distanceFile.append(stringArrayList.get(0));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(1));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(2));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(3));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(4));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(5));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(6));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(7));
-            distanceFile.append(lineSeparator);
-
-        }
-
-        // now write to file
-        try {
-            Files.write(Paths.get(outputDir + "/organelleDistance.csv"), distanceFile.toString().getBytes());
-
-        } catch (IOException e) {
-
-            IJ.log("Unable to write distance measurement!");
-            e.printStackTrace();
-
-        }
-
-        StringBuilder cellFile = new StringBuilder("Name,Series, ell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
-        cellFile.append(lineSeparator);
 
         for (ArrayList<String> strings : cellList) {
 
@@ -515,10 +459,16 @@ public class BatchProcessor {
             cellFile.append(strings.get(6));
             cellFile.append(",");
             cellFile.append(strings.get(7));
-            cellFile.append(",");
-            cellFile.append(strings.get(8));
-            cellFile.append(",");
-            cellFile.append(strings.get(9));
+
+            if ( measure > 0  ) {
+
+                cellFile.append(",");
+                cellFile.append(strings.get(8));
+                cellFile.append(",");
+                cellFile.append(strings.get(9));
+
+            }
+
             cellFile.append(lineSeparator);
 
         }
