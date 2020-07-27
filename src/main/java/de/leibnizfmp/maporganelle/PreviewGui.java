@@ -1,8 +1,10 @@
 package de.leibnizfmp.maporganelle;
 
+import fiji.util.gui.GenericDialogPlus;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
+import ij.io.OpenDialog;
 import ij.measure.Calibration;
 import org.scijava.util.ArrayUtils;
 import org.xml.sax.SAXException;
@@ -508,7 +510,7 @@ public class PreviewGui extends JPanel {
 
     }
 
-    private void saveSettings( String name ) {
+    private void saveSettings( String directory, String name ) {
 
         IJ.log( "saving settings" );
 
@@ -550,7 +552,7 @@ public class PreviewGui extends JPanel {
 
         XmlHandler writeToXml = new XmlHandler();
 
-        writeToXml.xmlWriter(outputDir, name, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
+        writeToXml.xmlWriter(directory, name, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
                 cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
                 cellSepGaussCellSep, cellSepProminence,
                 cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc,
@@ -1236,7 +1238,23 @@ public class PreviewGui extends JPanel {
         public void actionPerformed(ActionEvent a) {
             String fileName = new SimpleDateFormat( "yyyy-MM-dd'T'HHmmss'-settings.xml'").format( new Date() );
 
-            saveSettings( fileName );
+            GenericDialogPlus gdPlus = new GenericDialogPlus("Save settings");
+            gdPlus.addDirectoryField("Save directory: ", OpenDialog.getDefaultDirectory(), 50);
+            gdPlus.showDialog();
+
+            if ( gdPlus.wasCanceled() ) {
+
+                System.out.println("Saving canceled");
+
+            } else {
+
+                String saveDirectory = gdPlus.getNextString();
+
+                saveSettings( saveDirectory, fileName );
+
+            }
+
+
         }
     }
 
@@ -1250,6 +1268,10 @@ public class PreviewGui extends JPanel {
             JFileChooser settingsFileChooser = new JFileChooser();
             settingsFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             settingsFileChooser.setFileFilter(xmlfilter);
+
+            String directory = OpenDialog.getDefaultDirectory();
+            File newFile = new File(directory);
+            settingsFileChooser.setCurrentDirectory(newFile);
 
             int option = settingsFileChooser.showOpenDialog(this);
 
@@ -1368,7 +1390,7 @@ public class PreviewGui extends JPanel {
             if ( checkDir ){
 
                 String fileName = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss'-settings.xml'").format(new Date());
-                saveSettings(fileName);
+                saveSettings( outputDir, fileName );
 
                 String settingFilePath = outputDir + File.separator + fileName;
 
@@ -1449,6 +1471,9 @@ public class PreviewGui extends JPanel {
                 int cytoChannelNumber = Integer.parseInt(cytoChannel);
                 int orgaChannelNumber = Integer.parseInt(orgaChannel);
                 int measureChannelNumber = ChannelChecker.channelNumber(measureChannel);
+
+                String fileName = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss'-settings.xml'").format(new Date());
+                saveSettings( outputDir, fileName );
 
                 BatchProcessor processing = new BatchProcessor(inputDir, outputDir, fileList, fileFormat, channelNumber,
                         nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber,

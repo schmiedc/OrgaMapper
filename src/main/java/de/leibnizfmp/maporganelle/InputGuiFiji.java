@@ -3,12 +3,16 @@ package de.leibnizfmp.maporganelle;
 import ij.IJ;
 import fiji.util.gui.GenericDialogPlus;
 import ij.ImagePlus;
+import ij.io.OpenDialog;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static ij.io.OpenDialog.setDefaultDirectory;
+import static ij.io.OpenDialog.setLastDirectory;
 
 /**
  * implements the setup dialog for the input output directories using ImageJ's inbuilt dialogs
@@ -98,8 +102,8 @@ class InputGuiFiji {
     void createWindow() {
 
         GenericDialogPlus gdPlus = new GenericDialogPlus("Setup dialog");
-        gdPlus.addDirectoryField("Input directory: ", defaultInputDirectory, 50);
-        gdPlus.addDirectoryField("Output directory: ", defaultOutputDirectory, 50);
+        gdPlus.addDirectoryField("Input directory: ", OpenDialog.getLastDirectory(), 50);
+        gdPlus.addDirectoryField("Output directory: ", OpenDialog.getDefaultDirectory(), 50);
         gdPlus.addStringField("File ending: ", defaultFileFormat, 50);
 
         if ( !showSettingsSwitch ) {
@@ -150,7 +154,11 @@ class InputGuiFiji {
                 FileList getFileList = new FileList(fileFormat);
 
                 String inputFileString = inputDirectory.toString();
+                setLastDirectory(inputFileString);
+
                 String outputFileString = outputDirectory.toString();
+                setDefaultDirectory(outputFileString);
+
 
                 // generates the file list that is fed to the preview GUI
                 ArrayList<String> fileList = getFileList.getFileMultiSeriesList(checkTrailingSlash(inputFileString));
