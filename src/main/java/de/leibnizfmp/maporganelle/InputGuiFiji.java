@@ -29,8 +29,7 @@ class InputGuiFiji {
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
-    // TODO: Improve GUI:
-    // https://github.com/PreibischLab/multiview-reconstruction/blob/master/src/main/java/net/preibisch/mvrecon/fiji/plugin/queryXML/GenericLoadParseQueryXML.java
+
     /**
      * default constructor
      */

@@ -447,8 +447,8 @@ public class PreviewGui extends JPanel {
 
         // here we create a Array list for selecting different numbers for the channels
         ArrayList<String> channelString = new ArrayList<>();
-        channelString.add( "select" );
         channelString.add( "ignore" );
+        channelString.add( "select" );
 
         for ( int channelIndex = 1; channelIndex <= channelNumber; channelIndex++ ) {
 
@@ -464,7 +464,7 @@ public class PreviewGui extends JPanel {
         nucleusChannelLabel.setPreferredSize(new Dimension(210, nucleusChannelList.getMinimumSize().height));
         Box nucleusChannelBox= new Box(BoxLayout.X_AXIS);
         nucleusChannelList.setMaximumSize(new Dimension(Integer.MAX_VALUE, nucleusChannelList.getMinimumSize().height));
-        nucleusChannelList.setSelectedIndex(0);
+        nucleusChannelList.setSelectedIndex(nucleusChannel + 1);
 
         nucleusChannelBox.add(nucleusChannelLabel);
         nucleusChannelBox.add(nucleusChannelList);
@@ -475,7 +475,7 @@ public class PreviewGui extends JPanel {
         cytoplasmChannelLabel.setPreferredSize(new Dimension(210, nucleusChannelList.getMinimumSize().height));
         Box cytopalasmChannelBox= new Box(BoxLayout.X_AXIS);
         cytoplasmChannelList.setMaximumSize(new Dimension(Integer.MAX_VALUE, cytoplasmChannelList.getMinimumSize().height));
-        cytoplasmChannelList.setSelectedIndex(0);
+        cytoplasmChannelList.setSelectedIndex(cytoplasmChannel + 1);
 
         cytopalasmChannelBox.add(cytoplasmChannelLabel);
         cytopalasmChannelBox.add(cytoplasmChannelList);
@@ -486,7 +486,7 @@ public class PreviewGui extends JPanel {
         organelleChannelLabel.setPreferredSize(new Dimension(210, nucleusChannelList.getMinimumSize().height));
         Box organelleChannelBox= new Box(BoxLayout.X_AXIS);
         organelleChannelList.setMaximumSize(new Dimension(Integer.MAX_VALUE, organelleChannelList.getMinimumSize().height));
-        organelleChannelList.setSelectedIndex(0);
+        organelleChannelList.setSelectedIndex(organelleChannel + 1);
 
         organelleChannelBox.add(organelleChannelLabel);
         organelleChannelBox.add(organelleChannelList);
@@ -497,7 +497,7 @@ public class PreviewGui extends JPanel {
         measureChannelLabel.setPreferredSize(new Dimension(210, nucleusChannelList.getMinimumSize().height));
         Box measureChannelBox= new Box(BoxLayout.X_AXIS);
         measureChannelList.setMaximumSize(new Dimension(Integer.MAX_VALUE, measureChannelList.getMinimumSize().height));
-        measureChannelList.setSelectedIndex(0);
+        measureChannelList.setSelectedIndex(measure + 1);
 
         measureChannelBox.add(measureChannelLabel);
         measureChannelBox.add(measureChannelList);
@@ -544,10 +544,16 @@ public class PreviewGui extends JPanel {
         boolean calibrationSetting = checkCalibration.isSelected();
         Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
-        int nucChannel = nucleusChannel;
-        int cytoChannel = cytoplasmChannel;
-        int orgaChannel = organelleChannel;
-        int measureChannel = measure;
+        // dataset settings
+        String nucChannelString = (String) nucleusChannelList.getSelectedItem();
+        String cytoChannelString = (String) cytoplasmChannelList.getSelectedItem();
+        String orgaChannelString = (String) organelleChannelList.getSelectedItem();
+        String measureChannelString = (String) measureChannelList.getSelectedItem();
+
+        int nucChannel = Integer.parseInt(nucChannelString);
+        int cytoChannel = Integer.parseInt(cytoChannelString);
+        int orgaChannel = Integer.parseInt(orgaChannelString);
+        int measureChannel = ChannelChecker.channelNumber(measureChannelString);
         String fileFormatSetting = fileFormat;
 
         XmlHandler writeToXml = new XmlHandler();
@@ -725,9 +731,9 @@ public class PreviewGui extends JPanel {
         // image settings
         calibrationSetting = false;
 
-        nucleusChannel = 1;
-        cytoplasmChannel = 2;
-        organelleChannel = 3;
+        nucleusChannel = 0;
+        cytoplasmChannel = 0;
+        organelleChannel = 0;
         measure = 0;
 
     }
@@ -1367,6 +1373,9 @@ public class PreviewGui extends JPanel {
                 boxSettings.removeAll();
                 setUpSettingsTab();
                 batchBox.add(boxSettings);
+
+
+
 
             } else {
 
