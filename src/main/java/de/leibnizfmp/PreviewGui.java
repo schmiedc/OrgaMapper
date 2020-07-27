@@ -841,15 +841,15 @@ public class PreviewGui extends JPanel {
                 int orgaChannelNumber = Integer.parseInt( orgaChannel );
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
-                String selectedFile = (String) list.getSelectedValue();
-                int stringLength = selectedFile.length();
-                String seriesNumberString;
-                seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
-                int seriesNumber = Integer.parseInt(seriesNumberString);
-
-                Image previewImage = new Image(inputDir, fileFormat, channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
-
                 if (selectionChecker != -1) {
+
+                    String selectedFile = (String) list.getSelectedValue();
+                    int stringLength = selectedFile.length();
+                    String seriesNumberString;
+                    seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
+                    int seriesNumber = Integer.parseInt(seriesNumberString);
+
+                    Image previewImage = new Image(inputDir, fileFormat, channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                     boolean selectedFileChecker = SelectionChecker.checkSelectedFile(selectedFile, fileFormat, fileList);
 
@@ -1000,16 +1000,16 @@ public class PreviewGui extends JPanel {
                 int orgaChannelNumber = Integer.parseInt(orgaChannel);
                 int measureChannelNumber = ChannelChecker.channelNumber(measureChannel);
 
-                // gets series number from filename in file list
-                String selectedFile = (String) list.getSelectedValue();
-                int stringLength = selectedFile.length();
-                String seriesNumberString;
-                seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
-                int seriesNumber = Integer.parseInt(seriesNumberString);
-
-                Image previewImage = new Image(inputDir, fileFormat, channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
-
                 if (selectionChecker != -1) {
+
+                    // gets series number from filename in file list
+                    String selectedFile = (String) list.getSelectedValue();
+                    int stringLength = selectedFile.length();
+                    String seriesNumberString;
+                    seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
+                    int seriesNumber = Integer.parseInt(seriesNumberString);
+
+                    Image previewImage = new Image(inputDir, fileFormat, channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                     boolean selectedFileChecker = SelectionChecker.checkSelectedFile(selectedFile, fileFormat, fileList);
 
@@ -1134,16 +1134,16 @@ public class PreviewGui extends JPanel {
                 int orgaChannelNumber = Integer.parseInt( orgaChannel );
                 int measureChannelNumber = ChannelChecker.channelNumber( measureChannel );
 
-                // gets series number from filename in file list
-                String selectedFile = (String) list.getSelectedValue();
-                int stringLength = selectedFile.length();
-                String seriesNumberString;
-                seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
-                int seriesNumber = Integer.parseInt(seriesNumberString);
-
-                Image previewImage = new Image(inputDir, fileFormat,channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
-
                 if (selectionChecker != -1){
+
+                    // gets series number from filename in file list
+                    String selectedFile = (String) list.getSelectedValue();
+                    int stringLength = selectedFile.length();
+                    String seriesNumberString;
+                    seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
+                    int seriesNumber = Integer.parseInt(seriesNumberString);
+
+                    Image previewImage = new Image(inputDir, fileFormat,channelNumber, seriesNumber, nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber);
 
                     boolean selectedFileChecker = SelectionChecker.checkSelectedFile(selectedFile, fileFormat, fileList);
 
