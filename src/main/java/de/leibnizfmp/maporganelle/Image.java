@@ -161,6 +161,65 @@ public class Image {
         assert options != null;
         options.setId(directory + File.separator + inputFile);
         options.setSeriesOn(seriesID,true);
+
+        ImagePlus[] imp = new ImagePlus[0];
+
+        try {
+
+            IJ.log("Open Image with BF");
+            imp = BF.openImagePlus(options);
+
+        } catch (FormatException e) {
+
+            IJ.error("Bio-formats format exception: " + e.getMessage());
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            IJ.error("Bio-formats cannot open file: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        ImagePlus resultImage = imp[0];
+        resultImage.setTitle(nameWithoutExt + "_S" + seriesID);
+
+        return resultImage;
+    }
+
+    /**
+     * opens an image
+     *
+     * @param selectedFile name of image
+     * @return and ImagePlus object
+     */
+    static ImagePlus getImagePlusBF(String selectedFile, String format, String directory, int seriesID) {
+
+        String nameWithoutExt = selectedFile.substring(0, selectedFile.lastIndexOf("_S"));
+
+        String inputFile = nameWithoutExt + format;
+
+        IJ.log("Opening file: " + inputFile);
+
+        ImporterOptions options = null;
+
+        try {
+
+            IJ.log("Try opening with BF");
+            options = new ImporterOptions();
+
+        } catch (IOException e) {
+
+            IJ.error("Bio-formats I/O: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        IJ.log("Setup of BF");
+        assert options != null;
+        options.setId(directory + File.separator + inputFile);
+        options.setSeriesOn(seriesID,true);
+
         ImagePlus[] imp = new ImagePlus[0];
 
         try {

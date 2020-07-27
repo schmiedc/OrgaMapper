@@ -2,6 +2,7 @@ package de.leibnizfmp.maporganelle;
 
 import ij.IJ;
 import fiji.util.gui.GenericDialogPlus;
+import ij.ImagePlus;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,7 +22,6 @@ class InputGuiFiji {
 
     String defaultInputDirectory;
     String defaultOutputDirectory;
-    int defaultChannelNumber;
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
@@ -34,7 +34,6 @@ class InputGuiFiji {
 
         defaultInputDirectory = "Choose Directory";
         defaultOutputDirectory = "Choose Directory";
-        defaultChannelNumber = 3;
         defaultFileFormat = ".tif";
         defaultSettingsFile = "Choose a File or leave empty";
         settingsFile = null;
@@ -49,11 +48,10 @@ class InputGuiFiji {
      * @param settingsFileString name of the xml file that stores the analysis settings
      * @param showSettings boolean that switches the settingsFile dialog on or off
      */
-    InputGuiFiji(String settingsFileString, int channelNumber, Boolean showSettings) {
+    InputGuiFiji(String settingsFileString, Boolean showSettings) {
 
         defaultInputDirectory = "Choose Directory";
         defaultOutputDirectory = "Choose Directory";
-        defaultChannelNumber = channelNumber;
         defaultFileFormat = ".tif";
         defaultSettingsFile = settingsFileString;
         settingsFile = new File(settingsFileString);
@@ -72,11 +70,10 @@ class InputGuiFiji {
      * @param fileFormat fileFormat
      * @param settingsFileString location of test settingsFile
      */
-    InputGuiFiji(String inputDir, String outputDir, int channelNumber, String fileFormat, String settingsFileString ) {
+    InputGuiFiji(String inputDir, String outputDir, String fileFormat, String settingsFileString ) {
 
         defaultInputDirectory = inputDir;
         defaultOutputDirectory = outputDir;
-        defaultChannelNumber = channelNumber;
         defaultFileFormat = fileFormat;
         defaultSettingsFile = settingsFileString;
         settingsFile = null;
@@ -101,10 +98,8 @@ class InputGuiFiji {
     void createWindow() {
 
         GenericDialogPlus gdPlus = new GenericDialogPlus("Setup dialog");
-
         gdPlus.addDirectoryField("Input directory: ", defaultInputDirectory, 50);
         gdPlus.addDirectoryField("Output directory: ", defaultOutputDirectory, 50);
-        gdPlus.addNumericField("Numbers of Channels: ", defaultChannelNumber, 0, 50, "");
         gdPlus.addStringField("File ending: ", defaultFileFormat, 50);
 
         if ( !showSettingsSwitch ) {
@@ -128,9 +123,6 @@ class InputGuiFiji {
 
             File inputDirectory = new File(defaultInputDirectory = gdPlus.getNextString());
             File outputDirectory = new File(defaultOutputDirectory = gdPlus.getNextString());
-
-            int channelNumber= (int) gdPlus.getNextNumber();
-
             String fileFormat = gdPlus.getNextString();
 
             if ( showSettingsSwitch ) {
@@ -183,7 +175,11 @@ class InputGuiFiji {
                             // reads settings file
                             readMyXml.xmlReader(settingsFileString);
 
-                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString), checkTrailingSlash(outputFileString), fileList, fileFormat, channelNumber,
+                            String selectedFile = fileList.get(0);
+                            ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
+                            int channelN = imageForMetadata.getNChannels();
+
+                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString), checkTrailingSlash(outputFileString), fileList, fileFormat, channelN,
                                     readMyXml.readKernelSizeNuc, readMyXml.readRollingBallRadiusNuc, readMyXml.readThresholdNuc, readMyXml.readErosionNuc, readMyXml.readMinSizeNuc, readMyXml.readMaxSizeNuc, readMyXml.readLowCircNuc, readMyXml.readHighCircNuc,
                                     readMyXml.readKernelSizeCellArea, readMyXml.readRollBallRadiusCellArea, readMyXml.readManualThresholdCellArea,
                                     readMyXml.readSigmaGaussCellSep, readMyXml.readProminenceCellSep,
@@ -219,11 +215,16 @@ class InputGuiFiji {
 
                     } else {
 
+                        String selectedFile = fileList.get(0);
+                        ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
+                        double pixelHeight = imageForMetadata.getCalibration().pixelHeight;
+                        int channelN = imageForMetadata.getNChannels();
+
                         IJ.log("Did no find xml settings file using default values");
 
                         // constructs previewGui from default settings since no valid settings file was given
                         PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString),
-                                checkTrailingSlash(outputFileString), fileList, fileFormat, channelNumber);
+                                checkTrailingSlash(outputFileString), fileList, fileFormat, channelN, pixelHeight);
 
                         // instantiates previewGui
                         previewGui.setUpGui();

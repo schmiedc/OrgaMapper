@@ -682,13 +682,14 @@ public class PreviewGui extends JPanel {
     }
 
 
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber) {
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber, double pixelSize ) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
         fileList = filesToProcess;
         fileFormat = format;
         channelNumber = getChannelNumber;
+        pxSizeMicron = pixelSize;
 
         // settings for nucleus settings
         kernelSizeNuc = 5;
@@ -721,7 +722,7 @@ public class PreviewGui extends JPanel {
 
         // image settings
         calibrationSetting = false;
-        pxSizeMicron = 0.1567095;
+
         nucleusChannel = 1;
         cytoplasmChannel = 2;
         organelleChannel = 3;
@@ -800,7 +801,6 @@ public class PreviewGui extends JPanel {
         measure = getMeasure;
     }
 
-
     private class MyPreviewNucleusListener implements ActionListener {
 
         public void actionPerformed(ActionEvent a) {
@@ -858,6 +858,7 @@ public class PreviewGui extends JPanel {
                         IJ.log("Reusing open image for visualization");
                         IJ.selectWindow(selectedFile);
                         ImagePlus selectedImage = WindowManager.getCurrentImage();
+
                         setDisplayRange = false;
 
                         if (calibrationSetting) {
@@ -903,6 +904,7 @@ public class PreviewGui extends JPanel {
 
                         // segment background and show for validation
                         ImagePlus originalImage = previewImage.openWithMultiseriesBF(selectedFile);
+
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
@@ -1371,7 +1373,7 @@ public class PreviewGui extends JPanel {
                 String settingFilePath = outputDir + File.separator + fileName;
 
                 theFrame.dispose();
-                InputGuiFiji start = new InputGuiFiji( settingFilePath, channelNumber, false);
+                InputGuiFiji start = new InputGuiFiji( settingFilePath, false);
 
                 start.createWindow();
 
