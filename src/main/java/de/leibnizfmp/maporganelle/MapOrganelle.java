@@ -9,9 +9,6 @@
 package de.leibnizfmp.maporganelle;
 
 import ij.IJ;
-import ij.ImagePlus;
-import ij.io.FileSaver;
-import ij.plugin.ChannelSplitter;
 import net.imagej.ImageJ;
 import ij.Prefs;
 import net.imglib2.type.numeric.RealType;
