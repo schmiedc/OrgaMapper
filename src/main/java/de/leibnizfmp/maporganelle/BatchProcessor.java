@@ -164,6 +164,7 @@ public class BatchProcessor {
         saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir, measureChannel);
 
         IJ.log("== Batch processing finished ==");
+        IJ.showProgress(1);
 
     }
 

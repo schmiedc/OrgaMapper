@@ -895,6 +895,8 @@ public class PreviewGui extends JPanel {
                                 nucHighCirc,
                                 setDisplayRange);
 
+                        IJ.showProgress(1);
+
                     } else {
 
                         IJ.log("Selected file: " + selectedFile);
@@ -1051,6 +1053,8 @@ public class PreviewGui extends JPanel {
                                     setDisplayRange,
                                     nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
 
+                        IJ.showProgress(1);
+
                     } else {
 
                         IJ.log("Selected file: " + selectedFile);
@@ -1079,6 +1083,8 @@ public class PreviewGui extends JPanel {
                                 cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
                                 setDisplayRange,
                                 nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+
+                        IJ.showProgress(1);
 
                     }
 
@@ -1181,6 +1187,8 @@ public class PreviewGui extends JPanel {
                                     setDisplayRange,
                                     nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
 
+                        IJ.showProgress(1);
+
                     } else {
 
                         IJ.log("Selected file: " + selectedFile);
@@ -1206,6 +1214,8 @@ public class PreviewGui extends JPanel {
                         visualizer.visualizeSpots(originalImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
                                 setDisplayRange,
                                 nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+
+                        IJ.showProgress(1);
 
                     }
 
