@@ -6,7 +6,7 @@
  *     http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-package de.leibnizfmp;
+package de.leibnizfmp.mapOrganelle;
 
 import ij.IJ;
 import ij.ImagePlus;
