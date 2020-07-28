@@ -265,13 +265,13 @@ public class PreviewGui extends JPanel {
         titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
         filterBox.setBorder(titleFilter);
 
-        doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,1000000,10.0);
+        doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,10000000,10.0);
         String minSizeLabel = "Minimum size: ";
         String minUnitLabel = "µm²";
         Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSize, minUnitLabel );
         filterBox.add(spinnerNuc4);
 
-        doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,1000000,10.0);
+        doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,10000000,10.0);
         String maxSizeLabel = "Maximum size: ";
         String maxUnitLabel = "µm²";
         Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSize, maxUnitLabel);
@@ -341,7 +341,7 @@ public class PreviewGui extends JPanel {
         Box spinnerGaussCellSep = addLabeledSpinnerUnit(spinGaussCellSep, doubleSpinGaussCellSep, spinGaussCellSepUnit);
         separationBox.add(spinnerGaussCellSep);
 
-        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,1000.0, 0.1);
+        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,65536.0, 0.1);
         String spinLabelProminence = "Prominence: ";
         String spinUnitProminence = "A.U.";
         Box spinSpot2 = addLabeledSpinnerUnit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
@@ -356,13 +356,13 @@ public class PreviewGui extends JPanel {
         titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
         filterBox.setBorder(titleFilter);
 
-        doubleSpinMinSizeCellFilter = new SpinnerNumberModel(minCellSize,0.0,1000000,10.0);
+        doubleSpinMinSizeCellFilter = new SpinnerNumberModel(minCellSize,0.0,10000000,10.0);
         String minSizeLabel = "Minimum size: ";
         String minUnitLabel = "µm²";
         Box spinnerNuc4 = addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSizeCellFilter, minUnitLabel );
         filterBox.add(spinnerNuc4);
 
-        doubleSpinMaxSizeCellFilter = new SpinnerNumberModel(maxCellSize,0.0,1000000,10.0);
+        doubleSpinMaxSizeCellFilter = new SpinnerNumberModel(maxCellSize,0.0,10000000,10.0);
         String maxSizeLabel = "Maximum size: ";
         String maxUnitLabel = "µm²";
         Box spinnerNuc5 = addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSizeCellFilter, maxUnitLabel);
@@ -403,13 +403,13 @@ public class PreviewGui extends JPanel {
         detectionBox.setBorder(titleDetection);
 
         // Spinner for some number input
-        doubleSpinnerLoGOragenelle = new SpinnerNumberModel(sigmaLoGOrga, 0.0,20.0, 0.1);
+        doubleSpinnerLoGOragenelle = new SpinnerNumberModel(sigmaLoGOrga, 0.0,50.0, 0.1);
         String spinLabelSpot1 = "LoG sigma: ";
         String spinUnitSpot1 = "px";
         Box spinSpot1 = addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGOragenelle, spinUnitSpot1);
         detectionBox.add(spinSpot1);
 
-        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,1000.0, 0.1);
+        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,65536.0, 0.1);
         String spinLabelSpot2 = "Prominence: ";
         String spinUnitSpot2 = "A.U.";
         Box spinSpot2 = addLabeledSpinnerUnit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
@@ -550,10 +550,58 @@ public class PreviewGui extends JPanel {
         String orgaChannelString = (String) organelleChannelList.getSelectedItem();
         String measureChannelString = (String) measureChannelList.getSelectedItem();
 
-        int nucChannel = Integer.parseInt(nucChannelString);
-        int cytoChannel = Integer.parseInt(cytoChannelString);
-        int orgaChannel = Integer.parseInt(orgaChannelString);
-        int measureChannel = ChannelChecker.channelNumber(measureChannelString);
+        assert nucChannelString != null;
+        int nucChannel;
+
+        if (nucChannelString.equals( "ignore" ) || nucChannelString.equals( "select" ) ) {
+
+            nucChannel = 0;
+
+        } else {
+
+            nucChannel= Integer.parseInt(nucChannelString);
+
+        }
+
+        assert cytoChannelString != null;
+        int cytoChannel;
+
+        if (cytoChannelString.equals( "ignore" ) || cytoChannelString.equals( "select" ) ) {
+
+            cytoChannel = 0;
+
+        } else {
+
+            cytoChannel = Integer.parseInt(cytoChannelString);
+
+        }
+
+        assert orgaChannelString != null;
+        int orgaChannel;
+
+        if (orgaChannelString.equals( "ignore" ) || orgaChannelString.equals( "select" ) ) {
+
+            orgaChannel = 0;
+
+        } else {
+
+            orgaChannel = Integer.parseInt(orgaChannelString);
+
+        }
+
+        assert measureChannelString != null;
+        int measureChannel;
+
+        if (measureChannelString.equals( "ignore" ) || measureChannelString.equals( "select" ) ) {
+
+            measureChannel = 0;
+
+        } else {
+
+            measureChannel = ChannelChecker.channelNumber(measureChannelString);
+
+        }
+
         String fileFormatSetting = fileFormat;
 
         XmlHandler writeToXml = new XmlHandler();
