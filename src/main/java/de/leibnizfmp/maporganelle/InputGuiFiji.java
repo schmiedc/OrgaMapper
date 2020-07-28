@@ -24,8 +24,8 @@ class InputGuiFiji {
 
     private File settingsFile;
 
-    String defaultInputDirectory;
-    String defaultOutputDirectory;
+    String InputDirectory;
+    String OutputDirectory;
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
@@ -35,8 +35,8 @@ class InputGuiFiji {
      */
     InputGuiFiji() {
 
-        defaultInputDirectory = "Choose Directory";
-        defaultOutputDirectory = "Choose Directory";
+        InputDirectory = "Choose Directory";
+        OutputDirectory = "Choose Directory";
         defaultFileFormat = ".tif";
         defaultSettingsFile = "Choose a File or leave empty";
         settingsFile = null;
@@ -53,8 +53,8 @@ class InputGuiFiji {
      */
     InputGuiFiji(String settingsFileString, Boolean showSettings) {
 
-        defaultInputDirectory = "Choose Directory";
-        defaultOutputDirectory = "Choose Directory";
+        InputDirectory = "Choose Directory";
+        OutputDirectory = "Choose Directory";
         defaultFileFormat = ".tif";
         defaultSettingsFile = settingsFileString;
         settingsFile = new File(settingsFileString);
@@ -75,8 +75,8 @@ class InputGuiFiji {
      */
     InputGuiFiji(String inputDir, String outputDir, String fileFormat, String settingsFileString ) {
 
-        defaultInputDirectory = inputDir;
-        defaultOutputDirectory = outputDir;
+        InputDirectory = inputDir;
+        OutputDirectory = outputDir;
         defaultFileFormat = fileFormat;
         defaultSettingsFile = settingsFileString;
         settingsFile = null;
@@ -100,9 +100,25 @@ class InputGuiFiji {
      */
     void createWindow() {
 
+        String lastDirectory = OpenDialog.getLastDirectory();
+
+        if ( lastDirectory == null ) {
+
+            lastDirectory = "Choose directory";
+
+        }
+
+        String defaultDirectory = OpenDialog.getDefaultDirectory();
+
+        if ( defaultDirectory == null ) {
+
+            defaultDirectory = "Choose directory";
+
+        }
+
         GenericDialogPlus gdPlus = new GenericDialogPlus("Setup dialog");
-        gdPlus.addDirectoryField("Input directory: ", OpenDialog.getLastDirectory(), 50);
-        gdPlus.addDirectoryField("Output directory: ", OpenDialog.getDefaultDirectory(), 50);
+        gdPlus.addDirectoryField("Input directory: ", lastDirectory , 50);
+        gdPlus.addDirectoryField("Output directory: ", defaultDirectory, 50);
         gdPlus.addStringField("File ending: ", defaultFileFormat, 50);
 
         if ( !showSettingsSwitch ) {
@@ -124,8 +140,8 @@ class InputGuiFiji {
 
         } else {
 
-            File inputDirectory = new File(defaultInputDirectory = gdPlus.getNextString());
-            File outputDirectory = new File(defaultOutputDirectory = gdPlus.getNextString());
+            File inputDirectory = new File(InputDirectory = gdPlus.getNextString());
+            File outputDirectory = new File(OutputDirectory = gdPlus.getNextString());
             String fileFormat = gdPlus.getNextString();
 
             if ( showSettingsSwitch ) {
