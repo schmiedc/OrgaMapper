@@ -436,7 +436,7 @@ public class BatchProcessor {
 
         } else {
 
-            cellFile = new StringBuilder("Name,Series, ell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
+            cellFile = new StringBuilder("Name,Series, Cell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
             cellFile.append(lineSeparator);
 
         }

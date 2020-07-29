@@ -78,11 +78,11 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
             if ( runTest1 ) {
 
                 IJ.log("Run test 1");
-                //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157);
-                //guiTest.setUpGui();
+                PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157);
+                guiTest.setUpGui();
 
-                InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
-                guiTest.createWindow();
+                //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
+                //guiTest.createWindow();
 
                 //BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
                 //processBatch.processImage();

@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -503,10 +504,14 @@ public class PreviewGui extends JPanel {
         measureChannelBox.add(measureChannelList);
         boxSettings.add(measureChannelBox);
 
+        boxSettings.add(Box.createRigidArea(new Dimension(0, 40)));
+
         JButton batchButton = new JButton("Batch Process");
         // TODO: option for measuring in another channel
         batchButton.addActionListener(new MyBatchListener());
         boxSettings.add(batchButton);
+
+        boxSettings.add(Box.createRigidArea(new Dimension(0, 60)));
 
     }
 
