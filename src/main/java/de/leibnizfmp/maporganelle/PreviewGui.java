@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -336,13 +335,13 @@ public class PreviewGui extends JPanel {
         titleSeparation = BorderFactory.createTitledBorder(blackline, "Watershed settings: ");
         separationBox.setBorder(titleSeparation);
 
-        doubleSpinGaussCellSep = new SpinnerNumberModel(sigmaGaussCellSep, 0.0, 50.0, 1.0);
+        doubleSpinGaussCellSep = new SpinnerNumberModel(sigmaGaussCellSep, 0.0, 100.0, 1.0);
         String spinGaussCellSep = "Gaussian sigma: ";
         String spinGaussCellSepUnit = "px";
         Box spinnerGaussCellSep = addLabeledSpinnerUnit(spinGaussCellSep, doubleSpinGaussCellSep, spinGaussCellSepUnit);
         separationBox.add(spinnerGaussCellSep);
 
-        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,65536.0, 0.1);
+        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,65536, 0.1);
         String spinLabelProminence = "Prominence: ";
         String spinUnitProminence = "A.U.";
         Box spinSpot2 = addLabeledSpinnerUnit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
@@ -410,7 +409,7 @@ public class PreviewGui extends JPanel {
         Box spinSpot1 = addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGOragenelle, spinUnitSpot1);
         detectionBox.add(spinSpot1);
 
-        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,65536.0, 0.1);
+        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,65536, 0.1);
         String spinLabelSpot2 = "Prominence: ";
         String spinUnitSpot2 = "A.U.";
         Box spinSpot2 = addLabeledSpinnerUnit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
