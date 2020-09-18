@@ -244,7 +244,7 @@ public class BatchProcessor {
         ArrayList<ArrayList<String>> distanceList = new ArrayList<>();
         ArrayList<ArrayList<String>> cellList = new ArrayList<>();
 
-        for ( int cellIndex = 1; cellIndex <  manager.getCount(); cellIndex++ ) {
+        for ( int cellIndex = 0; cellIndex <  manager.getCount(); cellIndex++ ) {
 
             IJ.log("Analyzing Cell: " + cellIndex);
 

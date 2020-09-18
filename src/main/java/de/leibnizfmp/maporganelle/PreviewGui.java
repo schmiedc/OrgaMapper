@@ -764,7 +764,7 @@ public class PreviewGui extends JPanel {
         // settings for cell area segmentation
         kernelSizeCellArea = 10;
         rollingBallRadiusCellArea = 150;
-        manualThresholdCellArea = 200;
+        manualThresholdCellArea = 700;
 
         // settings for cell separator
         sigmaGaussCellSep = 15;
