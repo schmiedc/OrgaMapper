@@ -4,17 +4,14 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
-import ij.gui.Roi;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.RGBStackMerge;
-import ij.plugin.filter.EDM;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.frame.RoiManager;
 import ij.process.ImageProcessor;
-import ij.process.ImageStatistics;
 import ij.process.LUT;
 
 import java.awt.*;
@@ -152,7 +149,7 @@ public class BatchProcessor {
                 e.printStackTrace();
             }
 
-            double backgroundOrganelle = measureDetectionBackground(backgroundMask, organelle);
+            double backgroundOrganelle = BackgroundMeasure.measureDetectionBackground(backgroundMask, organelle);
 
             double backgroundMeasure = -1;
             ArrayList<ArrayList<ArrayList<String>>> resultLists;
@@ -160,7 +157,7 @@ public class BatchProcessor {
             if ( measureChannel == 0) {
 
                 IJ.log("No measure channel selected");
-                resultLists = measureCell(manager,
+                resultLists = DistanceMeasure.measureCell(manager,
                         nucleusMask,
                         detectionsFiltered,
                         organelle,
@@ -175,8 +172,8 @@ public class BatchProcessor {
 
                 ImagePlus measure = imp_channels[processingImage.measure - 1];
                 IJ.log("Measuring in channel: " + measureChannel);
-                backgroundMeasure = measureDetectionBackground(backgroundMask, measure);
-                resultLists = measureCell(manager,
+                backgroundMeasure = BackgroundMeasure.measureDetectionBackground(backgroundMask, measure);
+                resultLists = DistanceMeasure.measureCell(manager,
                         nucleusMask,
                         detectionsFiltered,
                         organelle,
@@ -204,218 +201,6 @@ public class BatchProcessor {
 
         IJ.log("== Batch processing finished ==");
         IJ.showProgress(1);
-
-    }
-
-    double measureDetectionBackground(ImagePlus background, ImagePlus measureImage) {
-
-        IJ.log("Starting background measurements");
-
-        ImagePlus backgroundDup = background.duplicate();
-
-        backgroundDup.getProcessor().invert();
-
-        ParticleAnalyzer cellAnalyzer = new ParticleAnalyzer(2048, 0, null,
-                500, Image.calculateMaxArea( backgroundDup.getWidth(), backgroundDup.getHeight() ) );
-
-        RoiManager backgroundRoiManager = new RoiManager(false);
-        ParticleAnalyzer.setRoiManager( backgroundRoiManager );
-
-        cellAnalyzer.analyze( backgroundDup );
-
-        double backgroundMean;
-
-        if ( backgroundRoiManager.getCount() > 0 ) {
-
-            int imageWidth;
-            int imageHeight;
-
-            double backgroundSum = 0;
-            double backgroundArea = 0;
-
-            imageWidth = measureImage.getWidth();
-            imageHeight = measureImage.getHeight();
-
-            ImageProcessor measureImageProcessor = measureImage.getProcessor();
-            ImageProcessor backgroundMaksProcessor = backgroundDup.getProcessor();
-
-            float[] measureImagePixels = (float[]) measureImageProcessor.convertToFloat().getPixels();
-            byte[] backgroundMaskPixels  = (byte[]) backgroundMaksProcessor.getPixels();
-
-            for (int y = 0; y < imageHeight; y++) {
-
-                for (int x = 0; x < imageWidth; x++) {
-
-                    if ( backgroundMaskPixels[x + y * imageWidth] < 0 ) {
-
-                        backgroundSum += measureImagePixels[x + y * imageWidth];
-                        backgroundArea += 1;
-
-                    }
-
-                }
-
-            }
-
-            backgroundMean = backgroundSum / backgroundArea;
-
-       } else {
-
-            backgroundMean = -1;
-
-        }
-
-        backgroundDup.close();
-        backgroundRoiManager.reset();
-
-        return backgroundMean;
-
-    }
-
-    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager,
-                                                        ImagePlus nucleusMask,
-                                                        ImagePlus detectionsFiltered,
-                                                        ImagePlus organelleChannel,
-                                                        String fileNameWOtExt,
-                                                        int seriesNumber,
-                                                        double backgroundMean,
-                                                        double backgroundMeasure,
-                                                        int measureChannel,
-                                                        ImagePlus measureChannelImage) {
-
-        IJ.log("Starting measurements");
-
-        double pxHeight = nucleusMask.getCalibration().pixelHeight;
-        double pxWidth = nucleusMask.getCalibration().pixelWidth;
-        double pxSize = pxHeight * pxWidth;
-
-        ArrayList<ArrayList<String>> distanceList = new ArrayList<>();
-        ArrayList<ArrayList<String>> cellList = new ArrayList<>();
-
-        for ( int cellIndex = 0; cellIndex <  manager.getCount(); cellIndex++ ) {
-
-            IJ.log("Analyzing Cell: " + cellIndex);
-
-            ImagePlus nucleusMaskDup = nucleusMask.duplicate();
-            ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
-
-            // get the EDM of cell outside of nucleus
-            nucProcessor.setValue(0.0);
-            nucProcessor.fillOutside(manager.getRoi(cellIndex));
-            nucProcessor.invert();
-            nucProcessor.convertToByteProcessor();
-            EDM edmProcessor = new EDM();
-            edmProcessor.setup("", nucleusMaskDup);
-            ImageProcessor nucEDM = edmProcessor.makeFloatEDM(nucProcessor, 0, false);
-
-            // organelle detection in nucleus and within cell area
-            ImagePlus detectionDup = detectionsFiltered.duplicate();
-            ImageProcessor detectProcessor = detectionDup.getProcessor();
-            detectProcessor.fillOutside(manager.getRoi(cellIndex));
-
-            MaximumFinder maxima = new MaximumFinder();
-            Polygon detectionPolygons = maxima.getMaxima(detectProcessor, 1, false);
-
-            IJ.log("Cell " + cellIndex + " has " + detectionPolygons.npoints + " detection(s)");
-
-            for ( int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
-
-                double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex],
-                        detectionPolygons.ypoints[detectIndex]);
-
-                double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
-                        detectionPolygons.ypoints[detectIndex]);
-
-                double detectionMeasureValue;
-
-                if (measureChannel == 0) {
-
-                    detectionMeasureValue = 0;
-
-                } else {
-
-                    detectionMeasureValue = measureChannelImage.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
-                            detectionPolygons.ypoints[detectIndex]);
-
-                }
-
-                ArrayList<String> valueList = new ArrayList<>();
-                valueList.add(fileNameWOtExt);
-                valueList.add(String.valueOf(seriesNumber));
-                valueList.add(String.valueOf(cellIndex));
-                valueList.add(String.valueOf(detectIndex));
-                valueList.add(String.valueOf(detectionPosition));
-                valueList.add(String.valueOf(detectionPosition * pxHeight));
-                valueList.add(String.valueOf(detectionValue));
-                valueList.add(String.valueOf(detectionMeasureValue));
-                distanceList.add(valueList);
-
-            }
-
-            ArrayList<String> cellValueList = new ArrayList<>();
-            cellValueList.add(fileNameWOtExt);
-            cellValueList.add(String.valueOf(seriesNumber));
-            cellValueList.add(String.valueOf(cellIndex));
-            Roi cellRoi = manager.getRoi(cellIndex);
-
-            // Ferets diameter
-            cellValueList.add(String.valueOf(cellRoi.getFeretsDiameter()));
-
-            // cell area
-            ImageStatistics cellStat = cellRoi.getStatistics();
-            cellValueList.add(String.valueOf( cellStat.area * pxSize ));
-
-            // detection number
-            cellValueList.add(String.valueOf(detectionPolygons.npoints));
-
-            // intensity in detection channel
-            organelleChannel.setRoi( manager.getRoi(cellIndex) );
-            cellValueList.add( String.valueOf(organelleChannel.getProcessor().getStats().mean ) );
-
-
-            if ( backgroundMean >= 0 ) {
-
-                cellValueList.add( String.valueOf(backgroundMean));
-
-            } else {
-
-                cellValueList.add( "NaN" );
-
-            }
-
-            if ( measureChannel > 0) {
-
-                measureChannelImage.setRoi( manager.getRoi(cellIndex) );
-                cellValueList.add( String.valueOf(measureChannelImage.getProcessor().getStats().mean ) );
-
-                if ( backgroundMeasure >= 0 ) {
-
-                    cellValueList.add( String.valueOf(backgroundMeasure));
-
-                } else {
-
-                    cellValueList.add( "NaN" );
-
-                }
-
-            }
-
-            cellList.add(cellValueList);
-
-            //nucleusMaskDup.close();
-            detectionDup.close();
-
-            IJ.log("Distance & cell measurements finished");
-
-        }
-
-        ArrayList<ArrayList<ArrayList<String>>> results = new ArrayList<>();
-        results.add(distanceList);
-        results.add(cellList);
-
-        IJ.log("Measurement done!");
-
-        return results;
 
     }
 

@@ -29,6 +29,7 @@ class InputGuiFiji {
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
+    Boolean testMode;
 
     /**
      * default constructor
@@ -41,6 +42,7 @@ class InputGuiFiji {
         defaultSettingsFile = "Choose a File or leave empty";
         settingsFile = null;
         showSettingsSwitch = true;
+        testMode = false;
     }
 
 
@@ -59,6 +61,7 @@ class InputGuiFiji {
         defaultSettingsFile = settingsFileString;
         settingsFile = new File(settingsFileString);
         showSettingsSwitch = showSettings;
+        testMode = false;
 
         IJ.log("Taking settings from previous preview:");
         IJ.log(settingsFileString);
@@ -81,6 +84,7 @@ class InputGuiFiji {
         defaultSettingsFile = settingsFileString;
         settingsFile = null;
         showSettingsSwitch = true;
+        testMode = true;
 
     }
 
@@ -102,17 +106,25 @@ class InputGuiFiji {
 
         String lastDirectory = OpenDialog.getLastDirectory();
 
-        if ( lastDirectory == null ) {
+        if ( lastDirectory == null && !testMode) {
 
             lastDirectory = "Choose directory";
+
+        } else if ( testMode ) {
+
+            lastDirectory = InputDirectory;
 
         }
 
         String defaultDirectory = OpenDialog.getDefaultDirectory();
 
-        if ( defaultDirectory == null ) {
+        if ( defaultDirectory == null && !testMode) {
 
             defaultDirectory = "Choose directory";
+
+        } else if ( testMode ) {
+
+            defaultDirectory = OutputDirectory;
 
         }
 
