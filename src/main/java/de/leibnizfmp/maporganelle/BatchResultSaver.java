@@ -41,8 +41,6 @@ public class BatchResultSaver {
 
         }
 
-
-
         // now append your data in a loop
         for (ArrayList<String> stringArrayList : distanceList) {
 

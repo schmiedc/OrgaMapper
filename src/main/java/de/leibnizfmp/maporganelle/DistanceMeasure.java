@@ -38,17 +38,7 @@ public class DistanceMeasure {
 
             IJ.log("Analyzing Cell: " + cellIndex);
 
-            ImagePlus nucleusMaskDup = nucleusMask.duplicate();
-            ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
-
-            // get the EDM of cell outside of nucleus
-            nucProcessor.setValue(0.0);
-            nucProcessor.fillOutside(manager.getRoi(cellIndex));
-            nucProcessor.invert();
-            nucProcessor.convertToByteProcessor();
-            EDM edmProcessor = new EDM();
-            edmProcessor.setup("", nucleusMaskDup);
-            ImageProcessor nucEDM = edmProcessor.makeFloatEDM(nucProcessor, 0, false);
+            ImageProcessor nucEDM = createEDM(manager, nucleusMask, cellIndex);
 
             // organelle detection in nucleus and within cell area
             ImagePlus detectionDup = detectionsFiltered.duplicate();
@@ -158,6 +148,27 @@ public class DistanceMeasure {
         IJ.log("Measurement done!");
 
         return results;
+
+    }
+
+    private static ImageProcessor createEDM(RoiManager manager, ImagePlus nucleusMask, int cellIndex) {
+        ImagePlus nucleusMaskDup = nucleusMask.duplicate();
+        ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
+
+        // get the EDM of cell outside of nucleus
+        nucProcessor.setValue(0.0);
+        nucProcessor.fillOutside(manager.getRoi(cellIndex));
+        nucProcessor.invert();
+        nucProcessor.convertToByteProcessor();
+        EDM edmProcessor = new EDM();
+        edmProcessor.setup("", nucleusMaskDup);
+        ImageProcessor nucEDM = edmProcessor.makeFloatEDM(nucProcessor, 0, false);
+        return nucEDM;
+    }
+
+    void intensityProfile(ImageProcessor nucEDM,
+                          ImagePlus imageToProfile,
+                          RoiManager manager) {
 
     }
 }

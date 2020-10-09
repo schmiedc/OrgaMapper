@@ -67,7 +67,7 @@ public class BatchProcessor {
             seriesNumberString = fileName.substring( fileName.lastIndexOf("_S") + 2 , stringLength );
             int seriesNumber = Integer.parseInt(seriesNumberString);
 
-            // open image
+            // define and open image
             Image processingImage = new Image(inputDir,
                     fileFormat,
                     channelNumber,
@@ -79,6 +79,7 @@ public class BatchProcessor {
 
             ImagePlus image = processingImage.openWithMultiseriesBF( fileName );
 
+            // override calibration settings if selected
             if (calibrationSetting) {
 
                 Calibration calibration = Image.calibrate(pxSizeMicron);
@@ -129,22 +130,12 @@ public class BatchProcessor {
             ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
 
             // measure background in organelle channel
-            String saveDir = outputDir + File.separator + fileName;
-            try {
-
-                Files.createDirectories(Paths.get(saveDir));
-
-            } catch (IOException e) {
-
-                IJ.log("Unable to create output directory");
-                e.printStackTrace();
-            }
-
             double backgroundOrganelle = BackgroundMeasure.measureDetectionBackground(backgroundMask, organelle);
 
             double backgroundMeasure = -1;
             ArrayList<ArrayList<ArrayList<String>>> resultLists;
 
+            // performing measurements in measurement channel if selected
             if ( measureChannel == 0) {
 
                 IJ.log("No measure channel selected");
@@ -163,7 +154,9 @@ public class BatchProcessor {
 
                 ImagePlus measure = imp_channels[processingImage.measure - 1];
                 IJ.log("Measuring in channel: " + measureChannel);
+
                 backgroundMeasure = BackgroundMeasure.measureDetectionBackground(backgroundMask, measure);
+
                 resultLists = DistanceMeasure.measureCell(manager,
                         nucleusMask,
                         detectionsFiltered,
@@ -184,6 +177,19 @@ public class BatchProcessor {
             distanceMeasureAll.addAll(distanceMeasure);
             cellMeasureAll.addAll(cellMeasure);
 
+            // create directory for saving result images
+            String saveDir = outputDir + File.separator + fileName;
+            try {
+
+                Files.createDirectories(Paths.get(saveDir));
+
+            } catch (IOException e) {
+
+                IJ.log("Unable to create output directory");
+                e.printStackTrace();
+            }
+
+            // save result images
             BatchResultSaver.saveResultImages(outputDir, fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
         }
