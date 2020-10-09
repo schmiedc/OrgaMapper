@@ -57,13 +57,13 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         if ( runTest1 || runTest2 ) {
 
             //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-            String testInDir = "/home/schmiedc/Desktop/Test/8-bit/";
+            String testInDir = "/home/schmiedc/Desktop/Test/test_nd2/input/";
             //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/TestDataSet_2ndChannel/";
-            String testOutDir = "/home/schmiedc/Desktop/Test/8-bit/";
-            int channelNumber = 4;
-            String fileEnding = ".tif";
-            //String fileEnding = ".nd2";
-            String settings = "/home/schmiedc/Desktop/Test/8-bit/2020-10-09T120113-settings.xml";
+            String testOutDir = "/home/schmiedc/Desktop/Test/test_nd2/output/";
+            //int channelNumber = 4;
+            //String fileEnding = ".tif";
+            String fileEnding = ".nd2";
+            String settings = "/home/schmiedc/Desktop/Test/test_nd2/input/2020-10-09T121957-settings.xml";
 
             FileList getFileList = new FileList(fileEnding);
             ArrayList<String> fileList = getFileList.getFileMultiSeriesList(testInDir);
@@ -78,11 +78,11 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
             if ( runTest1 ) {
 
                 IJ.log("Run test 1");
-                PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157);
-                guiTest.setUpGui();
+                //PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157);
+                //guiTest.setUpGui();
 
-                //InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
-                //guiTest.createWindow();
+                InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
+                guiTest.createWindow();
 
                 //BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
                 //processBatch.processImage();

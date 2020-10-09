@@ -80,7 +80,15 @@ public class BatchProcessor {
             int seriesNumber = Integer.parseInt(seriesNumberString);
 
             // open image
-            Image processingImage = new Image(inputDir, fileFormat, channelNumber, seriesNumber, nucleusChannel, cytoplasmChannel, organelleChannel, measureChannel);
+            Image processingImage = new Image(inputDir,
+                    fileFormat,
+                    channelNumber,
+                    seriesNumber,
+                    nucleusChannel,
+                    cytoplasmChannel,
+                    organelleChannel,
+                    measureChannel);
+
             ImagePlus image = processingImage.openWithMultiseriesBF( fileName );
 
             if (calibrationSetting) {
@@ -103,12 +111,25 @@ public class BatchProcessor {
             nucleus.setOverlay(null);
 
             // get nucleus masks
-            ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus, kernelSizeNuc, rollingBallRadiusNuc, thresholdNuc, erosionNuc, minSizeNuc, maxSizeNuc, lowCircNuc, highCircNuc);
+            ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus,
+                    kernelSizeNuc,
+                    rollingBallRadiusNuc,
+                    thresholdNuc,
+                    erosionNuc,
+                    minSizeNuc,
+                    maxSizeNuc,
+                    lowCircNuc,
+                    highCircNuc);
 
             // get filtered cell ROIs
-            ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
-            ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, sigmaGaussCellSep, prominenceCellSep);
-            ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCircCellSize, highCircCelLSize);
+            ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm,
+                    kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
+
+            ImagePlus separatedCells = CellSeparator.separateCells(nucleus,
+                    cytoplasm, sigmaGaussCellSep, prominenceCellSep);
+
+            ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask,
+                    separatedCells, minCellSize, maxCellSize, lowCircCellSize, highCircCelLSize);
 
             RoiManager manager;
             manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);
@@ -139,14 +160,32 @@ public class BatchProcessor {
             if ( measureChannel == 0) {
 
                 IJ.log("No measure channel selected");
-                resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundOrganelle, backgroundMeasure, measureChannel, organelle);
+                resultLists = measureCell(manager,
+                        nucleusMask,
+                        detectionsFiltered,
+                        organelle,
+                        fileNameWOtExt,
+                        seriesNumber,
+                        backgroundOrganelle,
+                        backgroundMeasure,
+                        measureChannel,
+                        organelle);
 
             } else {
 
                 ImagePlus measure = imp_channels[processingImage.measure - 1];
                 IJ.log("Measuring in channel: " + measureChannel);
                 backgroundMeasure = measureDetectionBackground(backgroundMask, measure);
-                resultLists = measureCell(manager, nucleusMask, detectionsFiltered, organelle, fileNameWOtExt, seriesNumber, backgroundOrganelle, backgroundMeasure, measureChannel, measure);
+                resultLists = measureCell(manager,
+                        nucleusMask,
+                        detectionsFiltered,
+                        organelle,
+                        fileNameWOtExt,
+                        seriesNumber,
+                        backgroundOrganelle,
+                        backgroundMeasure,
+                        measureChannel,
+                        measure);
 
             }
 
@@ -233,7 +272,16 @@ public class BatchProcessor {
 
     }
 
-    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager, ImagePlus nucleusMask, ImagePlus detectionsFiltered, ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, double backgroundMean, double backgroundMeasure, int measureChannel, ImagePlus measureChannelImage) {
+    ArrayList<ArrayList<ArrayList<String>>> measureCell(RoiManager manager,
+                                                        ImagePlus nucleusMask,
+                                                        ImagePlus detectionsFiltered,
+                                                        ImagePlus organelleChannel,
+                                                        String fileNameWOtExt,
+                                                        int seriesNumber,
+                                                        double backgroundMean,
+                                                        double backgroundMeasure,
+                                                        int measureChannel,
+                                                        ImagePlus measureChannelImage) {
 
         IJ.log("Starting measurements");
 
@@ -272,8 +320,11 @@ public class BatchProcessor {
 
             for ( int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
 
-                double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
-                double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
+                double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex],
+                        detectionPolygons.ypoints[detectIndex]);
+
+                double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
+                        detectionPolygons.ypoints[detectIndex]);
 
                 double detectionMeasureValue;
 
@@ -283,7 +334,8 @@ public class BatchProcessor {
 
                 } else {
 
-                    detectionMeasureValue = measureChannelImage.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex], detectionPolygons.ypoints[detectIndex]);
+                    detectionMeasureValue = measureChannelImage.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
+                            detectionPolygons.ypoints[detectIndex]);
 
                 }
 
@@ -489,7 +541,13 @@ public class BatchProcessor {
         IJ.log("Measurements saved");
     }
 
-    void saveResultImages(String fileName, ImagePlus nucleusMask, ImagePlus cytoplasm, RoiManager manager, ImagePlus nucleus, ImagePlus organelle, ImagePlus detectionImage) {
+    void saveResultImages(String fileName,
+                          ImagePlus nucleusMask,
+                          ImagePlus cytoplasm,
+                          RoiManager manager,
+                          ImagePlus nucleus,
+                          ImagePlus organelle,
+                          ImagePlus detectionImage) {
 
         String saveDir = outputDir + File.separator + fileName;
         try {
