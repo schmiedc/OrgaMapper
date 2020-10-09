@@ -14,7 +14,7 @@
 
 	<groupId>de.leibnizfmp</groupId>
 	<artifactId>MapOrganelle</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.2.1-SNAPSHOT</version>
 
 	<name>Organelle Positioning</name>
 	<description>ImageJ plugin for detecting and mapping organelles within a cell</description>
