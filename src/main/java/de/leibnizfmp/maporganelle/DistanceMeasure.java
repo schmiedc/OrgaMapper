@@ -31,7 +31,7 @@ public class DistanceMeasure {
         double pxWidth = nucleusMask.getCalibration().pixelWidth;
         double pxSize = pxHeight * pxWidth;
 
-        ArrayList<ArrayList<String>> distanceList = new ArrayList<>();
+        ArrayList<ArrayList<String>> distanceListImage = new ArrayList<>();
         ArrayList<ArrayList<String>> cellList = new ArrayList<>();
 
         for ( int cellIndex = 0; cellIndex <  manager.getCount(); cellIndex++ ) {
@@ -50,87 +50,31 @@ public class DistanceMeasure {
 
             IJ.log("Cell " + cellIndex + " has " + detectionPolygons.npoints + " detection(s)");
 
-            for ( int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
+            ArrayList<ArrayList<String>> distanceListCell = getDistanceDetections(organelleChannel,
+                    fileNameWOtExt,
+                    seriesNumber,
+                    measureChannel,
+                    measureChannelImage,
+                    pxHeight,
+                    cellIndex,
+                    nucEDM,
+                    detectionPolygons);
 
-                double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex],
-                        detectionPolygons.ypoints[detectIndex]);
-
-                double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
-                        detectionPolygons.ypoints[detectIndex]);
-
-                double detectionMeasureValue;
-
-                if (measureChannel == 0) {
-
-                    detectionMeasureValue = 0;
-
-                } else {
-
-                    detectionMeasureValue = measureChannelImage.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
-                            detectionPolygons.ypoints[detectIndex]);
-
-                }
-
-                ArrayList<String> valueList = new ArrayList<>();
-                valueList.add(fileNameWOtExt);
-                valueList.add(String.valueOf(seriesNumber));
-                valueList.add(String.valueOf(cellIndex));
-                valueList.add(String.valueOf(detectIndex));
-                valueList.add(String.valueOf(detectionPosition));
-                valueList.add(String.valueOf(detectionPosition * pxHeight));
-                valueList.add(String.valueOf(detectionValue));
-                valueList.add(String.valueOf(detectionMeasureValue));
-                distanceList.add(valueList);
-
+            for (int i = 0; i < distanceListCell.size(); ++i) {
+                distanceListImage.add(distanceListCell.get(i));
             }
 
-            ArrayList<String> cellValueList = new ArrayList<>();
-            cellValueList.add(fileNameWOtExt);
-            cellValueList.add(String.valueOf(seriesNumber));
-            cellValueList.add(String.valueOf(cellIndex));
-            Roi cellRoi = manager.getRoi(cellIndex);
-
-            // Ferets diameter
-            cellValueList.add(String.valueOf(cellRoi.getFeretsDiameter()));
-
-            // cell area
-            ImageStatistics cellStat = cellRoi.getStatistics();
-            cellValueList.add(String.valueOf( cellStat.area * pxSize ));
-
-            // detection number
-            cellValueList.add(String.valueOf(detectionPolygons.npoints));
-
-            // intensity in detection channel
-            organelleChannel.setRoi( manager.getRoi(cellIndex) );
-            cellValueList.add( String.valueOf(organelleChannel.getProcessor().getStats().mean ) );
-
-
-            if ( backgroundMean >= 0 ) {
-
-                cellValueList.add( String.valueOf(backgroundMean));
-
-            } else {
-
-                cellValueList.add( "NaN" );
-
-            }
-
-            if ( measureChannel > 0) {
-
-                measureChannelImage.setRoi( manager.getRoi(cellIndex) );
-                cellValueList.add( String.valueOf(measureChannelImage.getProcessor().getStats().mean ) );
-
-                if ( backgroundMeasure >= 0 ) {
-
-                    cellValueList.add( String.valueOf(backgroundMeasure));
-
-                } else {
-
-                    cellValueList.add( "NaN" );
-
-                }
-
-            }
+            ArrayList<String> cellValueList = getCellMeasurements(manager,
+                    organelleChannel,
+                    fileNameWOtExt,
+                    seriesNumber,
+                    backgroundMean,
+                    backgroundMeasure,
+                    measureChannel,
+                    measureChannelImage,
+                    pxSize,
+                    cellIndex,
+                    detectionPolygons);
 
             cellList.add(cellValueList);
 
@@ -142,13 +86,103 @@ public class DistanceMeasure {
         }
 
         ArrayList<ArrayList<ArrayList<String>>> results = new ArrayList<>();
-        results.add(distanceList);
+        results.add(distanceListImage);
         results.add(cellList);
 
         IJ.log("Measurement done!");
 
         return results;
 
+    }
+
+    private static ArrayList<String> getCellMeasurements(RoiManager manager, ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, double backgroundMean, double backgroundMeasure, int measureChannel, ImagePlus measureChannelImage, double pxSize, int cellIndex, Polygon detectionPolygons) {
+        ArrayList<String> cellValueList = new ArrayList<>();
+        cellValueList.add(fileNameWOtExt);
+        cellValueList.add(String.valueOf(seriesNumber));
+        cellValueList.add(String.valueOf(cellIndex));
+        Roi cellRoi = manager.getRoi(cellIndex);
+
+        // Ferets diameter
+        cellValueList.add(String.valueOf(cellRoi.getFeretsDiameter()));
+
+        // cell area
+        ImageStatistics cellStat = cellRoi.getStatistics();
+        cellValueList.add(String.valueOf( cellStat.area * pxSize));
+
+        // detection number
+        cellValueList.add(String.valueOf(detectionPolygons.npoints));
+
+        // intensity in detection channel
+        organelleChannel.setRoi( manager.getRoi(cellIndex) );
+        cellValueList.add( String.valueOf(organelleChannel.getProcessor().getStats().mean ) );
+
+
+        if ( backgroundMean >= 0 ) {
+
+            cellValueList.add( String.valueOf(backgroundMean));
+
+        } else {
+
+            cellValueList.add( "NaN" );
+
+        }
+
+        if ( measureChannel > 0) {
+
+            measureChannelImage.setRoi( manager.getRoi(cellIndex) );
+            cellValueList.add( String.valueOf(measureChannelImage.getProcessor().getStats().mean ) );
+
+            if ( backgroundMeasure >= 0 ) {
+
+                cellValueList.add( String.valueOf(backgroundMeasure));
+
+            } else {
+
+                cellValueList.add( "NaN" );
+
+            }
+
+        }
+        return cellValueList;
+    }
+
+    private static ArrayList<ArrayList<String>> getDistanceDetections(ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, int measureChannel, ImagePlus measureChannelImage, double pxHeight, int cellIndex, ImageProcessor nucEDM, Polygon detectionPolygons) {
+        ArrayList<ArrayList<String>> distanceListCell = new ArrayList<>();
+
+        for (int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
+
+            double detectionPosition =  nucEDM.getPixelValue(detectionPolygons.xpoints[detectIndex],
+                    detectionPolygons.ypoints[detectIndex]);
+
+            double detectionValue = organelleChannel.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
+                    detectionPolygons.ypoints[detectIndex]);
+
+            double detectionMeasureValue;
+
+            if (measureChannel == 0) {
+
+                detectionMeasureValue = 0;
+
+            } else {
+
+                detectionMeasureValue = measureChannelImage.getProcessor().getPixelValue(detectionPolygons.xpoints[detectIndex],
+                        detectionPolygons.ypoints[detectIndex]);
+
+            }
+
+            ArrayList<String> valueList = new ArrayList<>();
+            valueList.add(fileNameWOtExt);
+            valueList.add(String.valueOf(seriesNumber));
+            valueList.add(String.valueOf(cellIndex));
+            valueList.add(String.valueOf(detectIndex));
+            valueList.add(String.valueOf(detectionPosition));
+            valueList.add(String.valueOf(detectionPosition * pxHeight));
+            valueList.add(String.valueOf(detectionValue));
+            valueList.add(String.valueOf(detectionMeasureValue));
+            distanceListCell.add(valueList);
+
+        }
+        return distanceListCell;
     }
 
     private static ImageProcessor createEDM(RoiManager manager, ImagePlus nucleusMask, int cellIndex) {
