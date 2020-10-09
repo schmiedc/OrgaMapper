@@ -49,10 +49,10 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         // create the ImageJ application context with all available services
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
-        //ij.command().run(MapOrganelle.class, true);
+        ij.command().run(MapOrganelle.class, true);
 
         boolean runTest1 = false;
-        boolean runTest2 = true;
+        boolean runTest2 = false;
 
         if ( runTest1 || runTest2 ) {
 
