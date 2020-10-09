@@ -10,6 +10,9 @@ import ij.process.ImageProcessor;
 import ij.process.ImageStatistics;
 
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class DistanceMeasure {
@@ -60,8 +63,10 @@ public class DistanceMeasure {
                     nucEDM,
                     detectionPolygons);
 
-            for (int i = 0; i < distanceListCell.size(); ++i) {
-                distanceListImage.add(distanceListCell.get(i));
+            for ( int i = 0; i < distanceListCell.size(); ++i ) {
+
+                distanceListImage.add( distanceListCell.get(i) );
+
             }
 
             ArrayList<String> cellValueList = getCellMeasurements(manager,
@@ -81,6 +86,9 @@ public class DistanceMeasure {
             //nucleusMaskDup.close();
             detectionDup.close();
 
+            //intensityProfile(nucEDM, organelleChannel, manager, cellIndex);
+
+
             IJ.log("Distance & cell measurements finished");
 
         }
@@ -96,6 +104,7 @@ public class DistanceMeasure {
     }
 
     private static ArrayList<String> getCellMeasurements(RoiManager manager, ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, double backgroundMean, double backgroundMeasure, int measureChannel, ImagePlus measureChannelImage, double pxSize, int cellIndex, Polygon detectionPolygons) {
+
         ArrayList<String> cellValueList = new ArrayList<>();
         cellValueList.add(fileNameWOtExt);
         cellValueList.add(String.valueOf(seriesNumber));
@@ -146,7 +155,16 @@ public class DistanceMeasure {
         return cellValueList;
     }
 
-    private static ArrayList<ArrayList<String>> getDistanceDetections(ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, int measureChannel, ImagePlus measureChannelImage, double pxHeight, int cellIndex, ImageProcessor nucEDM, Polygon detectionPolygons) {
+    private static ArrayList<ArrayList<String>> getDistanceDetections(ImagePlus organelleChannel,
+                                                                      String fileNameWOtExt,
+                                                                      int seriesNumber,
+                                                                      int measureChannel,
+                                                                      ImagePlus measureChannelImage,
+                                                                      double pxHeight,
+                                                                      int cellIndex,
+                                                                      ImageProcessor nucEDM,
+                                                                      Polygon detectionPolygons) {
+
         ArrayList<ArrayList<String>> distanceListCell = new ArrayList<>();
 
         for (int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
@@ -185,7 +203,10 @@ public class DistanceMeasure {
         return distanceListCell;
     }
 
-    private static ImageProcessor createEDM(RoiManager manager, ImagePlus nucleusMask, int cellIndex) {
+    private static ImageProcessor createEDM(RoiManager manager,
+                                            ImagePlus nucleusMask,
+                                            int cellIndex) {
+
         ImagePlus nucleusMaskDup = nucleusMask.duplicate();
         ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
 
@@ -200,9 +221,63 @@ public class DistanceMeasure {
         return nucEDM;
     }
 
-    void intensityProfile(ImageProcessor nucEDM,
-                          ImagePlus imageToProfile,
-                          RoiManager manager) {
+    static void intensityProfile(ImageProcessor nucEDM,
+                                 ImagePlus imageToProfile,
+                                 RoiManager manager,
+                                 int cellIndex) {
+
+        Roi cellRoi = manager.getRoi(cellIndex);
+
+        ArrayList<ArrayList<String>> valueListCell = new ArrayList<>();
+
+        for (Point p : cellRoi) {
+
+            int corrX = p.x;
+            int corrY = p.y;
+
+            float valueImage = imageToProfile.getProcessor().getPixelValue(p.x, p.y);
+            float valueDistance = nucEDM.getPixelValue(p.x, p.y);
+
+            ArrayList<String> valueList = new ArrayList<>();
+            valueList.add(String.valueOf(corrX));
+            valueList.add(String.valueOf(corrY));
+            valueList.add(String.valueOf(valueImage));
+            valueList.add(String.valueOf(valueDistance));
+            valueListCell.add(valueList);
+
+        }
+
+        final String lineSeparator = "\n";
+        StringBuilder distanceFile;
+        distanceFile = new StringBuilder("X,Y,Int,Dist");
+        distanceFile.append(lineSeparator);
+
+        // now append your data in a loop
+        for (ArrayList<String> stringArrayList : valueListCell) {
+
+            distanceFile.append(stringArrayList.get(0));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(1));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(2));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(3));
+
+            distanceFile.append(lineSeparator);
+
+        }
+
+        // now write to file
+        try {
+            String outputDir = "/home/schmiedc/Desktop/Test/test_tif/output/";
+            Files.write(Paths.get(outputDir + "/intDistance" + cellIndex + ".csv"), distanceFile.toString().getBytes());
+
+        } catch (IOException e) {
+
+            IJ.log("Unable to write distance measurement!");
+            e.printStackTrace();
+
+        }
 
     }
 }

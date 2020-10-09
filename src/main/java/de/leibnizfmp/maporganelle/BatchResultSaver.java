@@ -94,8 +94,6 @@ public class BatchResultSaver {
 
         }
 
-
-
         for (ArrayList<String> strings : cellList) {
 
             cellFile.append(strings.get(0));
