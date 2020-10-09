@@ -200,7 +200,7 @@ public class BatchProcessor {
             ImageProcessor measureImageProcessor = measureImage.getProcessor();
             ImageProcessor backgroundMaksProcessor = backgroundDup.getProcessor();
 
-            short[] measureImagePixels = (short[]) measureImageProcessor.getPixels();
+            float[] measureImagePixels = (float[]) measureImageProcessor.convertToFloat().getPixels();
             byte[] backgroundMaskPixels  = (byte[]) backgroundMaksProcessor.getPixels();
 
             for (int y = 0; y < imageHeight; y++) {

@@ -57,13 +57,13 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         if ( runTest1 || runTest2 ) {
 
             //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-            String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/LysoPos_BMC_paper/cell_size_test/";
+            String testInDir = "/home/schmiedc/Desktop/Test/8-bit/";
             //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/TestDataSet_2ndChannel/";
-            String testOutDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/LysoPos_BMC_paper/cell_size_test_out/";
+            String testOutDir = "/home/schmiedc/Desktop/Test/8-bit/";
             int channelNumber = 4;
             String fileEnding = ".tif";
             //String fileEnding = ".nd2";
-            String settings = "/data1/FMP_Docs/Projects/orgaPosJ_ME/LysoPos_BMC_paper/cell_size_test_out/2020-09-18T155746-settings.xml";
+            String settings = "/home/schmiedc/Desktop/Test/8-bit/2020-10-09T120113-settings.xml";
 
             FileList getFileList = new FileList(fileEnding);
             ArrayList<String> fileList = getFileList.getFileMultiSeriesList(testInDir);
@@ -72,7 +72,7 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
                 System.out.println(file);
             }
 
-            ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 2));
+           ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 1));
 
 
             if ( runTest1 ) {
