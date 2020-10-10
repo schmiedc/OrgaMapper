@@ -22,56 +22,68 @@ import java.util.ArrayList;
 
 public class BatchResultSaver {
 
-    static void saveMeasurements(ArrayList<ArrayList<String>> distanceList, ArrayList<ArrayList<String>> cellList, String outputDir, int measure) {
+    static void saveMeasurements(ArrayList<ArrayList<String>> distanceList, ArrayList<ArrayList<String>> cellList, ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure) {
 
         IJ.log("Saving measurements to: " + outputDir);
 
         final String lineSeparator = "\n";
-        StringBuilder distanceFile;
+
+        StringBuilder distanceFile = saveDistanceMeasure(distanceList, outputDir, measure, lineSeparator);
+
+        saveCellMeasure(cellList, outputDir, measure, lineSeparator);
+
+        saveValueMeasure(valueMeasure, outputDir, measure, lineSeparator, distanceFile);
+
+        IJ.log("Measurements saved");
+    }
+
+    private static void saveValueMeasure(ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure, String lineSeparator, StringBuilder distanceFile) {
+        StringBuilder valueFile;
 
         if ( measure == 0 ) {
 
-            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt");
-            distanceFile.append(lineSeparator);
+            valueFile = new StringBuilder("Name, Series, Cell,X,Y,Distance,orgaInt");
+            valueFile.append(lineSeparator);
 
         } else {
 
-            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
-            distanceFile.append(lineSeparator);
+            valueFile = new StringBuilder("Name, Series, Cell,X,Y,Distance,orgaInt,measureInt");
+            valueFile.append(lineSeparator);
 
         }
 
         // now append your data in a loop
-        for (ArrayList<String> stringArrayList : distanceList) {
+        for (ArrayList<String> stringArrayList : valueMeasure) {
 
-            distanceFile.append(stringArrayList.get(0));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(1));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(2));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(3));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(4));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(5));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(6));
+            valueFile.append(stringArrayList.get(0));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(1));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(2));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(3));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(4));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(5));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(6));
 
             if ( measure > 0  ) {
 
-                distanceFile.append(",");
-                distanceFile.append(stringArrayList.get(7));
+                valueFile.append(",");
+                valueFile.append(stringArrayList.get(7));
 
             }
 
-            distanceFile.append(lineSeparator);
+            valueFile.append(lineSeparator);
 
         }
 
         // now write to file
         try {
-            Files.write(Paths.get(outputDir + "/organelleDistance.csv"), distanceFile.toString().getBytes());
+
+            Files.write(Paths.get(outputDir + "/intDistance.csv"), valueFile.toString().getBytes());
 
         } catch (IOException e) {
 
@@ -79,7 +91,9 @@ public class BatchResultSaver {
             e.printStackTrace();
 
         }
+    }
 
+    private static void saveCellMeasure(ArrayList<ArrayList<String>> cellList, String outputDir, int measure, String lineSeparator) {
         StringBuilder cellFile;
 
         if ( measure == 0 ) {
@@ -136,8 +150,62 @@ public class BatchResultSaver {
             e.printStackTrace();
 
         }
+    }
 
-        IJ.log("Measurements saved");
+    private static StringBuilder saveDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, int measure, String lineSeparator) {
+        StringBuilder distanceFile;
+
+        if ( measure == 0 ) {
+
+            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt");
+            distanceFile.append(lineSeparator);
+
+        } else {
+
+            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
+            distanceFile.append(lineSeparator);
+
+        }
+
+        // now append your data in a loop
+        for (ArrayList<String> stringArrayList : distanceList) {
+
+            distanceFile.append(stringArrayList.get(0));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(1));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(2));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(3));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(4));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(5));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(6));
+
+            if ( measure > 0  ) {
+
+                distanceFile.append(",");
+                distanceFile.append(stringArrayList.get(7));
+
+            }
+
+            distanceFile.append(lineSeparator);
+
+        }
+
+        // now write to file
+        try {
+            Files.write(Paths.get(outputDir + "/organelleDistance.csv"), distanceFile.toString().getBytes());
+
+        } catch (IOException e) {
+
+            IJ.log("Unable to write distance measurement!");
+            e.printStackTrace();
+
+        }
+        return distanceFile;
     }
 
     static void saveResultImages(String outputDir, String fileName,
