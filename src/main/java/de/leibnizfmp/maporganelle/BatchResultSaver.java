@@ -42,12 +42,12 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            valueFile = new StringBuilder("Name, Series, Cell,X,Y,Distance,orgaInt");
+            valueFile = new StringBuilder("Name, Series, Cell,X,Y,DistanceRaw,DistanceCal,orgaInt");
             valueFile.append(lineSeparator);
 
         } else {
 
-            valueFile = new StringBuilder("Name, Series, Cell,X,Y,Distance,orgaInt,measureInt");
+            valueFile = new StringBuilder("Name, Series, Cell,X,Y,DistanceRaw,DistanceCal,orgaInt,measureInt");
             valueFile.append(lineSeparator);
 
         }
@@ -68,11 +68,13 @@ public class BatchResultSaver {
             valueFile.append(stringArrayList.get(5));
             valueFile.append(",");
             valueFile.append(stringArrayList.get(6));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(7));
 
             if ( measure > 0  ) {
 
                 valueFile.append(",");
-                valueFile.append(stringArrayList.get(7));
+                valueFile.append(stringArrayList.get(8));
 
             }
 
@@ -157,12 +159,12 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt");
+            distanceFile = new StringBuilder("Name,Series,Cell,Detection,X,Y,DistanceRaw,DistanceCal,PeakDetectionInt");
             distanceFile.append(lineSeparator);
 
         } else {
 
-            distanceFile = new StringBuilder("Name,Series,Cell,Detection,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
+            distanceFile = new StringBuilder("Name,Series,Cell,Detection,X,Y,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
             distanceFile.append(lineSeparator);
 
         }
@@ -183,11 +185,15 @@ public class BatchResultSaver {
             distanceFile.append(stringArrayList.get(5));
             distanceFile.append(",");
             distanceFile.append(stringArrayList.get(6));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(7));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(8));
 
             if ( measure > 0  ) {
 
                 distanceFile.append(",");
-                distanceFile.append(stringArrayList.get(7));
+                distanceFile.append(stringArrayList.get(9));
 
             }
 
