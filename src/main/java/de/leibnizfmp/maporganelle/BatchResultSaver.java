@@ -277,7 +277,7 @@ public class BatchResultSaver {
         manager.moveRoisToOverlay(organelle);
 
         FileSaver organelleSave = new FileSaver(organelle);
-        organelleSave.saveAsTiff(saveDir + File.separator + "detections.png");
+        organelleSave.saveAsTiff(saveDir + File.separator + "detections.tiff");
 
         nucRoiManager.reset();
 
