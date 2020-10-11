@@ -54,7 +54,6 @@ public class BatchProcessor {
 
         ArrayList<ArrayList<String>> distanceMeasureAll = new ArrayList<>();
         ArrayList<ArrayList<String>> cellMeasureAll = new ArrayList<>();
-        ArrayList<ArrayList<String>> valueMeasureAll = new ArrayList<>();
 
         for ( String fileName : fileList ) {
 
@@ -149,7 +148,8 @@ public class BatchProcessor {
                         backgroundOrganelle,
                         backgroundMeasure,
                         measureChannel,
-                        organelle);
+                        organelle
+                );
 
             } else {
 
@@ -167,18 +167,19 @@ public class BatchProcessor {
                         backgroundOrganelle,
                         backgroundMeasure,
                         measureChannel,
-                        measure);
+                        measure
+                );
 
             }
 
             // measure organelle distance and intensity, cell properties
             ArrayList<ArrayList<String>> distanceMeasure = resultLists.get(0);
             ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
+
             ArrayList<ArrayList<String>> valueMeasure = resultLists.get(2);
 
             distanceMeasureAll.addAll(distanceMeasure);
             cellMeasureAll.addAll(cellMeasure);
-            valueMeasureAll.addAll(valueMeasure);
 
             // create directory for saving result images
             String saveDir = outputDir + File.separator + fileName;
@@ -195,9 +196,12 @@ public class BatchProcessor {
             // save result images
             BatchResultSaver.saveResultImages(outputDir, fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
+            // results for value measurement too large for large datasets save measurement for each image
+            BatchResultSaver.saveValueMeasure(valueMeasure, saveDir, measureChannel);
+
         }
 
-        BatchResultSaver.saveMeasurements(distanceMeasureAll, cellMeasureAll, valueMeasureAll, outputDir, measureChannel);
+        BatchResultSaver.saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir, measureChannel);
 
         IJ.log("== Batch processing finished ==");
         IJ.showProgress(1);

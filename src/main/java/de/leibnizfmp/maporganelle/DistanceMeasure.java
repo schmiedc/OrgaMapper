@@ -89,12 +89,7 @@ public class DistanceMeasure {
 
             valueListImage.addAll(valueListCell);
 
-
-            //nucleusMaskDup.close();
             detectionDup.close();
-
-            //intensityProfile(nucEDM, organelleChannel, manager, cellIndex);
-
 
             IJ.log("Distance & cell measurements finished");
 
@@ -111,7 +106,17 @@ public class DistanceMeasure {
 
     }
 
-    private static ArrayList<String> getCellMeasurements(RoiManager manager, ImagePlus organelleChannel, String fileNameWOtExt, int seriesNumber, double backgroundMean, double backgroundMeasure, int measureChannel, ImagePlus measureChannelImage, double pxSize, int cellIndex, Polygon detectionPolygons) {
+    private static ArrayList<String> getCellMeasurements(RoiManager manager,
+                                                         ImagePlus organelleChannel,
+                                                         String fileNameWOtExt,
+                                                         int seriesNumber,
+                                                         double backgroundMean,
+                                                         double backgroundMeasure,
+                                                         int measureChannel,
+                                                         ImagePlus measureChannelImage,
+                                                         double pxSize,
+                                                         int cellIndex,
+                                                         Polygon detectionPolygons) {
 
         ArrayList<String> cellValueList = new ArrayList<>();
         cellValueList.add(fileNameWOtExt);
@@ -278,4 +283,5 @@ public class DistanceMeasure {
         return valueListCell;
 
     }
+
 }

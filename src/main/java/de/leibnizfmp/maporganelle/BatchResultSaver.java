@@ -22,35 +22,31 @@ import java.util.ArrayList;
 
 public class BatchResultSaver {
 
-    static void saveMeasurements(ArrayList<ArrayList<String>> distanceList, ArrayList<ArrayList<String>> cellList, ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure) {
+    static void saveMeasurements(ArrayList<ArrayList<String>> distanceList, ArrayList<ArrayList<String>> cellList, String outputDir, int measure) {
 
         IJ.log("Saving measurements to: " + outputDir);
 
-        final String lineSeparator = "\n";
+        saveDistanceMeasure(distanceList, outputDir, measure);
 
-        StringBuilder distanceFile = saveDistanceMeasure(distanceList, outputDir, measure, lineSeparator);
-
-        saveCellMeasure(cellList, outputDir, measure, lineSeparator);
-
-        saveValueMeasure(valueMeasure, outputDir, measure, lineSeparator, distanceFile);
+        saveCellMeasure(cellList, outputDir, measure);
 
         IJ.log("Measurements saved");
     }
 
-    private static void saveValueMeasure(ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure, String lineSeparator, StringBuilder distanceFile) {
+    static void saveValueMeasure(ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure) {
+
         StringBuilder valueFile;
 
         if ( measure == 0 ) {
 
             valueFile = new StringBuilder("Name, Series, Cell,X,Y,DistanceRaw,DistanceCal,orgaInt");
-            valueFile.append(lineSeparator);
 
         } else {
 
             valueFile = new StringBuilder("Name, Series, Cell,X,Y,DistanceRaw,DistanceCal,orgaInt,measureInt");
-            valueFile.append(lineSeparator);
 
         }
+        valueFile.append("\n");
 
         // now append your data in a loop
         for (ArrayList<String> stringArrayList : valueMeasure) {
@@ -78,7 +74,7 @@ public class BatchResultSaver {
 
             }
 
-            valueFile.append(lineSeparator);
+            valueFile.append("\n");
 
         }
 
@@ -95,20 +91,22 @@ public class BatchResultSaver {
         }
     }
 
-    private static void saveCellMeasure(ArrayList<ArrayList<String>> cellList, String outputDir, int measure, String lineSeparator) {
+    private static void saveCellMeasure(ArrayList<ArrayList<String>> cellList,
+                                        String outputDir,
+                                        int measure) {
+
         StringBuilder cellFile;
 
         if ( measure == 0 ) {
 
             cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections, MeanValueOrga, MeanBackgroundOrga");
-            cellFile.append(lineSeparator);
 
         } else {
 
             cellFile = new StringBuilder("Name,Series, Cell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
-            cellFile.append(lineSeparator);
 
         }
+        cellFile.append("\n");
 
         for (ArrayList<String> strings : cellList) {
 
@@ -137,7 +135,7 @@ public class BatchResultSaver {
 
             }
 
-            cellFile.append(lineSeparator);
+            cellFile.append("\n");
 
         }
 
@@ -154,20 +152,20 @@ public class BatchResultSaver {
         }
     }
 
-    private static StringBuilder saveDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, int measure, String lineSeparator) {
+    private static void saveDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, int measure) {
+
         StringBuilder distanceFile;
 
         if ( measure == 0 ) {
 
             distanceFile = new StringBuilder("Name,Series,Cell,Detection,X,Y,DistanceRaw,DistanceCal,PeakDetectionInt");
-            distanceFile.append(lineSeparator);
 
         } else {
 
             distanceFile = new StringBuilder("Name,Series,Cell,Detection,X,Y,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
-            distanceFile.append(lineSeparator);
 
         }
+        distanceFile.append("\n");
 
         // now append your data in a loop
         for (ArrayList<String> stringArrayList : distanceList) {
@@ -197,7 +195,7 @@ public class BatchResultSaver {
 
             }
 
-            distanceFile.append(lineSeparator);
+            distanceFile.append("\n");
 
         }
 
@@ -211,7 +209,6 @@ public class BatchResultSaver {
             e.printStackTrace();
 
         }
-        return distanceFile;
     }
 
     static void saveResultImages(String outputDir, String fileName,
