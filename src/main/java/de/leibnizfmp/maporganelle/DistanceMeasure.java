@@ -56,7 +56,7 @@ public class DistanceMeasure {
                     seriesNumber,
                     measureChannel,
                     measureChannelImage,
-                    pxHeight,
+                    pxSize,
                     cellIndex,
                     nucEDM,
                     detectionPolygons);
