@@ -56,7 +56,7 @@ public class DistanceMeasure {
                     seriesNumber,
                     measureChannel,
                     measureChannelImage,
-                    pxSize,
+                    pxHeight,
                     cellIndex,
                     nucEDM,
                     detectionPolygons);
@@ -84,7 +84,7 @@ public class DistanceMeasure {
                     measureChannel,
                     fileNameWOtExt,
                     seriesNumber,
-                    pxSize,
+                    pxHeight,
                     cellIndex);
 
             valueListImage.addAll(valueListCell);
