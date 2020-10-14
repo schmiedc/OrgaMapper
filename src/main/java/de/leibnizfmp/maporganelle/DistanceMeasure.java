@@ -206,9 +206,9 @@ public class DistanceMeasure {
             valueList.add(String.valueOf(seriesNumber));
             valueList.add(String.valueOf(cellIndex));
             valueList.add(String.valueOf(detectIndex));
-            valueList.add(String.valueOf(detectionPosition));
             valueList.add(String.valueOf(detectionPolygons.xpoints[detectIndex]));
             valueList.add(String.valueOf(detectionPolygons.ypoints[detectIndex]));
+            valueList.add(String.valueOf(detectionPosition));
             valueList.add(String.valueOf(detectionPosition * pxHeight));
             valueList.add(String.valueOf(detectionValue));
             valueList.add(String.valueOf(detectionMeasureValue));
