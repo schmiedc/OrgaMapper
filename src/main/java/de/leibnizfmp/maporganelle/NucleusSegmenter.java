@@ -34,10 +34,20 @@ public class NucleusSegmenter {
         medianFilter.rank(nucImageDup.getProcessor(), kernelSize, 4);
 
         IJ.log("Background subtraction radius: " + rollingBallRadius);
+
         ImageProcessor filteredProcessor = nucImageDup.getProcessor();
-        BackgroundSubtracter subtracted= new BackgroundSubtracter();
-        subtracted.rollingBallBackground(filteredProcessor, rollingBallRadius,
-                false, false, true, false, false);
+
+        if (rollingBallRadius == 0) {
+
+            IJ.log("Background subtraction turned off");
+
+        } else {
+
+            BackgroundSubtracter subtracted= new BackgroundSubtracter();
+            subtracted.rollingBallBackground(filteredProcessor, rollingBallRadius,
+                    false, false, true, false, false);
+
+        }
 
         IJ.log("Automatic threshold method: " + threshold);
         filteredProcessor.setAutoThreshold( threshold, true, 0);

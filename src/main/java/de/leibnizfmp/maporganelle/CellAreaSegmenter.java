@@ -27,9 +27,16 @@ public class CellAreaSegmenter {
 
         IJ.log("Background subtraction radius: " + rollingBallRadius);
         ImageProcessor filteredProcessor = cellImageDup.getProcessor();
-        BackgroundSubtracter subtractor = new BackgroundSubtracter();
-        subtractor.rollingBallBackground( filteredProcessor, rollingBallRadius,
-                false, false, true, false, false );
+
+        if (rollingBallRadius == 0) {
+
+            IJ.log("Background subtraction turned off");
+
+        } else {
+            BackgroundSubtracter subtractor = new BackgroundSubtracter();
+            subtractor.rollingBallBackground(filteredProcessor, rollingBallRadius,
+                    false, false, true, false, false);
+        }
 
         IJ.log("Global threshold with value: " + manualThreshold);
         filteredProcessor.setThreshold(manualThreshold, 65536, 1);
