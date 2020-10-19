@@ -134,7 +134,7 @@ public class PreviewGui extends JPanel {
     void setUpGui() {
 
         // sets up the frame
-        theFrame = new JFrame("Map organelles processing");
+        theFrame = new JFrame("OrgaMapper preview");
 
         // needs to set to dispose otherwise it also closes Fiji
         theFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -693,7 +693,7 @@ public class PreviewGui extends JPanel {
 
                 // settings for nucleus settings
                 kernelSizeNuc = 5;
-                rollingBallRadiusNuc = 150;
+                rollingBallRadiusNuc = 15;
                 thresholdNuc = "Otsu";
                 erosionNuc = 0;
                 minSizeNuc = 50;
@@ -753,7 +753,7 @@ public class PreviewGui extends JPanel {
 
         // settings for nucleus settings
         kernelSizeNuc = 5;
-        rollingBallRadiusNuc = 150;
+        rollingBallRadiusNuc = 15;
         thresholdNuc = "Otsu";
         erosionNuc = 0;
         minSizeNuc = 50;
