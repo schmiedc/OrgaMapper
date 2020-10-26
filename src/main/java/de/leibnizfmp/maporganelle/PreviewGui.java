@@ -192,7 +192,7 @@ public class PreviewGui extends JPanel {
         background.add(BorderLayout.SOUTH, saveLoadBox);
         theFrame.getContentPane().add(background);
 
-        theFrame.setSize(1000,500);
+        theFrame.setSize(900,600);
         theFrame.setVisible(true);
 
     }
@@ -515,7 +515,7 @@ public class PreviewGui extends JPanel {
 
         boxSettings.add(Box.createRigidArea(new Dimension(0, 60)));
 
-        URL url = getClass().getResource("/Logo.png");
+        URL url = getClass().getResource("/Logo-1.png");
 
         if (url == null)
             System.out.println( "Could not find image!" );
