@@ -99,11 +99,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            cellFile = new StringBuilder("Name, Series, Cell, Ferets, CellArea, NumDetections, MeanValueOrga, MeanBackgroundOrga");
+            cellFile = new StringBuilder("name,series,cell,ferets,cellArea,numberDetections,orgaMeanValue,orgaMeanBackground");
 
         } else {
 
-            cellFile = new StringBuilder("Name,Series, Cell,Ferets,CellArea,NumDetections,MeanValueOrga,MeanBackgroundOrga,MeanValueMeasure,MeanBackgroundMeasure");
+            cellFile = new StringBuilder("name,series,cell,ferets,cellArea,numberDetections,orgaMeanValue,orgaMeanBackground,measureMeanValue,measureMeanBackground");
 
         }
         cellFile.append("\n");
