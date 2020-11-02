@@ -158,11 +158,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            distanceFile = new StringBuilder("Name,Series,Cell,Detection,X,Y,DistanceRaw,DistanceCal,PeakDetectionInt");
+            distanceFile = new StringBuilder("name,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated,orgaDetectionPeak");
 
         } else {
 
-            distanceFile = new StringBuilder("Name,Series,Cell,Detection,X,Y,DistanceRaw,DistanceCal,PeakDetectionInt,PeakMeasureInt");
+            distanceFile = new StringBuilder("name,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated,orgaDetectionPeak,measureDetectionPeak");
 
         }
         distanceFile.append("\n");
