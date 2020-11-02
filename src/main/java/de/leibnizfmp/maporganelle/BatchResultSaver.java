@@ -39,11 +39,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            valueFile = new StringBuilder("name,series,cell,xIntensity,xIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity");
+            valueFile = new StringBuilder("identifier,series,cell,xIntensity,xIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity");
 
         } else {
 
-            valueFile = new StringBuilder("name,series,cell,xIntensity,xIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity,measureIntensity");
+            valueFile = new StringBuilder("identifier,series,cell,xIntensity,xIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity,measureIntensity");
 
         }
         valueFile.append("\n");
@@ -99,11 +99,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            cellFile = new StringBuilder("name,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground");
+            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground");
 
         } else {
 
-            cellFile = new StringBuilder("name,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground,measureMeanIntensity,measureMeanBackground");
+            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground,measureMeanIntensity,measureMeanBackground");
 
         }
         cellFile.append("\n");
@@ -158,11 +158,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            distanceFile = new StringBuilder("name,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated,orgaDetectionPeak");
+            distanceFile = new StringBuilder("identifier,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated,orgaDetectionPeak");
 
         } else {
 
-            distanceFile = new StringBuilder("name,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated,orgaDetectionPeak,measureDetectionPeak");
+            distanceFile = new StringBuilder("identifier,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated,orgaDetectionPeak,measureDetectionPeak");
 
         }
         distanceFile.append("\n");
