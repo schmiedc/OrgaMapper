@@ -39,11 +39,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            valueFile = new StringBuilder("Name, Series, Cell,X,Y,DistanceRaw,DistanceCal,orgaInt");
+            valueFile = new StringBuilder("name,series,cell,xIntensity,xIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity");
 
         } else {
 
-            valueFile = new StringBuilder("Name, Series, Cell,X,Y,DistanceRaw,DistanceCal,orgaInt,measureInt");
+            valueFile = new StringBuilder("name,series,cell,xIntensity,xIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity,measureIntensity");
 
         }
         valueFile.append("\n");
