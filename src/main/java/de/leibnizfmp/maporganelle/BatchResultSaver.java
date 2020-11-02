@@ -81,7 +81,7 @@ public class BatchResultSaver {
         // now write to file
         try {
 
-            Files.write(Paths.get(outputDir + "/intDistance.csv"), valueFile.toString().getBytes());
+            Files.write(Paths.get(outputDir + "/intensityDistance.csv"), valueFile.toString().getBytes());
 
         } catch (IOException e) {
 
