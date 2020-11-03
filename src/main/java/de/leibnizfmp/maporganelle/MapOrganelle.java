@@ -9,8 +9,8 @@
 package de.leibnizfmp.maporganelle;
 
 import ij.IJ;
-import net.imagej.ImageJ;
 import ij.Prefs;
+import net.imagej.ImageJ;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
