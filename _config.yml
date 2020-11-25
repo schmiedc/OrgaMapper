@@ -1,3 +1,5 @@
 theme: jekyll-theme-minimal
 title: OrgaMapper
 description: ImageJ plugin for detecting and mapping organelles within cells
+
+logo: Logo_small.png
