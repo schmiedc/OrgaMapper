@@ -2,4 +2,4 @@ theme: jekyll-theme-minimal
 title: OrgaMapper
 description: ImageJ plugin for detecting and mapping organelles within cells
 
-logo: ![Jetpacktocat](https://octodex.github.com/images/jetpacktocat.png)
+logo: Logo_small.png
