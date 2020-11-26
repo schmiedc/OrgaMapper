@@ -174,7 +174,7 @@ Adjust the brightness contrast of the image using:
 
 Once you are happy with the segmentation parameters press Batch Process. The result of the workflow will be saved in the specified output directory along the used settings.
 
-<img src="images/BatchProcessing.png" alt="BatchProcessing" class="inline"/>
+<img src="images/BatchProcess.png" alt="BatchProcessing" class="inline"/>
 
 The progress of the processing will be written in the Log file. Once finished the Log file will display:
 
@@ -188,14 +188,14 @@ The progress of the processing will be written in the Log file. Once finished th
 The results of the workflow are structured the following way:
 
 OutputFolder
-├── \<Date\>\-\<Time\>\-settings.xml
-├── cellMeasurements.csv
-├── organelleDistance.csv
-└── \<imageName\>
-├── *cellSegmentation.png*
-├── *detections.tiff*
-├── intDistance.csv
-└── *nucSegmentation.png*
+├── \<Date\>\-\<Time\>\-settings.xml<br>
+├── cellMeasurements.csv<br>
+├── organelleDistance.csv<br>
+└── \<imageName\><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── *cellSegmentation.png*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── *detections.tiff*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── intDistance.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── *nucSegmentation.png*<br>
 
 For each image a folder will be created containing visualizations for the segmentation task:
 
@@ -210,14 +210,14 @@ For each image a folder will be created containing visualizations for the segmen
 The resulting measurements will be saved in .csv tables either collected or per individual image in case of the intensity profiles:
 
 OutputFolder
-├── *\<Date\>\-\<Time\>\-settings.xml*
-├── *cellMeasurements.csv*
-├── *organelleDistance.csv*
-└── <imageName>
-├── cellSegmentation.png
-├── Detections.tiff
-├── *intDistance.csv*
-└── nucSegmentation.png
+├── *\<Date\>\-\<Time\>\-settings.xml*<br>
+├── *cellMeasurements.csv*<br>
+├── *organelleDistance.csv*<br>
+└── <imageName><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── cellSegmentation.png<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── Detections.tiff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── *intDistance.csv*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── nucSegmentation.png<br>
 
 1. *.xml settings*: will be created containing the processing settings used.
 2. *cellMeasurements.csv* file contains the measurements of size, number of detections and intensity.
