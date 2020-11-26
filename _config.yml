@@ -1,13 +1,9 @@
 theme: jekyll-theme-minimal
 title: OrgaMapper
-email: schmied@fmp-berlin.de
 description: ImageJ plugin for detecting and mapping organelles within cells
 logo: "assets/Logo_small.png?raw=true"
-
-
-sidebar:
-  - text: "[Workflow execution](pages/workflow.html)"
-  - text: "[Results](pages/results.html)"
+baseurl: /
+github: [metadata]
 
 # Exclude from processing.
 # The following items will not be processed, by default.

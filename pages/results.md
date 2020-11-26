@@ -1,3 +1,8 @@
+---
+layout: default
+title: Result
+---
+
 # Results of Fiji plugin
 
 ## Result images

@@ -1,3 +1,8 @@
+---
+layout: default
+title: Workflow
+---
+
 # Workflow execution
 
 ## Start and loading data

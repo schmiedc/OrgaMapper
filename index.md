@@ -1,3 +1,8 @@
+---
+layout: default
+title: Start
+---
+
 # Easy to use plugin for analysing organelle position
 
 The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease.
