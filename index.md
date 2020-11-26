@@ -120,6 +120,9 @@ In the following sections we will discuss the different processing options for e
 
 ### Nuclei segmentation
 
+<img src="images/preview/nuclei.png" alt="nuclei" class="inline"/>
+<img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" class="inline"/>
+
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
@@ -132,6 +135,9 @@ In the following sections we will discuss the different processing options for e
 **_Image > Adjust > Brightness/Contrast...-** - **_Ctrl + Shift + C_**
 
 ### Cell segmentation
+
+<img src="images/preview/cells.png" alt="nuclei" class="inline"/>
+<img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" class="inline"/>
 
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
@@ -150,6 +156,9 @@ Adjust the brightness contrast of the image using:
 
 ### Organelle detection
 
+<img src="images/preview/organelles.png" alt="nuclei" class="inline"/>
+<img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei" class="inline"/>
+
 1. Detect number & position of spots:
   - LoG sigma (px) - a laplacian of gaussian filter is applied to enhance blob like structures.
   - Prominence (A.U.) - detection of peaks in the filtered image.
@@ -165,4 +174,52 @@ Adjust the brightness contrast of the image using:
 
 Once you are happy with the segmentation parameters press Batch Process. The result of the workflow will be saved in the specified output directory along the used settings.
 
+<img src="images/BatchProcessing.png" alt="BatchProcessing" class="inline"/>
+
 The progress of the processing will be written in the Log file. Once finished the Log file will display:
+
+<img src="images/Finished.png" alt="Finished" class="inline"/>
+
+
+# Results & analysis
+
+## Result images
+
+The results of the workflow are structured the following way:
+
+OutputFolder
+├── \<Date\>\-\<Time\>\-settings.xml
+├── cellMeasurements.csv
+├── organelleDistance.csv
+└── \<imageName\>
+├── *cellSegmentation.png*
+├── *detections.tiff*
+├── intDistance.csv
+└── *nucSegmentation.png*
+
+For each image a folder will be created containing visualizations for the segmentation task:
+
+1. *cellSegmentation.png* file contains the cytoplasm channel overlaid with the nuclei segmentation and an outline of the cell segmentation.
+2. *detections.tiff* file contains the organelle channel with overlays from the nuclei and cell segmentation as well as the organelle detection.
+3. *nucSegmtnation.png* contains the nucleus channel with an outline of the nucleus segmentation.
+
+
+## Result tables
+
+
+The resulting measurements will be saved in .csv tables either collected or per individual image in case of the intensity profiles:
+
+OutputFolder
+├── *\<Date\>\-\<Time\>\-settings.xml*
+├── *cellMeasurements.csv*
+├── *organelleDistance.csv*
+└── <imageName>
+├── cellSegmentation.png
+├── Detections.tiff
+├── *intDistance.csv*
+└── nucSegmentation.png
+
+1. *.xml settings*: will be created containing the processing settings used.
+2. *cellMeasurements.csv* file contains the measurements of size, number of detections and intensity.
+3. *organelleDistance.csv* contains the distance and peak intensity values for each detected organelle will be saved in the file.
+4. *intDistance.csv* file contains the measurements of the intensity values of each pixel in the cytoplasm segmentation and their distance from the nucleus.
