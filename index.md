@@ -119,9 +119,15 @@ You can preview each segmentation setting on different images. In fact we want t
 In the following sections we will discuss the different processing options for each task.
 
 ### Nuclei segmentation
+<div class="row">
+  <div class="column">
+  <img src="images/preview/nuclei.png" alt="nuclei" style="width:100%"/>
+  </div>
+  <div class="column">
+    <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:100%"/>
+  </div>
+</div>
 
-<img src="images/preview/nuclei.png" alt="nuclei" class="inline"/>
-<img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" class="inline"/>
 
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
