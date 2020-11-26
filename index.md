@@ -1,4 +1,4 @@
-# Introduction
+# Easy to use plugin for analysing organelle position
 
 The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease.
 The distance of the organelles are related to the nucleus using location or signal intensity.
@@ -11,7 +11,8 @@ The generated masks are filtered for size and shape.
 
 **2. Cell segmentation:** Cells are segmented using an intensity threshold.
 Touching cells are separated using a marker controlled watershed.
-The cell ROIs are filtered such that each cell contains 1 nucleus.
+The cell ROIs are filtered such that each (base) schmiedc@LTN-2018-005:/data1/FMP_Docs/Repositories/plugins_FMP/map-organelle$
+cell contains 1 nucleus.
 Cells are further filered by size and shape.
 
 **3. Organelle detection:** We use a blob detection to detect individual organelles to locate their number and the position within the cell.
@@ -54,12 +55,12 @@ The plugin is available via an update site.
 
 You need to add the Cellular-Imaging site to your list of update sites:
 
-1. Select **__Help  › Update...</strong>__** from the menu bar.
-2. Click on Manage update sites. Which opens the **__Manage update sites__** dialog.
-3. Press **__Add update size__** a new line in the Manage update sites dialog appears
+1. Select **_Help  › Update...</strong>_** from the menu bar.
+2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
+3. Press **_Add update size_** a new line in the Manage update sites dialog appears
 4. Add https://sites.imagej.net/Cellular-Imaging/ as url
 5. Add an optional name such as Cellular-Imaging
-6. Press **__Close__** and then **__Apply changes__**
+6. Press **_Close_** and then **_Apply changes_**
 
 For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)
 As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
