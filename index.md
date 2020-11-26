@@ -188,7 +188,7 @@ The progress of the processing will be written in the Log file. Once finished th
   <img src="images/Finished.png" alt="Finished">
 </p>
 
-# Results & analysis
+# Results
 
 ## Result images
 
@@ -212,7 +212,6 @@ For each image a folder will be created containing visualizations for the segmen
 
 
 ## Result tables
-
 
 The resulting measurements will be saved in .csv tables either collected or per individual image in case of the intensity profiles:
 
