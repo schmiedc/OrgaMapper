@@ -119,7 +119,7 @@ You can preview each segmentation setting on different images. In fact we want t
 In the following sections we will discuss the different processing options for each task.
 
 ### Nuclei segmentation
-<img src="images/preview/nuclei.png" alt="nuclei" style="width:50%" align="left"/>
+<img src="images/preview/nuclei.png" alt="nuclei" style="width:50%" align="left"/> |
 <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
 <br>
 
@@ -135,9 +135,10 @@ In the following sections we will discuss the different processing options for e
 **_Image > Adjust > Brightness/Contrast...-** - **_Ctrl + Shift + C_**
 
 ### Cell segmentation
-
-<img src="images/preview/cells.png" alt="nuclei" align="left" style="width:50%"/>
-<img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" style="width:50%"/>
+<p float="left">
+  <img src="images/preview/cells.png" alt="nuclei"/>
+  <img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/>
+  </p>
 <br>
 
 1. Segmentation:
