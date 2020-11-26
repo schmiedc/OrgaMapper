@@ -121,8 +121,8 @@ In the following sections we will discuss the different processing options for e
 ### Nuclei segmentation
 <table>
   <tr>
-    <td><img src="images/preview/nuclei.png" alt="nuclei" style="width:50%" align="left"/></td>
-    <td><img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/></td>
+    <td><img src="images/preview/nuclei.png" alt="nuclei" ></td>
+    <td><img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei"></td>
   </tr>
 </table>
 1. Segmentation:
