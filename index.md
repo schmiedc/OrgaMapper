@@ -121,8 +121,8 @@ In the following sections we will discuss the different processing options for e
 ### Nuclei segmentation
 <img src="images/preview/nuclei.png" alt="nuclei" style="width:50%" align="left"/> |
 <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
-<br>
 
+<p>
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
@@ -133,14 +133,13 @@ In the following sections we will discuss the different processing options for e
 
 3. Press **_Preview_** to see the outline of the segmentation on top of the nucleus channel. Adjust the brightness contrast of the image using:
 **_Image > Adjust > Brightness/Contrast...-** - **_Ctrl + Shift + C_**
-
+</p>
 ### Cell segmentation
 <p float="left">
   <img src="images/preview/cells.png" alt="nuclei"/>
   <img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/>
-  </p>
-<br>
-
+</p>
+<p>
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
@@ -155,7 +154,7 @@ In the following sections we will discuss the different processing options for e
 4. Press **_Preview_** to see the outline of the segmentation on top of the cytoplasm channel.
 Adjust the brightness contrast of the image using:
 **_Image > Adjust > Brightness/Contrast..._** - **_Ctrl + Shift + C_**
-
+</p>
 ### Organelle detection
 
 <img src="images/preview/organelles.png" alt="nuclei" align="left" style="width:50%"/>
