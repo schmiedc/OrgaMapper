@@ -3,33 +3,33 @@
 The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease.
 The distance of the organelles are related to the nucleus using location or signal intensity.
 
-The image analysis plugin solves 3 main image segmentation tasks:
+The image analysis plugin solves 3 core image analysis tasks:
 
-<strong>1. Nucleus segmentation:</strong> The nucleus is segmented using an intensity threshold.
+**1. Nucleus segmentation:** The nucleus is segmented using an intensity threshold.
 Nuclei at the edge of the field of view are rejected.
 The generated masks are filtered for size and shape.
 
-<strong>2. Cell segmentation:</strong> Cells are segmented using an intensity threshold.
+**2. Cell segmentation:** Cells are segmented using an intensity threshold.
 Touching cells are separated using a marker controlled watershed.
 The cell ROIs are filtered such that each cell contains 1 nucleus.
 Cells are further filered by size and shape.
 
-<strong>3. Organelle detection:</strong> We use a blob detection to detect individual organelles to locate their number and the position within the cell.
+**3. Organelle detection:** We use a blob detection to detect individual organelles to locate their number and the position within the cell.
 
 The generated masks and ROIs are then used to perform the following measurements:
 
 
 
-1. Filtered cell ROIs:
+**1. Filtered cell ROIs:**
   - Intensity of the organelle channel and an optional measurement channel.
   - Ferets diameter as well as the cell area.
 
-2. Filtered cell ROIs & Nucleus Mask:
+**2. Filtered cell ROIs & Nucleus Mask:**
   - Compute euclidean distance map (EDM) from edge of nucleus masks.
   - Measure distance of each organelle detection based on EDM.
   - Extract signal value and distance of the organelle channel and an optional measurement channel.
 
-3. Outside of unfiltered cell ROIs:  
+**3. Outside of unfiltered cell ROIs:**
   - Background of the organelle channel and an optional measurement channel.
 
 ## How to cite
@@ -40,29 +40,29 @@ Single multichannel .tiff files and multichannel multiseries files. We tested th
 
 For the Data analysis and plotting to work seamlessly with the image analysis we require the following naming pattern.
 Single .tif files:<br>
-\<Name\>\_\<Treatment\>\_\<Number\>
+**\<Name\>\_\<Treatment\>\_\<Number\>**
 
 Multiseries files:<br>
-\<Name\>\_\<Treatment\/Wellnumber\>
+**\<Name\>\_\<Treatment\/Wellnumber\>**
 
 The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFDA) and against an organelle of choice.
 
 ## Installation
 
-For the image analysis you need to download and install Fiji: https://fiji.sc/
+For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
 The plugin is available via an update site.
 
 You need to add the Cellular-Imaging site to your list of update sites:
 
-1. Select <strong>Help  › Update...</strong> from the menu bar.
-2. Click on Manage update sites. Which opens the <strong>Manage update sites</strong> dialog.
-3. Press <strong>Add update size</strong> a new line in the Manage update sites dialog appears
+1. Select **__Help  › Update...</strong>__** from the menu bar.
+2. Click on Manage update sites. Which opens the **__Manage update sites__** dialog.
+3. Press **__Add update size__** a new line in the Manage update sites dialog appears
 4. Add https://sites.imagej.net/Cellular-Imaging/ as url
 5. Add an optional name such as Cellular-Imaging
-6. Press <strong>Close</strong> and then <strong>Apply changes</strong>
+6. Press **__Close__** and then **__Apply changes__**
 
-For the data anaylsis you need to install R: https://www.r-project.org/
-As an R editor I recommend to use RStudio: https://rstudio.com/products/rstudio/download/
+For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)
+As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
 
 ## Hardware requirements
 
