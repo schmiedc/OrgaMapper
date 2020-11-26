@@ -1,6 +1,6 @@
-theme: minima
+theme: jekyll-theme-minimal
 title: OrgaMapper
-email: your-email@example.com
+email: schmied@fmp-berlin.de
 description: ImageJ plugin for detecting and mapping organelles within cells
 logo: "assets/Logo_small.png?raw=true"
 

@@ -39,12 +39,13 @@ The generated masks and ROIs are then used to perform the following measurements
 
 Single multichannel .tiff files and multichannel multiseries files. We tested the workflow on multiseries .nd2 files from Nikon CSU.
 
-For the Data analysis and plotting to work seamlessly with the image analysis we require the following naming pattern.
+For the Data analysis and plotting to work seamlessly with the image analysis we require the following naming pattern.<br>
+<br>
 Single .tif files:<br>
 **\<Name\>\_\<Treatment\>\_\<Number\>**
 
 Multiseries files:<br>
-**\<Name\>\_\<Treatment\/Wellnumber\>**
+**\<Name\>\_\<Treatment/Wellnumber\>**
 
 The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFDA) and against an organelle of choice.
 
