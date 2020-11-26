@@ -45,7 +45,7 @@ Single .tif files:<br>
 Multiseries files:<br>
 \<Name\>\_\<Treatment\/Wellnumber\>
 
-The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFA) and against an organelle of choice.
+The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFDA) and against an organelle of choice.
 
 ## Installation
 
