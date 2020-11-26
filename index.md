@@ -178,12 +178,15 @@ Adjust the brightness contrast of the image using:
 
 Once you are happy with the segmentation parameters press Batch Process. The result of the workflow will be saved in the specified output directory along the used settings.
 
-<img src="images/BatchProcess.png" alt="BatchProcessing" class="center"/>
+<p align="center">
+  <img src="images/BatchProcess.png" alt="BatchProcessing">
+</p>
 
 The progress of the processing will be written in the Log file. Once finished the Log file will display:
 
-<img src="images/Finished.png" alt="Finished" class="center"/>
-
+<p align="center">
+  <img src="images/Finished.png" alt="Finished">
+</p>
 
 # Results & analysis
 
