@@ -121,10 +121,10 @@ In the following sections we will discuss the different processing options for e
 ### Nuclei segmentation
 <div class="row">
   <div class="column">
-  <img src="images/preview/nuclei.png" alt="nuclei" style="width:100%"/>
+  <img src="images/preview/nuclei.png" alt="nuclei" style="width:50%"/>
   </div>
   <div class="column">
-    <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:100%"/>
+    <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
   </div>
 </div>
 
@@ -193,15 +193,15 @@ The progress of the processing will be written in the Log file. Once finished th
 
 The results of the workflow are structured the following way:
 
-OutputFolder
+OutputFolder<br>
 ├── \<Date\>\-\<Time\>\-settings.xml<br>
 ├── cellMeasurements.csv<br>
 ├── organelleDistance.csv<br>
 └── \<imageName\><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── *cellSegmentation.png*<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── *detections.tiff*<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── intDistance.csv<br>
-&nbsp;&nbsp;&nbsp;&nbsp;└── *nucSegmentation.png*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── *cellSegmentation.png*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── *detections.tiff*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── intDistance.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── *nucSegmentation.png*<br>
 
 For each image a folder will be created containing visualizations for the segmentation task:
 
@@ -215,15 +215,15 @@ For each image a folder will be created containing visualizations for the segmen
 
 The resulting measurements will be saved in .csv tables either collected or per individual image in case of the intensity profiles:
 
-OutputFolder
+OutputFolder<br>
 ├── *\<Date\>\-\<Time\>\-settings.xml*<br>
 ├── *cellMeasurements.csv*<br>
 ├── *organelleDistance.csv*<br>
-└── <imageName><br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── cellSegmentation.png<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── Detections.tiff<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── *intDistance.csv*<br>
-&nbsp;&nbsp;&nbsp;&nbsp;└── nucSegmentation.png<br>
+└── \<imageName\><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── cellSegmentation.png<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── Detections.tiff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── *intDistance.csv*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── nucSegmentation.png<br>
 
 1. *.xml settings*: will be created containing the processing settings used.
 2. *cellMeasurements.csv* file contains the measurements of size, number of detections and intensity.
