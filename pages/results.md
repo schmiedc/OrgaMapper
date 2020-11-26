@@ -22,7 +22,7 @@ For each image a folder will be created containing visualizations for the segmen
 
 <p align="center">
   <img src="../images/results_annotated.png" alt="ResultImages">
-<p>
+</p>
 
 ## Result tables
 
