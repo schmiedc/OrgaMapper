@@ -119,8 +119,8 @@ You can preview each segmentation setting on different images. In fact we want t
 In the following sections we will discuss the different processing options for each task.
 
 ### Nuclei segmentation
-<img src="images/preview/nuclei.png" alt="nuclei" style="width:100%" align="left"/>
-<img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:100%" align="left"/>
+<img src="images/preview/nuclei.png" alt="nuclei" style="width:50%" align="left"/>
+<img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
 
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
@@ -136,7 +136,7 @@ In the following sections we will discuss the different processing options for e
 ### Cell segmentation
 
 <img src="images/preview/cells.png" alt="nuclei" align="left"/>
-<img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" align="left"/>
+<img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/>
 
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
@@ -156,7 +156,7 @@ Adjust the brightness contrast of the image using:
 ### Organelle detection
 
 <img src="images/preview/organelles.png" alt="nuclei" align="left"/>
-<img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei" align="left"/>
+<img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei"/>
 
 1. Detect number & position of spots:
   - LoG sigma (px) - a laplacian of gaussian filter is applied to enhance blob like structures.
