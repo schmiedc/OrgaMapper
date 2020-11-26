@@ -21,7 +21,7 @@ For each image a folder will be created containing visualizations for the segmen
 3. **nucSegmtnation.png** contains the nucleus channel with an outline of the nucleus segmentation.
 
 <p align="center">
-  <img src="images/results_annotated.png" alt="ResultImages">
+  <img src="../images/results_annotated.png" alt="ResultImages">
 <p>
 
 ## Result tables

@@ -6,7 +6,7 @@
     **_Fiji > Plugins > Cellular-Imaging > OrgaMapper_**
 3. **_Setup dialog_** pops up
 
-<img src="images/SetupDialog.png" alt="SetupDialog" class="inline"/>
+<img src="../images/SetupDialog.png" alt="SetupDialog" class="inline"/>
 
 Specify the location of the input, output directories and the file ending of the files to be analyzed. If already available specify the location and name of a settings file  or otherwise leave empty. You can specify files and directory also by drag & drop into the respective field.
 
@@ -22,17 +22,17 @@ The left section of the preview menu contains tabs with the different processing
 The right section contains all key experimental settings such as pixel size and the identity of each channel (3).
 The lower bar contains menu items for saving, loading and resetting the processing settings as well as the input & output directories (4).
 
-<img src="images/Overview.png" alt="Overview" class="inline"/>
+<img src="../images/Overview.png" alt="Overview" class="inline"/>
 
 ## Save, load, reset settings and reset directories
 
 Different setting files can be saved and loaded. The reset Button will restore the processing setting to the system default. If you want to process a different dataset or store the output files in a different output directory you can press Reset Directories:
 
-<img src="images/SaveLoadReset.png" alt="SaveLoadReset" class="inline"/>
+<img src="../images/SaveLoadReset.png" alt="SaveLoadReset" class="inline"/>
 
 The workflow stores the experimental settings in a .xml file. This is a machine readable text file. You can open it with any text editor. The file is stored with the date and time when it has been saved: **_\<Date\>\-\<Time\>\-settings.xml_**. Each setting relevant for the processing is stored with the name of the specific setting.
 
-<img src="images/settings.png" alt="settings" class="inline"/>
+<img src="../images/settings.png" alt="settings" class="inline"/>
 
 ## Specify experimental settings
 
@@ -45,7 +45,7 @@ The workflow stores the experimental settings in a .xml file. This is a machine 
   - Measure channel (Optional)
 
 <p align="center">
-  <img src="images/ExperimentalSettings.png" alt="ExperimentalSettings">
+  <img src="../images/ExperimentalSettings.png" alt="ExperimentalSettings">
 </p>
 
 ## Preview the segmentation parameters
@@ -62,8 +62,8 @@ In the following sections we will discuss the different processing options for e
 ### Nuclei segmentation
 <table>
   <tr>
-    <td><img src="images/preview/nuclei.png" alt="nuclei" ></td>
-    <td><img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei"></td>
+    <td><img src="../images/preview/nuclei.png" alt="nuclei" ></td>
+    <td><img src="../images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei"></td>
   </tr>
 </table>
 1. Segmentation:
@@ -79,8 +79,8 @@ In the following sections we will discuss the different processing options for e
 
 ### Cell segmentation
 <table>
-  <td><img src="images/preview/cells.png" alt="nuclei"></td>
-  <td><img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" width="400"></td>
+  <td><img src="../images/preview/cells.png" alt="nuclei"></td>
+  <td><img src="../images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" width="400"></td>
 </table>
 
 1. Segmentation:
@@ -100,8 +100,8 @@ Adjust the brightness contrast of the image using:
 
 ### Organelle detection
 <table>
-  <td><img src="images/preview/organelles.png" alt="nuclei" align="left"></td>
-  <td><img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei"></td>
+  <td><img src="../images/preview/organelles.png" alt="nuclei" align="left"></td>
+  <td><img src="../images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei"></td>
 </table>
 
 1. Detect number & position of spots:
@@ -120,11 +120,11 @@ Adjust the brightness contrast of the image using:
 Once you are happy with the segmentation parameters press Batch Process. The result of the workflow will be saved in the specified output directory along the used settings.
 
 <p align="center">
-  <img src="images/BatchProcess.png" alt="BatchProcessing">
+  <img src="../images/BatchProcess.png" alt="BatchProcessing">
 </p>
 
 The progress of the processing will be written in the Log file. Once finished the Log file will display:
 
 <p align="center">
-  <img src="images/Finished.png" alt="Finished">
+  <img src="../images/Finished.png" alt="Finished">
 </p>
