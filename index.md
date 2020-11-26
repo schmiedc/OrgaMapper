@@ -139,7 +139,7 @@ In the following sections we will discuss the different processing options for e
 ### Cell segmentation
 <table>
   <td><img src="images/preview/cells.png" alt="nuclei"></td>
-  <td><img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" width="200"></td>
+  <td><img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" width="400"></td>
 </table>
 
 1. Segmentation:
