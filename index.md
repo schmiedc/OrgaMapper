@@ -119,14 +119,11 @@ You can preview each segmentation setting on different images. In fact we want t
 In the following sections we will discuss the different processing options for each task.
 
 ### Nuclei segmentation
-<div class="row">
-  <div class="column">
+<div class="column">
   <img src="images/preview/nuclei.png" alt="nuclei" style="width:50%"/>
-  </div>
-  <div class="column">
-    <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
-  </div>
+  <img src="images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
 </div>
+
 
 
 1. Segmentation:
