@@ -105,7 +105,9 @@ The workflow stores the experimental settings in a .xml file. This is a machine 
   - Organelle channel
   - Measure channel (Optional)
 
-<img src="images/ExperimentalSettings.png" alt="ExperimentalSettings" class="inline"/>
+<p align="center">
+  <img src="images/ExperimentalSettings.png" alt="ExperimentalSettings">
+</p>
 
 ## Preview the segmentation parameters
 
@@ -188,7 +190,7 @@ The progress of the processing will be written in the Log file. Once finished th
   <img src="images/Finished.png" alt="Finished">
 </p>
 
-# Results
+# Results of Fiji plugin
 
 ## Result images
 
@@ -210,6 +212,7 @@ For each image a folder will be created containing visualizations for the segmen
 2. **detections.tiff** file contains the organelle channel with overlays from the nuclei and cell segmentation as well as the organelle detection.
 3. **nucSegmtnation.png** contains the nucleus channel with an outline of the nucleus segmentation.
 
+<img src="images/results_annotated.png" alt="ResultImages">
 
 ## Result tables
 
