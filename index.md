@@ -67,7 +67,7 @@ As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio
     **_Fiji > Plugins > Cellular-Imaging > OrgaMapper_**
 3. **_Setup dialog_** pops up
 
-<img src="assets/SetupDialog.png" alt="hi" class="inline"/>
+<img src="images/SetupDialog.png" alt="SetupDialog" class="inline"/>
 
 Specify the location of the input, output directories and the file ending of the files to be analyzed. If already available specify the location and name of a settings file  or otherwise leave empty. You can specify files and directory also by drag & drop into the respective field.
 
@@ -83,17 +83,17 @@ The left section of the preview menu contains tabs with the different processing
 The right section contains all key experimental settings such as pixel size and the identity of each channel (3).
 The lower bar contains menu items for saving, loading and resetting the processing settings as well as the input & output directories (4).
 
-<img src="assets/Overview.png" alt="hi" class="inline"/>
+<img src="images/Overview.png" alt="Overview" class="inline"/>
 
 ## Save, load, reset settings and reset directories
 
 Different setting files can be saved and loaded. The reset Button will restore the processing setting to the system default. If you want to process a different dataset or store the output files in a different output directory you can press Reset Directories:
 
-<img src="assets/SaveLoadReset.png" alt="hi" class="inline"/>
+<img src="images/SaveLoadReset.png" alt="SaveLoadReset" class="inline"/>
 
 The workflow stores the experimental settings in a .xml file. This is a machine readable text file. You can open it with any text editor. The file is stored with the date and time when it has been saved: **_\<Date\>\-\<Time\>\-settings.xml_**. Each setting relevant for the processing is stored with the name of the specific setting.
 
-<img src="assets/settings.png" alt="hi" class="inline"/>
+<img src="images/settings.png" alt="settings" class="inline"/>
 
 ## Specify experimental settings
 
@@ -105,7 +105,7 @@ The workflow stores the experimental settings in a .xml file. This is a machine 
   - Organelle channel
   - Measure channel (Optional)
 
-<img src="assets/ExperimentalSettings.png" alt="hi" class="inline"/>
+<img src="images/ExperimentalSettings.png" alt="ExperimentalSettings" class="inline"/>
 
 ## Preview the segmentation parameters
 
