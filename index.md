@@ -137,11 +137,11 @@ In the following sections we will discuss the different processing options for e
 **_Image > Adjust > Brightness/Contrast...-** - **_Ctrl + Shift + C_**
 
 ### Cell segmentation
-<p float="left">
-  <img src="images/preview/cells.png" alt="nuclei"/>
-  <img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/>
-</p>
-
+<table>
+  <td><img src="images/preview/cells.png" alt="nuclei"/></td>
+  <td><img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/></td>
+</table>
+<br>
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
