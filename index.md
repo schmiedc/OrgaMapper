@@ -141,7 +141,7 @@ In the following sections we will discuss the different processing options for e
   <td><img src="images/preview/cells.png" alt="nuclei"/></td>
   <td><img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/></td>
 </table>
-<br>
+
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
@@ -158,10 +158,10 @@ Adjust the brightness contrast of the image using:
 **_Image > Adjust > Brightness/Contrast..._** - **_Ctrl + Shift + C_**
 
 ### Organelle detection
-
-<img src="images/preview/organelles.png" alt="nuclei" align="left" style="width:50%"/>
-<img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
-<br>
+<table>
+  <td><img src="images/preview/organelles.png" alt="nuclei" align="left"></td>
+  <td><img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei"></td>
+</table>
 
 1. Detect number & position of spots:
   - LoG sigma (px) - a laplacian of gaussian filter is applied to enhance blob like structures.
