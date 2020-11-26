@@ -47,9 +47,7 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 ## Installation
 
 For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
-The plugin is available via an update site.
-
-You need to add the Cellular-Imaging site to your list of update sites:
+The plugin is available via an update site. Add the Cellular-Imaging site:
 
 1. Select **_Help  › Update...</strong>_** from the menu bar.
 2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
@@ -58,7 +56,7 @@ You need to add the Cellular-Imaging site to your list of update sites:
 5. Add an optional name such as Cellular-Imaging
 6. Press **_Close_** and then **_Apply changes_**
 
-For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)
+For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
 As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
 
 # Workflow execution
@@ -68,6 +66,8 @@ As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio
 2. Open OrgaMapper
     **_Fiji > Plugins > Cellular-Imaging > OrgaMapper_**
 3. **_Setup dialog_** pops up
+
+<img src="assets/Logo_small.png" alt="hi" class="inline"/>
 
 Specify the location of the input, output directories and the file ending of the files to be analyzed. If already available specify the location and name of a settings file  or otherwise leave empty. You can specify files and directory also by drag & drop into the respective field.
 
