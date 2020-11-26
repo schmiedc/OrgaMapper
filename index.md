@@ -136,8 +136,8 @@ In the following sections we will discuss the different processing options for e
 
 ### Cell segmentation
 
-<img src="images/preview/cells.png" alt="nuclei" align="left"/>
-<img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei"/>
+<img src="images/preview/cells.png" alt="nuclei" align="left" style="width:50%"/>
+<img src="images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" style="width:50%"/>
 <br>
 
 1. Segmentation:
@@ -157,8 +157,8 @@ Adjust the brightness contrast of the image using:
 
 ### Organelle detection
 
-<img src="images/preview/organelles.png" alt="nuclei" align="left"/>
-<img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei"/>
+<img src="images/preview/organelles.png" alt="nuclei" align="left" style="width:50%"/>
+<img src="images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei" style="width:50%"/>
 <br>
 
 1. Detect number & position of spots:
