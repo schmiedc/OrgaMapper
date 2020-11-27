@@ -50,7 +50,7 @@ Multiseries files:<br>
 
 The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFDA) and against an organelle of choice.
 
-<img src="images/OrgaMapperInput.png" alt="InputData" class="inline"/>
+<img src="https://schmiedc.github.io/OrgaMapper/images/OrgaMapperInput.png" alt="InputData" class="inline"/>
 
 
 ## Installation
