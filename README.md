@@ -7,7 +7,8 @@ The distance of the organelles are related to the nucleus using location or sign
 
 Have a look at the github pages site for more information:<br>
 [https://schmiedc.github.io/OrgaMapper/](https://schmiedc.github.io/OrgaMapper/)
-<br>
+<br/>
+<br/>
 The image analysis plugin solves 3 core image analysis tasks:
 
 **1. Nucleus segmentation:** The nucleus is segmented using an intensity threshold.
