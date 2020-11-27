@@ -8,6 +8,9 @@ title: Start
 The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease.
 The distance of the organelles are related to the nucleus using location or signal intensity.
 
+<img src="images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
+
+
 The image analysis plugin solves 3 core image analysis tasks:
 
 **1. Nucleus segmentation:** The nucleus is segmented using an intensity threshold.
@@ -48,6 +51,9 @@ Multiseries files:<br>
 **\<Name\>\_\<Treatment/Wellnumber\>**
 
 The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFDA) and against an organelle of choice.
+
+<img src="images/OrgaMapperInput.png" alt="InputData" class="inline"/>
+
 
 ## Installation
 
