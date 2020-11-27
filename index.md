@@ -76,5 +76,5 @@ As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/
 
 ## - [Fiji Plugin Execution](pages/workflow.html)
 ## - [Fiji Plugin Results](pages/results.html)
-## - [rShiny App Execution](pages/rShinyApp.html)
-## - [Analysis Results](pages/analysisResults.html)
+## - [Shiny App Execution](pages/rShinyApp.html)
+## - [Shiny Results](pages/analysisResults.html)
