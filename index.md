@@ -60,7 +60,7 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
 The plugin is available via an update site. Add the Cellular-Imaging site:
 
-1. Select **_Help  › Update...</strong>_** from the menu bar.
+1. Select **_Help  › Update..._** from the menu bar.
 2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
 3. Press **_Add update size_** a new line in the Manage update sites dialog appears
 4. Add **_https://sites.imagej.net/Cellular-Imaging/_** as url
@@ -77,4 +77,4 @@ As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/
 ## - [Fiji Plugin Execution](pages/workflow.html)
 ## - [Fiji Plugin Results](pages/results.html)
 ## - [Shiny App Execution](pages/rShinyApp.html)
-## - [Shiny Results](pages/analysisResults.html)
+## - [Shiny App Results](pages/analysisResults.html)
