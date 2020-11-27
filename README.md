@@ -3,7 +3,7 @@
 The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease.
 The distance of the organelles are related to the nucleus using location or signal intensity.
 
-<img src="images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
+<img src="https://schmiedc.github.io/OrgaMapper/images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
 
 Have a look at the github pages site for more information:<br>
 [https://schmiedc.github.io/OrgaMapper/](https://schmiedc.github.io/OrgaMapper/)
