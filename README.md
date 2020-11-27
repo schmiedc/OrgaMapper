@@ -5,6 +5,8 @@ The distance of the organelles are related to the nucleus using location or sign
 
 <img src="images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
 
+Have a look at the github pages site for more information:
+[https://schmiedc.github.io/OrgaMapper/](https://schmiedc.github.io/OrgaMapper/)
 
 The image analysis plugin solves 3 core image analysis tasks:
 
