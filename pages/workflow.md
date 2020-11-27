@@ -3,7 +3,7 @@ layout: default
 title: Workflow
 ---
 
-# Workflow execution
+# Fiji Plugin Execution
 
 ## Start and loading data
 1. Start Fiji

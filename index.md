@@ -67,11 +67,14 @@ The plugin is available via an update site. Add the Cellular-Imaging site:
 5. Add an optional name such as Cellular-Imaging
 6. Press **_Close_** and then **_Apply changes_**
 
-For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
-As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
+For the data anaylsis you need to install R:<br/>[https://www.r-project.org/](https://www.r-project.org/)<br/>
+<br/>
+As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
 
 
 # Getting started
 
-- [Workflow execution](pages/workflow.html)
-- [Results](pages/results.html)
+## - [Fiji Plugin Execution](pages/workflow.html)
+## - [Fiji Plugin Results](pages/results.html)
+## - [rShiny App Execution](pages/rShinyApp.html)
+## - [Analysis Results](pages/analysisResults.html)
