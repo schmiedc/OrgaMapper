@@ -1,23 +1,23 @@
 ---
 layout: default
-title: rShinyApp
+title: ShinyApp
 ---
 
-# rShiny App Execution
-The data analysis is realized as a rShiny app. This allows you to read in the output data and execute the data processing using a graphical interface.
+# Shiny App Execution
+The data analysis is realized as a Shiny app. This allows you to read in the output data and execute the data processing using a graphical interface.
 
-Install r and r studio for running the rShiny app:<br/>
+Install r and r studio for running the Shiny app:<br/>
 [https://www.r-project.org/](https://www.r-project.org/)<br/>
 [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)<br/>
 
-Then download the contents of the OrgaMapper_Rshiny repository:
-[OrgaMapper Rshiny](https://github.com/schmiedc/OrgaMapper_Rshiny/archive/main.zip)
+Then download the contents of the OrgaMapper_Shiny repository:
+[OrgaMapper Shiny](https://github.com/schmiedc/OrgaMapper_Rshiny/archive/main.zip)
 
-Here is a link to the OrgaMapper Rshiny repository:
+Here is a link to the OrgaMapper Shiny repository:
 [https://github.com/schmiedc/OrgaMapper_Rshiny](https://github.com/schmiedc/OrgaMapper_Rshiny)
 
 
-## rShiny app execution
+## Shiny app execution
 
 Open the app.R file in RStudio. Then specify the location of folder that contains the scripts in the setwd() line:
 
@@ -25,7 +25,7 @@ Open the app.R file in RStudio. Then specify the location of folder that contain
   <img src="../images/analysis/setWD.png" alt="setWD" class="inline"/>
 </p>
 
-To open the rShiny app press **_Run App_** in the top left corner of the RStudio editor:
+To open the Shiny app press **_Run App_** in the top left corner of the RStudio editor:
 
 <p align="center">
   <img src="../images/analysis/RunApp.png" alt="RunApp" class="inline"/>
