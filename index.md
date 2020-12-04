@@ -10,6 +10,18 @@ The distance of the organelles are related to the nucleus using location or sign
 
 <img src="images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
 
+## Core features of OrgaMapper
+
+- Easy to use Java Swing based graphical user interface
+- Interactive adjustment of segmentation over entire dataset
+- Batch processing executed from main interface
+- Settings are saved automatically for easy reproduction
+- Easy to use Shiny App for data analysis
+
+[Link to OrgaMapper repository](https://github.com/schmiedc/OrgaMapper)<br>
+[Link to Shiny App repository](https://github.com/schmiedc/OrgaMapper_Rshiny)
+
+## OrgaMapper at a glance
 
 The image analysis plugin solves 3 core image analysis tasks:
 
@@ -38,7 +50,7 @@ The generated masks and ROIs are then used to perform the following measurements
 3. Outside of unfilte1. red cell ROIs:
   - Background of the organelle channel and an optional measurement channel.
 
-## Accepted datasets
+### Accepted datasets
 
 Single multichannel .tiff files and multichannel multiseries files. We tested the workflow on multiseries .nd2 files from Nikon CSU.
 
@@ -55,7 +67,7 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 <img src="images/OrgaMapperInput.png" alt="InputData" class="inline"/>
 
 
-## Installation
+### Installation
 
 For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
 The plugin is available via an update site. Add the Cellular-Imaging site:
@@ -72,7 +84,7 @@ For the data anaylsis you need to install R:<br/>[https://www.r-project.org/](ht
 As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
 
 
-# Getting started
+# User tutorials
 
 ## - [Fiji Plugin Execution](pages/workflow.html)
 ## - [Fiji Plugin Results](pages/results.html)
