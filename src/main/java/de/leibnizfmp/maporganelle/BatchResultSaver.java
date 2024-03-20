@@ -99,11 +99,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground");
+            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,nucleusCenterMassX,nucleusCenterMassY,orgaMeanBackground");
 
         } else {
 
-            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground,measureMeanIntensity,measureMeanBackground");
+            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,nucleusCenterMassX,nucleusCenterMassY,orgaMeanBackground, measureMeanIntensity,measureMeanBackground");
 
         }
         cellFile.append("\n");
@@ -125,13 +125,17 @@ public class BatchResultSaver {
             cellFile.append(strings.get(6));
             cellFile.append(",");
             cellFile.append(strings.get(7));
+            cellFile.append(",");
+            cellFile.append(strings.get(8));
+            cellFile.append(",");
+            cellFile.append(strings.get(9));
 
             if ( measure > 0  ) {
 
                 cellFile.append(",");
-                cellFile.append(strings.get(8));
+                cellFile.append(strings.get(10));
                 cellFile.append(",");
-                cellFile.append(strings.get(9));
+                cellFile.append(strings.get(11));
 
             }
 
