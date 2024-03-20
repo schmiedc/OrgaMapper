@@ -37,3 +37,13 @@ out/# User-specific stuff
 .idea/modules
 *.iml
 *.ipr
+
+.idea/.gitignore
+.idea/.name
+.idea/artifacts/MapOrganelle_jar.xml
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
