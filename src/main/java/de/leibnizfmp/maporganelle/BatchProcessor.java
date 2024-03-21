@@ -19,15 +19,13 @@ public class BatchProcessor {
     private final ArrayList<String> fileList;
     private final String fileFormat;
     private final int channelNumber;
-
     private final int nucleusChannel;
     private final int cytoplasmChannel;
     private final int organelleChannel;
     private final int measureChannel;
-
     private final boolean calibrationSetting;
     private final double pxSizeMicron;
-
+    private final boolean distanceFromMembraneSetting;
     private final float kernelSizeNuc;
     private final double rollingBallRadiusNuc;
     private final String thresholdNuc;
@@ -148,7 +146,8 @@ public class BatchProcessor {
                         backgroundOrganelle,
                         backgroundMeasure,
                         measureChannel,
-                        organelle
+                        organelle,
+                        distanceFromMembraneSetting
                 );
 
             } else {
@@ -167,7 +166,8 @@ public class BatchProcessor {
                         backgroundOrganelle,
                         backgroundMeasure,
                         measureChannel,
-                        measure
+                        measure,
+                        distanceFromMembraneSetting
                 );
 
             }
@@ -224,8 +224,9 @@ public class BatchProcessor {
         measureChannel = 4;
         calibrationSetting = false;
         pxSizeMicron = 0.1567095;
+        distanceFromMembraneSetting = false;
 
-        // settings for nucleus settings
+         // settings for nucleus settings
         kernelSizeNuc = 5;
         rollingBallRadiusNuc = 50;
         thresholdNuc = "Otsu";
@@ -256,38 +257,37 @@ public class BatchProcessor {
 
     }
 
-    BatchProcessor( String inputDirectory,
-                    String outputDirectory,
-                    ArrayList<String> filesToProcess,
-                    String format,
-                    int getChannelNumber,
-                    int getNucleusChannel,
-                    int getCytoplasmChannel,
-                    int getOrganelleChannel,
-                    int getMeasure,
-                    boolean getCalibrationSetting,
-                    double getPxSizeMicron,
-                    float getKernelSizeNuc,
-                    double getRollingBallRadiusNuc,
-                    String getThresholdNuc,
-                    int getErosionNuc,
-                    double getMinSizeNuc,
-                    double getMaxSizeNuc,
-                    double getLowCircNuc,
-                    double getHighCircNuc,
-                    float getKernelSizeCellArea,
-                    double getRollingBallRadiusCellArea,
-                    int getManualThresholdCellArea,
-                    double getSigmaGaussCellSep,
-                    double getProminenceCellSep,
-                    double getMinCellSize,
-                    double getMaxCellSize,
-                    double getLowCircCellSize,
-                    double getHighCircCelLSize,
-                    double getSigmaLoGOrga,
-                    double getProminenceOrga
-
-    ) {
+    BatchProcessor(String inputDirectory,
+                   String outputDirectory,
+                   ArrayList<String> filesToProcess,
+                   String format,
+                   int getChannelNumber,
+                   int getNucleusChannel,
+                   int getCytoplasmChannel,
+                   int getOrganelleChannel,
+                   int getMeasure,
+                   boolean getCalibrationSetting,
+                   double getPxSizeMicron,
+                   boolean getDistanceFromMembraneSetting,
+                   float getKernelSizeNuc,
+                   double getRollingBallRadiusNuc,
+                   String getThresholdNuc,
+                   int getErosionNuc,
+                   double getMinSizeNuc,
+                   double getMaxSizeNuc,
+                   double getLowCircNuc,
+                   double getHighCircNuc,
+                   float getKernelSizeCellArea,
+                   double getRollingBallRadiusCellArea,
+                   int getManualThresholdCellArea,
+                   double getSigmaGaussCellSep,
+                   double getProminenceCellSep,
+                   double getMinCellSize,
+                   double getMaxCellSize,
+                   double getLowCircCellSize,
+                   double getHighCircCelLSize,
+                   double getSigmaLoGOrga,
+                   double getProminenceOrga) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -303,6 +303,7 @@ public class BatchProcessor {
         measureChannel = getMeasure;
         calibrationSetting = getCalibrationSetting;
         pxSizeMicron = getPxSizeMicron;
+        distanceFromMembraneSetting = getDistanceFromMembraneSetting;
 
         // settings for nucleus settings
         kernelSizeNuc = getKernelSizeNuc;

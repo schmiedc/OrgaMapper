@@ -25,7 +25,8 @@ public class DistanceMeasure {
                                                                double backgroundMean,
                                                                double backgroundMeasure,
                                                                int measureChannel,
-                                                               ImagePlus measureChannelImage) {
+                                                               ImagePlus measureChannelImage,
+                                                               boolean distanceFromMembrane) {
 
         IJ.log("Starting measurements");
 
@@ -33,7 +34,8 @@ public class DistanceMeasure {
         double pxWidth = nucleusMask.getCalibration().pixelWidth;
         double pxSize = pxHeight * pxWidth;
 
-        ArrayList<ArrayList<String>> distanceListCollected = new ArrayList<>();
+        ArrayList<ArrayList<String>> nucDistanceListCollected = new ArrayList<>();
+        ArrayList<ArrayList<String>> membraneDistanceListCollected = new ArrayList<>();
         ArrayList<ArrayList<String>> measurementsPerCellCollected = new ArrayList<>();
         ArrayList<ArrayList<String>> intensityProfilesImage = new ArrayList<>();
 
@@ -42,10 +44,7 @@ public class DistanceMeasure {
             IJ.log("Analyzing Cell: " + cellIndex);
 
             // creates EDM from the nucleus mask
-            ImageProcessor nucEDM = createEDM(manager, nucleusMask, cellIndex);
-
-            // TODO: create EDM from cell mask to measure from membrane- detections are filtered for nucleus
-            // TODO: Measure distance in cellEDM based on detections
+            ImageProcessor nucEDM = createNucEDM(manager, nucleusMask, cellIndex);
 
             // organelle detection in nucleus and within cell area
             ImagePlus detectionDup = detectionsFiltered.duplicate();
@@ -57,8 +56,9 @@ public class DistanceMeasure {
 
             IJ.log("Cell " + cellIndex + " has " + detectionPolygons.npoints + " detection(s)");
 
+            IJ.log("Measuring distance from nucleus edge");
             // collects the measurements for each organelle
-            ArrayList<ArrayList<String>> distanceListCell = getDistanceDetections(organelleChannel,
+            ArrayList<ArrayList<String>> nucDistanceListCell = getNucDistanceDetections(organelleChannel,
                     fileNameWOtExt,
                     seriesNumber,
                     measureChannel,
@@ -68,8 +68,27 @@ public class DistanceMeasure {
                     nucEDM,
                     detectionPolygons);
 
-            distanceListCollected.addAll(distanceListCell);
+            nucDistanceListCollected.addAll(nucDistanceListCell);
 
+            // measure distance from membrane edge
+            if (distanceFromMembrane) {
+
+                IJ.log("Measuring distance from membrane edge");
+
+                ImageProcessor membraneEDM = createMembraneEDM(manager, nucleusMask, cellIndex);
+
+                ArrayList<ArrayList<String>> membraneDistanceListCell = getMembraneDistanceDetections(membraneEDM,
+                        fileNameWOtExt,
+                        seriesNumber,
+                        cellIndex,
+                        pxHeight,
+                        detectionPolygons);
+
+                membraneDistanceListCollected.addAll(membraneDistanceListCell);
+
+            }
+
+            IJ.log("Measuring cell parameters");
             // collects the measurements for each cell
             ArrayList<String> measurementPerCell = getCellMeasurements(manager,
                     organelleChannel,
@@ -86,8 +105,9 @@ public class DistanceMeasure {
 
             measurementsPerCellCollected.add(measurementPerCell);
 
+            IJ.log("Measuring intensity profiles form nucleus edge");
             // collects the intensity profiles for each cell
-            ArrayList<ArrayList<String>> intensityProfilesCells = intensityProfile(organelleChannel,
+            ArrayList<ArrayList<String>> intensityProfilesCells = nucIntensityProfile(organelleChannel,
                     measureChannelImage,
                     manager,
                     nucEDM,
@@ -99,6 +119,8 @@ public class DistanceMeasure {
 
             intensityProfilesImage.addAll(intensityProfilesCells);
 
+            // TODO: Measure intensity profiles from nucleus edge
+
             detectionDup.close();
 
             IJ.log("Distance & cell measurements finished");
@@ -106,9 +128,15 @@ public class DistanceMeasure {
         }
 
         ArrayList<ArrayList<ArrayList<String>>> results = new ArrayList<>();
-        results.add(distanceListCollected);
+        results.add(nucDistanceListCollected);
         results.add(measurementsPerCellCollected);
         results.add(intensityProfilesImage);
+
+        if (distanceFromMembrane) {
+
+            results.add(membraneDistanceListCollected);
+
+        }
 
         IJ.log("Measurement done!");
 
@@ -197,17 +225,62 @@ public class DistanceMeasure {
         return cellValueList;
     }
 
-    private static ArrayList<ArrayList<String>> getDistanceDetections(ImagePlus organelleChannel,
-                                                                      String fileNameWOtExt,
-                                                                      int seriesNumber,
-                                                                      int measureChannel,
-                                                                      ImagePlus measureChannelImage,
-                                                                      double pxHeight,
-                                                                      int cellIndex,
-                                                                      ImageProcessor nucEDM,
-                                                                      Polygon detectionPolygons) {
 
-        ArrayList<ArrayList<String>> distanceListCell = new ArrayList<>();
+    private static ImageProcessor createNucEDM(RoiManager manager,
+                                               ImagePlus nucleusMask,
+                                               int cellIndex) {
+
+        ImagePlus nucleusMaskDup = nucleusMask.duplicate();
+        ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
+
+        // get the EDM of cell outside of nucleus
+        nucProcessor.setValue(0.0);
+        nucProcessor.fillOutside(manager.getRoi(cellIndex));
+        nucProcessor.invert();
+        nucProcessor.convertToByteProcessor();
+        EDM edmProcessor = new EDM();
+        edmProcessor.setup("", nucleusMaskDup);
+        return edmProcessor.makeFloatEDM(nucProcessor, 0, false);
+    }
+
+    private static ImageProcessor createMembraneEDM(RoiManager manager,
+                                                    ImagePlus nucleusMask,
+                                                    int cellIndex) {
+
+        ImagePlus nucMaskDup = nucleusMask.duplicate();
+        ImageProcessor membraneMaskProcessor = nucMaskDup.getProcessor();
+
+        // set values outside of cell roi to 0
+        // removes all other nuclei from mask image
+        membraneMaskProcessor.setValue(0.0);
+        membraneMaskProcessor.fillOutside(manager.getRoi(cellIndex));
+
+        // set values inside of cell to 255
+        // creates cell mask for specific cellIndex
+        membraneMaskProcessor.setValue(255.0);
+        membraneMaskProcessor.fill(manager.getRoi(cellIndex));
+
+        // setup EDM
+        membraneMaskProcessor.convertToByteProcessor();
+        EDM edmProcessor = new EDM();
+        edmProcessor.setup("", nucMaskDup);
+
+        // compute Float EDM for large distances
+        return edmProcessor.makeFloatEDM(membraneMaskProcessor, 0, false);
+
+    }
+
+    private static ArrayList<ArrayList<String>> getNucDistanceDetections(ImagePlus organelleChannel,
+                                                                         String fileNameWOtExt,
+                                                                         int seriesNumber,
+                                                                         int measureChannel,
+                                                                         ImagePlus measureChannelImage,
+                                                                         double pxHeight,
+                                                                         int cellIndex,
+                                                                         ImageProcessor nucEDM,
+                                                                         Polygon detectionPolygons) {
+
+        ArrayList<ArrayList<String>> nucDistanceListCell = new ArrayList<>();
 
         for (int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
 
@@ -241,38 +314,55 @@ public class DistanceMeasure {
             valueList.add(String.valueOf(detectionPosition * pxHeight));
             valueList.add(String.valueOf(detectionValue));
             valueList.add(String.valueOf(detectionMeasureValue));
-            distanceListCell.add(valueList);
+            nucDistanceListCell.add(valueList);
 
         }
-        return distanceListCell;
+        return nucDistanceListCell;
     }
 
-    private static ImageProcessor createEDM(RoiManager manager,
-                                            ImagePlus nucleusMask,
-                                            int cellIndex) {
+    private static ArrayList<ArrayList<String>> getMembraneDistanceDetections(ImageProcessor cellEDM,
+                                                                              String fileNameWOtExt,
+                                                                              int seriesNumber,
+                                                                              int cellIndex,
+                                                                              double pxHeight,
+                                                                              Polygon detectionPolygons) {
 
-        ImagePlus nucleusMaskDup = nucleusMask.duplicate();
-        ImageProcessor nucProcessor = nucleusMaskDup.getProcessor();
+        ArrayList<ArrayList<String>> membraneDistanceListCell = new ArrayList<>();
 
-        // get the EDM of cell outside of nucleus
-        nucProcessor.setValue(0.0);
-        nucProcessor.fillOutside(manager.getRoi(cellIndex));
-        nucProcessor.invert();
-        nucProcessor.convertToByteProcessor();
-        EDM edmProcessor = new EDM();
-        edmProcessor.setup("", nucleusMaskDup);
-        return edmProcessor.makeFloatEDM(nucProcessor, 0, false);
+        // loops through the detections
+        for (int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
+
+            // get the intensity value in cellEDM based on x & y of detection
+            double detectionPosition =  cellEDM.getPixelValue(
+                    detectionPolygons.xpoints[detectIndex],
+                    detectionPolygons.ypoints[detectIndex]);
+
+            ArrayList<String> valueList = new ArrayList<>();
+
+            valueList.add(fileNameWOtExt);
+            valueList.add(String.valueOf(seriesNumber));
+            valueList.add(String.valueOf(cellIndex));
+            valueList.add(String.valueOf(detectIndex));
+            valueList.add(String.valueOf(detectionPolygons.xpoints[detectIndex]));
+            valueList.add(String.valueOf(detectionPolygons.ypoints[detectIndex]));
+            valueList.add(String.valueOf(detectionPosition));
+            valueList.add(String.valueOf(detectionPosition * pxHeight));
+            membraneDistanceListCell.add(valueList);
+
+        }
+        return membraneDistanceListCell;
+
     }
 
-    static ArrayList<ArrayList<String>> intensityProfile(ImagePlus organelleChannel,
-                                                         ImagePlus measureChannelImage,
-                                                         RoiManager manager,
-                                                         ImageProcessor nucEDM,
-                                                         int measureChannel,
-                                                         String fileNameWOtExt,
-                                                         int seriesNumber,
-                                                         double pxHeight,
-                                                         int cellIndex) {
+    static ArrayList<ArrayList<String>> nucIntensityProfile(ImagePlus organelleChannel,
+                                                            ImagePlus measureChannelImage,
+                                                            RoiManager manager,
+                                                            ImageProcessor nucEDM,
+                                                            int measureChannel,
+                                                            String fileNameWOtExt,
+                                                            int seriesNumber,
+                                                            double pxHeight,
+                                                            int cellIndex) {
 
         Roi cellRoi = manager.getRoi(cellIndex);
 

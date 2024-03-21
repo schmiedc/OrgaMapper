@@ -101,6 +101,9 @@ public class PreviewGui extends JPanel {
 
     // image settings
     private boolean calibrationSetting;
+
+    private boolean distanceFromMembraneSetting;
+
     private double pxSizeMicron;
     private final int channelNumber;
     private int nucleusChannel;
@@ -119,6 +122,9 @@ public class PreviewGui extends JPanel {
     private boolean setDisplayRange = false;
 
     JCheckBox checkCalibration;
+
+    JCheckBox checkDistanceFromMembrane;
+
     private SpinnerModel doubleSpinnerPixelSize;
 
     Box nucSegBox = new Box(BoxLayout.Y_AXIS);
@@ -126,7 +132,6 @@ public class PreviewGui extends JPanel {
     Box organelleBox = new Box(BoxLayout.Y_AXIS);
     Box boxSettings = new Box(BoxLayout.Y_AXIS);
     Box batchBox = new Box(BoxLayout.Y_AXIS);
-
 
     // tabbed pane
     private final JTabbedPane tabbedPane = new JTabbedPane();
@@ -165,7 +170,7 @@ public class PreviewGui extends JPanel {
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         tabbedPane.setPreferredSize(new Dimension(290, 100));
 
-        // Setup Interactions for Segment Boutons
+        // Setup Interactions for Segmentation
         Box saveLoadBox = new Box(BoxLayout.X_AXIS);
 
         // setup Buttons
@@ -448,6 +453,12 @@ public class PreviewGui extends JPanel {
         checkCalibration.setSelected(calibrationSetting);
         boxSettings.add(checkCalibration);
 
+        // Checkbox for measurements from membrane
+        checkDistanceFromMembrane = new JCheckBox("Organelle distance from membrane?");
+        checkDistanceFromMembrane.setToolTipText("Additionally to distance from nucleus the distance from the membrane edge is measured");
+        checkDistanceFromMembrane.setSelected(distanceFromMembraneSetting);
+        boxSettings.add(checkDistanceFromMembrane);
+
         // here we create a Array list for selecting different numbers for the channels
         ArrayList<String> channelString = new ArrayList<>();
         channelString.add( "ignore" );
@@ -509,7 +520,6 @@ public class PreviewGui extends JPanel {
         boxSettings.add(Box.createRigidArea(new Dimension(0, 40)));
 
         JButton batchButton = new JButton("Batch Process");
-        // TODO: option for measuring in another channel
         batchButton.addActionListener(new MyBatchListener());
         boxSettings.add(batchButton);
 
@@ -518,17 +528,23 @@ public class PreviewGui extends JPanel {
         URL url = getClass().getResource("/Logo-1.png");
 
         if (url == null)
+
             System.out.println( "Could not find image!" );
+
         else
+
             System.out.println( "Could find image!" );
 
         try {
+
             final BufferedImage myLogo = ImageIO.read(url);
             JLabel logoLabel = new JLabel(new ImageIcon(myLogo));
             boxSettings.add(logoLabel);
 
         } catch (IOException e) {
+
             e.printStackTrace();
+
         }
 
     }
@@ -566,6 +582,9 @@ public class PreviewGui extends JPanel {
 
         boolean calibrationSetting = checkCalibration.isSelected();
         Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+
+        // TODO: Implement saving of distanceFromMembraneSetting in settings file. IMPORTANT: Backwards compatible
+        boolean distanceFromMembraneSetting = checkDistanceFromMembrane.isSelected();
 
         // dataset settings
         String nucChannelString = (String) nucleusChannelList.getSelectedItem();
@@ -629,6 +648,7 @@ public class PreviewGui extends JPanel {
 
         XmlHandler writeToXml = new XmlHandler();
 
+        // TODO: implement distanceFromMembraneSetting in save file
         writeToXml.xmlWriter(directory, name, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
                 cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
                 cellSepGaussCellSep, cellSepProminence,
@@ -801,6 +821,7 @@ public class PreviewGui extends JPanel {
 
         // image settings
         calibrationSetting = false;
+        distanceFromMembraneSetting = false;
 
         nucleusChannel = 0;
         cytoplasmChannel = 0;
@@ -809,7 +830,11 @@ public class PreviewGui extends JPanel {
 
     }
 
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber,
+    PreviewGui ( String inputDirectory, 
+                 String outputDirectory, 
+                 ArrayList<String> filesToProcess, 
+                 String format, 
+                 int getChannelNumber,
                  float getKernelSizeNuc,
                  double getRollingBallRadiusNuc,
                  String getThresholdNuc,
@@ -830,6 +855,7 @@ public class PreviewGui extends JPanel {
                  double getSigmaLoGOrga,
                  double getProminenceOrga,
                  boolean getCalibrationSetting,
+                 // TODO: boolean getdistanceFromMembraneSetting,
                  double getPxSizeMicron,
                  int getNucleusChannel,
                  int getCytoplasmChannel,
@@ -873,6 +899,7 @@ public class PreviewGui extends JPanel {
 
         // image settings
         calibrationSetting = getCalibrationSetting;
+        // TODO: boolean distanceFromMembraneSetting = getdistanceFromMembraneSetting;
         pxSizeMicron = getPxSizeMicron;
         nucleusChannel = getNucleusChannel;
         cytoplasmChannel = getCytoplasmChannel;
@@ -940,6 +967,7 @@ public class PreviewGui extends JPanel {
 
                         setDisplayRange = false;
 
+                        // Checks if calibrations should be overwritten
                         if (calibrationSetting) {
 
                             Calibration calibration = Image.calibrate(pxSizeMicronSetting);
@@ -1506,6 +1534,7 @@ public class PreviewGui extends JPanel {
 
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
+            boolean distanceFromMembraneSetting = checkDistanceFromMembrane.isSelected();
 
             // settings for nuclei segmentation
             Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
@@ -1555,10 +1584,11 @@ public class PreviewGui extends JPanel {
                 String fileName = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss'-settings.xml'").format(new Date());
                 saveSettings( outputDir, fileName );
 
+                // TODO: implement measure from membrane in BatchProcessor
                 BatchProcessor processing = new BatchProcessor(inputDir, outputDir, fileList, fileFormat, channelNumber,
                         nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber,
                         calibrationSetting, pxSizeMicronSetting,
-                        nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
+                        distanceFromMembraneSetting, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
                         cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat, cellSepGaussCellSep, cellSepProminence,
                         cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, organelleLoGSigma, organelleProminence);
 
