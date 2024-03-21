@@ -50,7 +50,8 @@ public class BatchProcessor {
 
         IJ.log("Starting batch processing");
 
-        ArrayList<ArrayList<String>> distanceMeasureAll = new ArrayList<>();
+        ArrayList<ArrayList<String>> nucDistanceMeasureAll = new ArrayList<>();
+        ArrayList<ArrayList<String>> membraneDistanceMeasureAll = new ArrayList<>();
         ArrayList<ArrayList<String>> cellMeasureAll = new ArrayList<>();
 
         for ( String fileName : fileList ) {
@@ -59,6 +60,7 @@ public class BatchProcessor {
 
             // get file names
             String fileNameWOtExt = fileName.substring(0, fileName.lastIndexOf("_S"));
+
             // get series number from file name
             int stringLength = fileName.length();
             String seriesNumberString;
@@ -173,13 +175,20 @@ public class BatchProcessor {
             }
 
             // measure organelle distance and intensity, cell properties
-            ArrayList<ArrayList<String>> distanceMeasure = resultLists.get(0);
+            ArrayList<ArrayList<String>> nucDistanceMeasure = resultLists.get(0);
             ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
+            ArrayList<ArrayList<String>> nucIntensityProfiles = resultLists.get(2);
 
-            ArrayList<ArrayList<String>> valueMeasure = resultLists.get(2);
-
-            distanceMeasureAll.addAll(distanceMeasure);
+            nucDistanceMeasureAll.addAll(nucDistanceMeasure);
             cellMeasureAll.addAll(cellMeasure);
+
+            // get distance measure from membrane
+            if (distanceFromMembraneSetting) {
+
+                ArrayList<ArrayList<String>> membraneDistanceMeasure = resultLists.get(3);
+                membraneDistanceMeasureAll.addAll(membraneDistanceMeasure);
+
+            }
 
             // create directory for saving result images
             String saveDir = outputDir + File.separator + fileName;
@@ -197,11 +206,18 @@ public class BatchProcessor {
             BatchResultSaver.saveResultImages(outputDir, fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
             // results for value measurement too large for large datasets save measurement for each image
-            BatchResultSaver.saveValueMeasure(valueMeasure, saveDir, measureChannel);
+            BatchResultSaver.saveNucIntensityProfiles(nucIntensityProfiles, saveDir, measureChannel);
 
         }
 
-        BatchResultSaver.saveMeasurements(distanceMeasureAll, cellMeasureAll, outputDir, measureChannel);
+        BatchResultSaver.saveNucDistanceMeasure(nucDistanceMeasureAll, outputDir, measureChannel);
+        BatchResultSaver.saveCellMeasure(cellMeasureAll, outputDir, measureChannel);
+
+        if (distanceFromMembraneSetting) {
+
+            BatchResultSaver.saveOptionalMembraneDistanceMeasure(membraneDistanceMeasureAll, outputDir);
+
+        }
 
         IJ.log("== Batch processing finished ==");
         IJ.showProgress(1);

@@ -22,18 +22,7 @@ import java.util.ArrayList;
 
 public class BatchResultSaver {
 
-    static void saveMeasurements(ArrayList<ArrayList<String>> distanceList, ArrayList<ArrayList<String>> cellList, String outputDir, int measure) {
-
-        IJ.log("Saving measurements to: " + outputDir);
-
-        saveDistanceMeasure(distanceList, outputDir, measure);
-
-        saveCellMeasure(cellList, outputDir, measure);
-
-        IJ.log("Measurements saved");
-    }
-
-    static void saveValueMeasure(ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure) {
+    protected static void saveNucIntensityProfiles(ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure) {
 
         StringBuilder valueFile;
 
@@ -91,9 +80,9 @@ public class BatchResultSaver {
         }
     }
 
-    private static void saveCellMeasure(ArrayList<ArrayList<String>> cellList,
-                                        String outputDir,
-                                        int measure) {
+    protected static void saveCellMeasure(ArrayList<ArrayList<String>> cellList,
+                                          String outputDir,
+                                          int measure) {
 
         StringBuilder cellFile;
 
@@ -156,7 +145,7 @@ public class BatchResultSaver {
         }
     }
 
-    private static void saveDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, int measure) {
+    protected static void saveNucDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, int measure) {
 
         StringBuilder distanceFile;
 
@@ -215,7 +204,48 @@ public class BatchResultSaver {
         }
     }
 
-    static void saveResultImages(String outputDir, String fileName,
+    public static void saveOptionalMembraneDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir) {
+
+        StringBuilder distanceFile;
+
+        distanceFile = new StringBuilder("identifier,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated");
+        distanceFile.append("\n");
+
+        // now append your data in a loop
+        for (ArrayList<String> stringArrayList : distanceList) {
+
+            distanceFile.append(stringArrayList.get(0));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(1));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(2));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(3));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(4));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(5));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(6));
+            distanceFile.append(",");
+            distanceFile.append(stringArrayList.get(7));
+            distanceFile.append("\n");
+
+        }
+
+        // now write to file
+        try {
+            Files.write(Paths.get(outputDir + "/organelleDistanceFromMembrane.csv"), distanceFile.toString().getBytes());
+
+        } catch (IOException e) {
+
+            IJ.log("Unable to write distance measurement!");
+            e.printStackTrace();
+
+        }
+    }
+
+    protected static void saveResultImages(String outputDir, String fileName,
                                  ImagePlus nucleusMask,
                                  ImagePlus cytoplasm,
                                  RoiManager manager,
@@ -289,4 +319,5 @@ public class BatchResultSaver {
         nucRoiManager.reset();
 
     }
+
 }
