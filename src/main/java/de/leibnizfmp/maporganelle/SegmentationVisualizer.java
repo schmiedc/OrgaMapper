@@ -161,6 +161,7 @@ public class SegmentationVisualizer {
 
     /**
      * visualization of the background segmentation
+     *
      * @param originalImage             the original image for vis
      * @param imageObject               image for segmentation of the nucleus
      * @param kernelSizeCellArea        median filter for cell area
@@ -182,6 +183,7 @@ public class SegmentationVisualizer {
      * @param maxSizeNuc                maximum background region size
      * @param lowCircNuc                lower threshold circularity
      * @param highCircNuc               higher threshold circularity
+     * @param invertCellImage           Setting if cell channel should be inverted or not
      */
     void visualizeCellSegments(ImagePlus originalImage,
                                Image imageObject,
@@ -203,7 +205,8 @@ public class SegmentationVisualizer {
                                double minSizeNuc,
                                double maxSizeNuc,
                                double lowCircNuc,
-                               double highCircNuc) {
+                               double highCircNuc,
+                               boolean invertCellImage) {
 
         IJ.log("Starting visualization for cell segmentation ");
 
@@ -214,7 +217,11 @@ public class SegmentationVisualizer {
         nucleus.setOverlay(null);
         cytoplasm.setOverlay(null);
 
-        ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm, kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
+        ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm,
+                kernelSizeCellArea,
+                rollingBallRadiusCellArea,
+                manualThresholdCellArea,
+                invertCellImage);
 
         ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
 

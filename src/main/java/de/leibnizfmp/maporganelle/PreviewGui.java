@@ -64,10 +64,12 @@ public class PreviewGui extends JPanel {
     SpinnerModel doubleSpinHighCirc;
 
     // settings for cell area segmentation
+    private boolean invertCellImageSetting;
     private float kernelSizeCellArea;
     private double rollingBallRadiusCellArea;
     private int manualThresholdCellArea;
 
+    JCheckBox checkInvertCellImage;
     SpinnerModel doubleSpinKernelCellArea;
     SpinnerModel doubleSpinRollBallCellArea;
     SpinnerModel doubleSpinThresholdCellArea;
@@ -315,6 +317,11 @@ public class PreviewGui extends JPanel {
         titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
         segmentationBox.setBorder(titleSegmentation);
 
+        checkInvertCellImage = new JCheckBox("Invert Cell Image");
+        checkInvertCellImage.setSelected(false);
+        checkInvertCellImage.setToolTipText("For segmentation based on cell membrane you can try to invert the cell image");
+        segmentationBox.add(checkInvertCellImage);
+
         doubleSpinKernelCellArea = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
         String spinBackLabel1 = "Median filter size: ";
         String spinBackUnit1 = "px";
@@ -561,6 +568,8 @@ public class PreviewGui extends JPanel {
         Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
         Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
 
+        // TODO: Implement saving of invertCellImageSetting in settings file. IMPORTANT: Backwards compatible
+        boolean invertCellImageSetting = checkInvertCellImage.isSelected();
         Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
         Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
         Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
@@ -649,6 +658,7 @@ public class PreviewGui extends JPanel {
         XmlHandler writeToXml = new XmlHandler();
 
         // TODO: implement distanceFromMembraneSetting in save file
+        // TODO: implement invertCellImage in save file
         writeToXml.xmlWriter(directory, name, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
                 cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
                 cellSepGaussCellSep, cellSepProminence,
@@ -724,11 +734,11 @@ public class PreviewGui extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            boolean checkResetSettings = IJ.showMessageWithCancel("Warning!", "Reset Segmentation Settings?");
+            boolean checkResetSettings = IJ.showMessageWithCancel("Warning!", "Reset segmentation/detection Settings?");
 
             if ( checkResetSettings ) {
 
-                IJ.log("Resetting settings to default parameters");
+                IJ.log("Resetting segmentation settings to default parameters");
 
                 // settings for nucleus settings
                 kernelSizeNuc = 5;
@@ -741,6 +751,7 @@ public class PreviewGui extends JPanel {
                 highCircNuc = 1.00;
 
                 // settings for cell area segmentation
+                invertCellImageSetting = false;
                 kernelSizeCellArea = 10;
                 rollingBallRadiusCellArea = 150;
                 manualThresholdCellArea = 200;
@@ -774,13 +785,13 @@ public class PreviewGui extends JPanel {
 
             } else {
 
-                IJ.log("Canceled resetting of processing settings!");
+                IJ.log("Canceled resetting of segmentation/detection settings!");
 
             }
         }
     }
 
-
+    // default PreviewGUI constructor of  will be loaded when fresh
     PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber, double pixelSize ) {
 
         inputDir = inputDirectory;
@@ -801,6 +812,7 @@ public class PreviewGui extends JPanel {
         highCircNuc = 1.00;
 
         // settings for cell area segmentation
+        invertCellImageSetting = false;
         kernelSizeCellArea = 10;
         rollingBallRadiusCellArea = 150;
         manualThresholdCellArea = 700;
@@ -830,6 +842,8 @@ public class PreviewGui extends JPanel {
 
     }
 
+    // TODO: Find out what this constructor does!!!
+    // This constructor is called by the InputGUI
     PreviewGui ( String inputDirectory, 
                  String outputDirectory, 
                  ArrayList<String> filesToProcess, 
@@ -843,6 +857,8 @@ public class PreviewGui extends JPanel {
                  double getMaxSizeNuc,
                  double getLowCircNuc,
                  double getHighCircNuc,
+                 // TODO: Fix getInvertCellImageSetting
+                 // boolean getInvertCellImageSetting,
                  float getKernelSizeCellArea,
                  double getRollingBallRadiusCellArea,
                  int getManualThresholdCellArea,
@@ -855,7 +871,8 @@ public class PreviewGui extends JPanel {
                  double getSigmaLoGOrga,
                  double getProminenceOrga,
                  boolean getCalibrationSetting,
-                 // TODO: boolean getdistanceFromMembraneSetting,
+                 // TODO: Fix getdistanceFromMembraneSetting,
+                 // boolean getdistanceFromMembraneSetting,
                  double getPxSizeMicron,
                  int getNucleusChannel,
                  int getCytoplasmChannel,
@@ -879,6 +896,8 @@ public class PreviewGui extends JPanel {
         highCircNuc = getHighCircNuc;
 
         // settings for cell area segmentation
+        // TODO: Fix getInvertCellImageSetting
+        // invertCellImageSetting = getInvertCellImageSetting;
         kernelSizeCellArea = getKernelSizeCellArea;
         rollingBallRadiusCellArea = getRollingBallRadiusCellArea;
         manualThresholdCellArea = getManualThresholdCellArea;
@@ -899,7 +918,8 @@ public class PreviewGui extends JPanel {
 
         // image settings
         calibrationSetting = getCalibrationSetting;
-        // TODO: boolean distanceFromMembraneSetting = getdistanceFromMembraneSetting;
+        // TODO: Fix distanceFromMembraneSetting
+        // distanceFromMembraneSetting = getdistanceFromMembraneSetting;
         pxSizeMicron = getPxSizeMicron;
         nucleusChannel = getNucleusChannel;
         cytoplasmChannel = getCytoplasmChannel;
@@ -1065,6 +1085,7 @@ public class PreviewGui extends JPanel {
 
             IJ.log("Starting preview for cell segmentation");
 
+            boolean invertCellImageSetting = checkInvertCellImage.isSelected();
             Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
             float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
             Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
@@ -1155,12 +1176,28 @@ public class PreviewGui extends JPanel {
 
                         SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        visualizer.visualizeCellSegments(selectedImage, previewImage,
-                                    cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
-                                    cellSepGaussCellSep, cellSepProminence,
-                                    cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
-                                    setDisplayRange,
-                                    nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                        visualizer.visualizeCellSegments(selectedImage,
+                                previewImage,
+                                cellAreaFilterSizeFloat,
+                                cellAreaRollBall,
+                                cellAreaThresholdFloat,
+                                cellSepGaussCellSep,
+                                cellSepProminence,
+                                cellFilterMinSize,
+                                cellFilterMaxSize,
+                                cellFilterLowCirc,
+                                cellFilterHighCirc,
+                                cellFilterCheck,
+                                setDisplayRange,
+                                nucFilterSize,
+                                nucRollBallRadius,
+                                nucThreshold,
+                                nucErosion,
+                                nucMinSize,
+                                nucMaxSize,
+                                nucLowCirc,
+                                nucHighCirc,
+                                invertCellImageSetting);
 
                         IJ.showProgress(1);
 
@@ -1186,12 +1223,29 @@ public class PreviewGui extends JPanel {
 
                         SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        visualizer.visualizeCellSegments(originalImage, previewImage,
-                                cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
-                                cellSepGaussCellSep, cellSepProminence,
-                                cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, cellFilterCheck,
+                        visualizer.visualizeCellSegments(
+                                originalImage,
+                                previewImage,
+                                cellAreaFilterSizeFloat,
+                                cellAreaRollBall,
+                                cellAreaThresholdFloat,
+                                cellSepGaussCellSep,
+                                cellSepProminence,
+                                cellFilterMinSize,
+                                cellFilterMaxSize,
+                                cellFilterLowCirc,
+                                cellFilterHighCirc,
+                                cellFilterCheck,
                                 setDisplayRange,
-                                nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                                nucFilterSize,
+                                nucRollBallRadius,
+                                nucThreshold,
+                                nucErosion,
+                                nucMinSize,
+                                nucMaxSize,
+                                nucLowCirc,
+                                nucHighCirc,
+                                invertCellImageSetting);
 
                         IJ.showProgress(1);
 
@@ -1402,6 +1456,7 @@ public class PreviewGui extends JPanel {
                     highCircNuc = readMyXml.readHighCircNuc;
 
                     // cell area segmentation settings
+                    // TODO: Fix invert cell image IMPORTANT: Backwards Compatible
                     kernelSizeCellArea = readMyXml.readKernelSizeCellArea;
                     rollingBallRadiusCellArea = readMyXml.readRollBallRadiusCellArea;
                     manualThresholdCellArea = readMyXml.readManualThresholdCellArea;
@@ -1421,6 +1476,7 @@ public class PreviewGui extends JPanel {
                     prominenceOrga =  readMyXml.readProminenceOrga;
 
                     // metadata settings
+                    // TODO: Fix measure from membrane IMPORTANT: Backwards Compatible
                     calibrationSetting = readMyXml.readCalibrationSetting;
                     pxSizeMicron = readMyXml.readPxSizeMicron;
 
@@ -1455,7 +1511,6 @@ public class PreviewGui extends JPanel {
 
                 }
 
-
                 // create tabbed panes
                 nucSegBox.removeAll();
                 setUpNucleiTab();
@@ -1472,9 +1527,6 @@ public class PreviewGui extends JPanel {
                 boxSettings.removeAll();
                 setUpSettingsTab();
                 batchBox.add(boxSettings);
-
-
-
 
             } else {
 
@@ -1549,6 +1601,7 @@ public class PreviewGui extends JPanel {
             Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
 
             // settings for cell segmentation
+            boolean invertCellImageSetting = checkInvertCellImage.isSelected();
             Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
             float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
             Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
@@ -1584,13 +1637,39 @@ public class PreviewGui extends JPanel {
                 String fileName = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss'-settings.xml'").format(new Date());
                 saveSettings( outputDir, fileName );
 
-                // TODO: implement measure from membrane in BatchProcessor
-                BatchProcessor processing = new BatchProcessor(inputDir, outputDir, fileList, fileFormat, channelNumber,
-                        nucChannelNumber, cytoChannelNumber, orgaChannelNumber, measureChannelNumber,
-                        calibrationSetting, pxSizeMicronSetting,
-                        distanceFromMembraneSetting, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
-                        cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat, cellSepGaussCellSep, cellSepProminence,
-                        cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc, organelleLoGSigma, organelleProminence);
+                BatchProcessor processing = new BatchProcessor(
+                        inputDir,
+                        outputDir,
+                        fileList,
+                        fileFormat,
+                        channelNumber,
+                        nucChannelNumber,
+                        cytoChannelNumber,
+                        orgaChannelNumber,
+                        measureChannelNumber,
+                        calibrationSetting,
+                        pxSizeMicronSetting,
+                        distanceFromMembraneSetting,
+                        nucFilterSize,
+                        nucRollBallRadius,
+                        nucThreshold,
+                        nucErosion,
+                        nucMinSize,
+                        nucMaxSize,
+                        nucLowCirc,
+                        nucHighCirc,
+                        cellAreaFilterSizeFloat,
+                        cellAreaRollBall,
+                        cellAreaThresholdFloat,
+                        cellSepGaussCellSep,
+                        cellSepProminence,
+                        cellFilterMinSize,
+                        cellFilterMaxSize,
+                        cellFilterLowCirc,
+                        cellFilterHighCirc,
+                        organelleLoGSigma,
+                        organelleProminence,
+                        invertCellImageSetting);
 
                 processing.processImage();
 

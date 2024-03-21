@@ -16,17 +16,32 @@ import ij.process.ImageProcessor;
  */
 public class CellAreaSegmenter {
 
-    static ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold) {
+    static ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold, boolean invertCellImageSetting) {
 
         Calibration calibration = image.getCalibration();
 
         IJ.log("Median filter with radius: " + kernelSize);
         ImagePlus cellImageDup = image.duplicate();
+
+        // TODO: invert cell image to segment using membrane signal
+        ImageProcessor cellImageDupProcessor = cellImageDup.getProcessor();
+
+        if (invertCellImageSetting) {
+
+            IJ.log("Inverting cell image to segment membrane signal");
+            cellImageDupProcessor.invert();
+
+        } else {
+
+            IJ.log("Cell image not inverted");
+
+        }
+
+        // apply median filter
         RankFilters medianFilter = new RankFilters();
-        medianFilter.rank(cellImageDup.getProcessor(), kernelSize, 4);
+        medianFilter.rank(cellImageDupProcessor, kernelSize, 4);
 
         IJ.log("Background subtraction radius: " + rollingBallRadius);
-        ImageProcessor filteredProcessor = cellImageDup.getProcessor();
 
         if (rollingBallRadius == 0) {
 
@@ -34,13 +49,13 @@ public class CellAreaSegmenter {
 
         } else {
             BackgroundSubtracter subtractor = new BackgroundSubtracter();
-            subtractor.rollingBallBackground(filteredProcessor, rollingBallRadius,
+            subtractor.rollingBallBackground(cellImageDupProcessor, rollingBallRadius,
                     false, false, true, false, false);
         }
 
         IJ.log("Global threshold with value: " + manualThreshold);
-        filteredProcessor.setThreshold(manualThreshold, 65536, 1);
-        ByteProcessor cellMaskProcessor = filteredProcessor.createMask();
+        cellImageDupProcessor.setThreshold(manualThreshold, 65536, 1);
+        ByteProcessor cellMaskProcessor = cellImageDupProcessor.createMask();
 
         ImagePlus cellMask = new ImagePlus("backgroundMask", cellMaskProcessor);
         cellMask.setCalibration( calibration );

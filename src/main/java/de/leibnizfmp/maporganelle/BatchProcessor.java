@@ -45,6 +45,7 @@ public class BatchProcessor {
     private final double highCircCelLSize;
     private final double sigmaLoGOrga;
     private final double prominenceOrga;
+    private final boolean invertCellImageSetting;
 
     void processImage() {
 
@@ -115,7 +116,7 @@ public class BatchProcessor {
 
             // get filtered cell ROIs
             ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm,
-                    kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea);
+                    kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea, invertCellImageSetting);
 
             ImagePlus separatedCells = CellSeparator.separateCells(nucleus,
                     cytoplasm, sigmaGaussCellSep, prominenceCellSep);
@@ -255,6 +256,7 @@ public class BatchProcessor {
         distanceFromMembraneSetting = false;
 
          // settings for nucleus settings
+        invertCellImageSetting = false;
         kernelSizeNuc = 5;
         rollingBallRadiusNuc = 50;
         thresholdNuc = "Otsu";
@@ -315,7 +317,8 @@ public class BatchProcessor {
                    double getLowCircCellSize,
                    double getHighCircCelLSize,
                    double getSigmaLoGOrga,
-                   double getProminenceOrga) {
+                   double getProminenceOrga,
+                   boolean getInvertCellImageSetting) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -334,6 +337,7 @@ public class BatchProcessor {
         distanceFromMembraneSetting = getDistanceFromMembraneSetting;
 
         // settings for nucleus settings
+        invertCellImageSetting = getInvertCellImageSetting;
         kernelSizeNuc = getKernelSizeNuc;
         rollingBallRadiusNuc = getRollingBallRadiusNuc;
         thresholdNuc = getThresholdNuc;
