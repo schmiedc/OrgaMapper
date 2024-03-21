@@ -35,9 +35,11 @@ public class DistanceMeasure {
         double pxSize = pxHeight * pxWidth;
 
         ArrayList<ArrayList<String>> nucDistanceListCollected = new ArrayList<>();
-        ArrayList<ArrayList<String>> membraneDistanceListCollected = new ArrayList<>();
         ArrayList<ArrayList<String>> measurementsPerCellCollected = new ArrayList<>();
         ArrayList<ArrayList<String>> intensityProfilesImage = new ArrayList<>();
+
+        ArrayList<ArrayList<String>> membraneDistanceListCollected = new ArrayList<>();
+        ArrayList<ArrayList<String>> membraneIntensityProfilesCollected = new ArrayList<>();
 
         for ( int cellIndex = 0; cellIndex <  manager.getCount(); cellIndex++ ) {
 
@@ -58,7 +60,7 @@ public class DistanceMeasure {
 
             IJ.log("Measuring distance from nucleus edge");
             // collects the measurements for each organelle
-            ArrayList<ArrayList<String>> nucDistanceListCell = getNucDistanceDetections(organelleChannel,
+            ArrayList<ArrayList<String>> nucDistanceListCell = getDistanceDetections(organelleChannel,
                     fileNameWOtExt,
                     seriesNumber,
                     measureChannel,
@@ -69,24 +71,6 @@ public class DistanceMeasure {
                     detectionPolygons);
 
             nucDistanceListCollected.addAll(nucDistanceListCell);
-
-            // measure distance from membrane edge
-            if (distanceFromMembrane) {
-
-                IJ.log("Measuring distance from membrane edge");
-
-                ImageProcessor membraneEDM = createMembraneEDM(manager, nucleusMask, cellIndex);
-
-                ArrayList<ArrayList<String>> membraneDistanceListCell = getMembraneDistanceDetections(membraneEDM,
-                        fileNameWOtExt,
-                        seriesNumber,
-                        cellIndex,
-                        pxHeight,
-                        detectionPolygons);
-
-                membraneDistanceListCollected.addAll(membraneDistanceListCell);
-
-            }
 
             IJ.log("Measuring cell parameters");
             // collects the measurements for each cell
@@ -107,7 +91,7 @@ public class DistanceMeasure {
 
             IJ.log("Measuring intensity profiles form nucleus edge");
             // collects the intensity profiles for each cell
-            ArrayList<ArrayList<String>> intensityProfilesCells = nucIntensityProfile(organelleChannel,
+            ArrayList<ArrayList<String>> nucIntensityProfilesCells = IntensityProfile(organelleChannel,
                     measureChannelImage,
                     manager,
                     nucEDM,
@@ -117,9 +101,40 @@ public class DistanceMeasure {
                     pxHeight,
                     cellIndex);
 
-            intensityProfilesImage.addAll(intensityProfilesCells);
+            intensityProfilesImage.addAll(nucIntensityProfilesCells);
 
-            // TODO: Measure intensity profiles from nucleus edge
+            // measure detection distance from membrane edge
+            if (distanceFromMembrane) {
+
+                IJ.log("Measuring distance from membrane edge");
+
+                ImageProcessor membraneEDM = createMembraneEDM(manager, nucleusMask, cellIndex);
+
+                ArrayList<ArrayList<String>> membraneDistanceListCell = getDistanceDetections(organelleChannel,
+                        fileNameWOtExt,
+                        seriesNumber,
+                        measureChannel,
+                        measureChannelImage,
+                        pxHeight,
+                        cellIndex,
+                        membraneEDM,
+                        detectionPolygons);
+
+                membraneDistanceListCollected.addAll(membraneDistanceListCell);
+
+                ArrayList<ArrayList<String>> membraneIntensityProfilesCells = IntensityProfile(organelleChannel,
+                        measureChannelImage,
+                        manager,
+                        membraneEDM,
+                        measureChannel,
+                        fileNameWOtExt,
+                        seriesNumber,
+                        pxHeight,
+                        cellIndex);
+
+                membraneIntensityProfilesCollected.addAll(membraneIntensityProfilesCells);
+
+            }
 
             detectionDup.close();
 
@@ -135,6 +150,7 @@ public class DistanceMeasure {
         if (distanceFromMembrane) {
 
             results.add(membraneDistanceListCollected);
+            results.add(membraneIntensityProfilesCollected);
 
         }
 
@@ -270,15 +286,15 @@ public class DistanceMeasure {
 
     }
 
-    private static ArrayList<ArrayList<String>> getNucDistanceDetections(ImagePlus organelleChannel,
-                                                                         String fileNameWOtExt,
-                                                                         int seriesNumber,
-                                                                         int measureChannel,
-                                                                         ImagePlus measureChannelImage,
-                                                                         double pxHeight,
-                                                                         int cellIndex,
-                                                                         ImageProcessor nucEDM,
-                                                                         Polygon detectionPolygons) {
+    private static ArrayList<ArrayList<String>> getDistanceDetections(ImagePlus organelleChannel,
+                                                                      String fileNameWOtExt,
+                                                                      int seriesNumber,
+                                                                      int measureChannel,
+                                                                      ImagePlus measureChannelImage,
+                                                                      double pxHeight,
+                                                                      int cellIndex,
+                                                                      ImageProcessor nucEDM,
+                                                                      Polygon detectionPolygons) {
 
         ArrayList<ArrayList<String>> nucDistanceListCell = new ArrayList<>();
 
@@ -320,49 +336,15 @@ public class DistanceMeasure {
         return nucDistanceListCell;
     }
 
-    private static ArrayList<ArrayList<String>> getMembraneDistanceDetections(ImageProcessor cellEDM,
-                                                                              String fileNameWOtExt,
-                                                                              int seriesNumber,
-                                                                              int cellIndex,
-                                                                              double pxHeight,
-                                                                              Polygon detectionPolygons) {
-
-        ArrayList<ArrayList<String>> membraneDistanceListCell = new ArrayList<>();
-
-        // loops through the detections
-        for (int detectIndex = 0; detectIndex < detectionPolygons.npoints; detectIndex++ ) {
-
-            // get the intensity value in cellEDM based on x & y of detection
-            double detectionPosition =  cellEDM.getPixelValue(
-                    detectionPolygons.xpoints[detectIndex],
-                    detectionPolygons.ypoints[detectIndex]);
-
-            ArrayList<String> valueList = new ArrayList<>();
-
-            valueList.add(fileNameWOtExt);
-            valueList.add(String.valueOf(seriesNumber));
-            valueList.add(String.valueOf(cellIndex));
-            valueList.add(String.valueOf(detectIndex));
-            valueList.add(String.valueOf(detectionPolygons.xpoints[detectIndex]));
-            valueList.add(String.valueOf(detectionPolygons.ypoints[detectIndex]));
-            valueList.add(String.valueOf(detectionPosition));
-            valueList.add(String.valueOf(detectionPosition * pxHeight));
-            membraneDistanceListCell.add(valueList);
-
-        }
-        return membraneDistanceListCell;
-
-    }
-
-    static ArrayList<ArrayList<String>> nucIntensityProfile(ImagePlus organelleChannel,
-                                                            ImagePlus measureChannelImage,
-                                                            RoiManager manager,
-                                                            ImageProcessor nucEDM,
-                                                            int measureChannel,
-                                                            String fileNameWOtExt,
-                                                            int seriesNumber,
-                                                            double pxHeight,
-                                                            int cellIndex) {
+    static ArrayList<ArrayList<String>> IntensityProfile(ImagePlus organelleChannel,
+                                                         ImagePlus measureChannelImage,
+                                                         RoiManager manager,
+                                                         ImageProcessor nucEDM,
+                                                         int measureChannel,
+                                                         String fileNameWOtExt,
+                                                         int seriesNumber,
+                                                         double pxHeight,
+                                                         int cellIndex) {
 
         Roi cellRoi = manager.getRoi(cellIndex);
 

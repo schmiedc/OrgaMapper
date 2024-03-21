@@ -51,8 +51,11 @@ public class BatchProcessor {
         IJ.log("Starting batch processing");
 
         ArrayList<ArrayList<String>> nucDistanceMeasureAll = new ArrayList<>();
-        ArrayList<ArrayList<String>> membraneDistanceMeasureAll = new ArrayList<>();
         ArrayList<ArrayList<String>> cellMeasureAll = new ArrayList<>();
+
+        ArrayList<ArrayList<String>> membraneDistanceMeasureAll = new ArrayList<>();
+        ArrayList<ArrayList<String>> membraneIntensityProfilesAll = new ArrayList<>();
+
 
         for ( String fileName : fileList ) {
 
@@ -188,6 +191,9 @@ public class BatchProcessor {
                 ArrayList<ArrayList<String>> membraneDistanceMeasure = resultLists.get(3);
                 membraneDistanceMeasureAll.addAll(membraneDistanceMeasure);
 
+                ArrayList<ArrayList<String>> membraneIntensityProfiles = resultLists.get(4);
+                membraneIntensityProfilesAll.addAll(membraneIntensityProfiles);
+
             }
 
             // create directory for saving result images
@@ -206,16 +212,22 @@ public class BatchProcessor {
             BatchResultSaver.saveResultImages(outputDir, fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
 
             // results for value measurement too large for large datasets save measurement for each image
-            BatchResultSaver.saveNucIntensityProfiles(nucIntensityProfiles, saveDir, measureChannel);
+            BatchResultSaver.saveIntensityProfiles(nucIntensityProfiles, saveDir, "intensityDistance.csv" , measureChannel);
+
+            if (distanceFromMembraneSetting) {
+
+                BatchResultSaver.saveIntensityProfiles(membraneIntensityProfilesAll, saveDir, "intensityDistanceFromMembrane.csv" , measureChannel);
+
+            }
 
         }
 
-        BatchResultSaver.saveNucDistanceMeasure(nucDistanceMeasureAll, outputDir, measureChannel);
-        BatchResultSaver.saveCellMeasure(cellMeasureAll, outputDir, measureChannel);
+        BatchResultSaver.saveCellMeasure(cellMeasureAll, outputDir,"cellMeasurements.csv", measureChannel);
+        BatchResultSaver.saveDistanceMeasure(nucDistanceMeasureAll, outputDir, "organelleDistance.csv", measureChannel);
 
         if (distanceFromMembraneSetting) {
 
-            BatchResultSaver.saveOptionalMembraneDistanceMeasure(membraneDistanceMeasureAll, outputDir);
+            BatchResultSaver.saveDistanceMeasure(membraneDistanceMeasureAll, outputDir, "organelleDistanceFromMembrane.csv", measureChannel);
 
         }
 

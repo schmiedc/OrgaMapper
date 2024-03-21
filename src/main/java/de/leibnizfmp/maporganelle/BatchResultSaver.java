@@ -22,66 +22,9 @@ import java.util.ArrayList;
 
 public class BatchResultSaver {
 
-    protected static void saveNucIntensityProfiles(ArrayList<ArrayList<String>> valueMeasure, String outputDir, int measure) {
-
-        StringBuilder valueFile;
-
-        if ( measure == 0 ) {
-
-            valueFile = new StringBuilder("identifier,series,cell,xIntensity,yIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity");
-
-        } else {
-
-            valueFile = new StringBuilder("identifier,series,cell,xIntensity,yIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity,measureIntensity");
-
-        }
-        valueFile.append("\n");
-
-        // now append your data in a loop
-        for (ArrayList<String> stringArrayList : valueMeasure) {
-
-            valueFile.append(stringArrayList.get(0));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(1));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(2));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(3));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(4));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(5));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(6));
-            valueFile.append(",");
-            valueFile.append(stringArrayList.get(7));
-
-            if ( measure > 0  ) {
-
-                valueFile.append(",");
-                valueFile.append(stringArrayList.get(8));
-
-            }
-
-            valueFile.append("\n");
-
-        }
-
-        // now write to file
-        try {
-
-            Files.write(Paths.get(outputDir + "/intensityDistance.csv"), valueFile.toString().getBytes());
-
-        } catch (IOException e) {
-
-            IJ.log("Unable to write distance measurement!");
-            e.printStackTrace();
-
-        }
-    }
-
     protected static void saveCellMeasure(ArrayList<ArrayList<String>> cellList,
                                           String outputDir,
+                                          String FileName,
                                           int measure) {
 
         StringBuilder cellFile;
@@ -135,7 +78,7 @@ public class BatchResultSaver {
         // now write to file
         try {
 
-            Files.write(Paths.get(outputDir + "/cellMeasurements.csv"), cellFile.toString().getBytes());
+            Files.write(Paths.get(outputDir + File.separator + FileName), cellFile.toString().getBytes());
 
         } catch (IOException e) {
 
@@ -145,7 +88,7 @@ public class BatchResultSaver {
         }
     }
 
-    protected static void saveNucDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, int measure) {
+    protected static void saveDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir, String FileName, int measure) {
 
         StringBuilder distanceFile;
 
@@ -194,7 +137,7 @@ public class BatchResultSaver {
 
         // now write to file
         try {
-            Files.write(Paths.get(outputDir + "/organelleDistance.csv"), distanceFile.toString().getBytes());
+            Files.write(Paths.get(outputDir + File.separator + FileName), distanceFile.toString().getBytes());
 
         } catch (IOException e) {
 
@@ -204,38 +147,56 @@ public class BatchResultSaver {
         }
     }
 
-    public static void saveOptionalMembraneDistanceMeasure(ArrayList<ArrayList<String>> distanceList, String outputDir) {
 
-        StringBuilder distanceFile;
+    protected static void saveIntensityProfiles(ArrayList<ArrayList<String>> valueMeasure, String outputDir, String FileName, int measure) {
 
-        distanceFile = new StringBuilder("identifier,series,cell,detection,xDetection,yDetection,detectionDistanceRaw,detectionDistanceCalibrated");
-        distanceFile.append("\n");
+        StringBuilder valueFile;
+
+        if ( measure == 0 ) {
+
+            valueFile = new StringBuilder("identifier,series,cell,xIntensity,yIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity");
+
+        } else {
+
+            valueFile = new StringBuilder("identifier,series,cell,xIntensity,yIntensity,intensityDistanceRaw,intensityDistanceCalibrated,orgaIntensity,measureIntensity");
+
+        }
+        valueFile.append("\n");
 
         // now append your data in a loop
-        for (ArrayList<String> stringArrayList : distanceList) {
+        for (ArrayList<String> stringArrayList : valueMeasure) {
 
-            distanceFile.append(stringArrayList.get(0));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(1));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(2));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(3));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(4));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(5));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(6));
-            distanceFile.append(",");
-            distanceFile.append(stringArrayList.get(7));
-            distanceFile.append("\n");
+            valueFile.append(stringArrayList.get(0));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(1));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(2));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(3));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(4));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(5));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(6));
+            valueFile.append(",");
+            valueFile.append(stringArrayList.get(7));
+
+            if ( measure > 0  ) {
+
+                valueFile.append(",");
+                valueFile.append(stringArrayList.get(8));
+
+            }
+
+            valueFile.append("\n");
 
         }
 
         // now write to file
         try {
-            Files.write(Paths.get(outputDir + "/organelleDistanceFromMembrane.csv"), distanceFile.toString().getBytes());
+
+            Files.write(Paths.get(outputDir + File.separator + FileName), valueFile.toString().getBytes());
 
         } catch (IOException e) {
 
