@@ -214,13 +214,39 @@ class InputGuiFiji {
                             ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
                             int channelN = imageForMetadata.getNChannels();
 
-                            PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString), checkTrailingSlash(outputFileString), fileList, fileFormat, channelN,
-                                    readMyXml.readKernelSizeNuc, readMyXml.readRollingBallRadiusNuc, readMyXml.readThresholdNuc, readMyXml.readErosionNuc, readMyXml.readMinSizeNuc, readMyXml.readMaxSizeNuc, readMyXml.readLowCircNuc, readMyXml.readHighCircNuc,
-                                    readMyXml.readKernelSizeCellArea, readMyXml.readRollBallRadiusCellArea, readMyXml.readManualThresholdCellArea,
-                                    readMyXml.readSigmaGaussCellSep, readMyXml.readProminenceCellSep,
-                                    readMyXml.readMinCellSize, readMyXml.readMaxCellSize, readMyXml.readLowCircCellSize, readMyXml.readHighCircCelLSize,
-                                    readMyXml.readSigmaLoGOrga, readMyXml.readProminenceOrga,
-                                    readMyXml.readCalibrationSetting, readMyXml.readPxSizeMicron, readMyXml.readNucleusChannel, readMyXml.readCytoplasmChannel, readMyXml.readOrganelleChannel, readMyXml.readMeasure);
+                            PreviewGui previewGui = new PreviewGui(
+                                    checkTrailingSlash(inputFileString),
+                                    checkTrailingSlash(outputFileString),
+                                    fileList,
+                                    fileFormat,
+                                    channelN,
+                                    readMyXml.readKernelSizeNuc,
+                                    readMyXml.readRollingBallRadiusNuc,
+                                    readMyXml.readThresholdNuc,
+                                    readMyXml.readErosionNuc,
+                                    readMyXml.readMinSizeNuc,
+                                    readMyXml.readMaxSizeNuc,
+                                    readMyXml.readLowCircNuc,
+                                    readMyXml.readHighCircNuc,
+                                    readMyXml.readInvertCellImage,
+                                    readMyXml.readKernelSizeCellArea,
+                                    readMyXml.readRollBallRadiusCellArea,
+                                    readMyXml.readManualThresholdCellArea,
+                                    readMyXml.readSigmaGaussCellSep,
+                                    readMyXml.readProminenceCellSep,
+                                    readMyXml.readMinCellSize,
+                                    readMyXml.readMaxCellSize,
+                                    readMyXml.readLowCircCellSize,
+                                    readMyXml.readHighCircCelLSize,
+                                    readMyXml.readSigmaLoGOrga,
+                                    readMyXml.readProminenceOrga,
+                                    readMyXml.readCalibrationSetting,
+                                    readMyXml.readPxSizeMicron,
+                                    readMyXml.readMembraneDistanceMeasurement,
+                                    readMyXml.readNucleusChannel,
+                                    readMyXml.readCytoplasmChannel,
+                                    readMyXml.readOrganelleChannel,
+                                    readMyXml.readMeasure);
 
                             // instantiates previewGui
                             previewGui.setUpGui();

@@ -29,6 +29,7 @@ import java.util.Date;
 
 public class PreviewGui extends JPanel {
 
+    private  final String orgaMapperVersionNumber = "1.1.0";
     // threshold method list
     private final String[] thresholdString = { "Default", "Huang", "IJ_IsoData", "Intermodes",
             "IsoData", "Li", "MaxEntropy", "Mean", "MinError", "Minimum",
@@ -318,7 +319,7 @@ public class PreviewGui extends JPanel {
         segmentationBox.setBorder(titleSegmentation);
 
         checkInvertCellImage = new JCheckBox("Invert Cell Image");
-        checkInvertCellImage.setSelected(false);
+        checkInvertCellImage.setSelected(invertCellImageSetting);
         checkInvertCellImage.setToolTipText("For segmentation based on cell membrane you can try to invert the cell image");
         segmentationBox.add(checkInvertCellImage);
 
@@ -544,6 +545,7 @@ public class PreviewGui extends JPanel {
 
         try {
 
+            assert url != null;
             final BufferedImage myLogo = ImageIO.read(url);
             JLabel logoLabel = new JLabel(new ImageIcon(myLogo));
             boxSettings.add(logoLabel);
@@ -568,7 +570,6 @@ public class PreviewGui extends JPanel {
         Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
         Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
 
-        // TODO: Implement saving of invertCellImageSetting in settings file. IMPORTANT: Backwards compatible
         boolean invertCellImageSetting = checkInvertCellImage.isSelected();
         Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
         Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
@@ -592,7 +593,6 @@ public class PreviewGui extends JPanel {
         boolean calibrationSetting = checkCalibration.isSelected();
         Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
-        // TODO: Implement saving of distanceFromMembraneSetting in settings file. IMPORTANT: Backwards compatible
         boolean distanceFromMembraneSetting = checkDistanceFromMembrane.isSelected();
 
         // dataset settings
@@ -657,14 +657,37 @@ public class PreviewGui extends JPanel {
 
         XmlHandler writeToXml = new XmlHandler();
 
-        // TODO: implement distanceFromMembraneSetting in save file
-        // TODO: implement invertCellImage in save file
-        writeToXml.xmlWriter(directory, name, nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc,
-                cellAreaFilterSizeFloat, cellAreaRollBall, cellAreaThresholdFloat,
-                cellSepGaussCellSep, cellSepProminence,
-                cellFilterMinSize, cellFilterMaxSize, cellFilterLowCirc, cellFilterHighCirc,
-                organelleLoGSigma, organelleProminence,
-                calibrationSetting, pxSizeMicronSetting, nucChannel, cytoChannel, orgaChannel, measureChannel, fileFormatSetting);
+        writeToXml.xmlWriter(directory,
+                name,
+                nucFilterSize,
+                nucRollBallRadius,
+                nucThreshold,
+                nucErosion,
+                nucMinSize,
+                nucMaxSize,
+                nucLowCirc,
+                nucHighCirc,
+                cellAreaFilterSizeFloat,
+                cellAreaRollBall,
+                cellAreaThresholdFloat,
+                cellSepGaussCellSep,
+                cellSepProminence,
+                cellFilterMinSize,
+                cellFilterMaxSize,
+                cellFilterLowCirc,
+                cellFilterHighCirc,
+                organelleLoGSigma,
+                organelleProminence,
+                calibrationSetting,
+                pxSizeMicronSetting,
+                nucChannel,
+                cytoChannel,
+                orgaChannel,
+                measureChannel,
+                fileFormatSetting,
+                orgaMapperVersionNumber,
+                invertCellImageSetting,
+                distanceFromMembraneSetting);
 
     }
 
@@ -791,7 +814,7 @@ public class PreviewGui extends JPanel {
         }
     }
 
-    // default PreviewGUI constructor of  will be loaded when fresh
+    // default PreviewGUI constructor will be loaded when no settings file is present
     PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber, double pixelSize ) {
 
         inputDir = inputDirectory;
@@ -842,8 +865,7 @@ public class PreviewGui extends JPanel {
 
     }
 
-    // TODO: Find out what this constructor does!!!
-    // This constructor is called by the InputGUI
+    // This constructor is called by the InputGUI to load the Preview GUI with an existing settings file
     PreviewGui ( String inputDirectory, 
                  String outputDirectory, 
                  ArrayList<String> filesToProcess, 
@@ -857,8 +879,7 @@ public class PreviewGui extends JPanel {
                  double getMaxSizeNuc,
                  double getLowCircNuc,
                  double getHighCircNuc,
-                 // TODO: Fix getInvertCellImageSetting
-                 // boolean getInvertCellImageSetting,
+                 boolean getInvertCellImageSetting,
                  float getKernelSizeCellArea,
                  double getRollingBallRadiusCellArea,
                  int getManualThresholdCellArea,
@@ -871,9 +892,8 @@ public class PreviewGui extends JPanel {
                  double getSigmaLoGOrga,
                  double getProminenceOrga,
                  boolean getCalibrationSetting,
-                 // TODO: Fix getdistanceFromMembraneSetting,
-                 // boolean getdistanceFromMembraneSetting,
                  double getPxSizeMicron,
+                 boolean getdistanceFromMembraneSetting,
                  int getNucleusChannel,
                  int getCytoplasmChannel,
                  int getOrganelleChannel,
@@ -896,8 +916,7 @@ public class PreviewGui extends JPanel {
         highCircNuc = getHighCircNuc;
 
         // settings for cell area segmentation
-        // TODO: Fix getInvertCellImageSetting
-        // invertCellImageSetting = getInvertCellImageSetting;
+        invertCellImageSetting = getInvertCellImageSetting;
         kernelSizeCellArea = getKernelSizeCellArea;
         rollingBallRadiusCellArea = getRollingBallRadiusCellArea;
         manualThresholdCellArea = getManualThresholdCellArea;
@@ -918,9 +937,8 @@ public class PreviewGui extends JPanel {
 
         // image settings
         calibrationSetting = getCalibrationSetting;
-        // TODO: Fix distanceFromMembraneSetting
-        // distanceFromMembraneSetting = getdistanceFromMembraneSetting;
         pxSizeMicron = getPxSizeMicron;
+        distanceFromMembraneSetting = getdistanceFromMembraneSetting;
         nucleusChannel = getNucleusChannel;
         cytoplasmChannel = getCytoplasmChannel;
         organelleChannel = getOrganelleChannel;
@@ -1456,7 +1474,7 @@ public class PreviewGui extends JPanel {
                     highCircNuc = readMyXml.readHighCircNuc;
 
                     // cell area segmentation settings
-                    // TODO: Fix invert cell image IMPORTANT: Backwards Compatible
+                    invertCellImageSetting = readMyXml.readInvertCellImage;
                     kernelSizeCellArea = readMyXml.readKernelSizeCellArea;
                     rollingBallRadiusCellArea = readMyXml.readRollBallRadiusCellArea;
                     manualThresholdCellArea = readMyXml.readManualThresholdCellArea;
@@ -1476,9 +1494,9 @@ public class PreviewGui extends JPanel {
                     prominenceOrga =  readMyXml.readProminenceOrga;
 
                     // metadata settings
-                    // TODO: Fix measure from membrane IMPORTANT: Backwards Compatible
                     calibrationSetting = readMyXml.readCalibrationSetting;
                     pxSizeMicron = readMyXml.readPxSizeMicron;
+                    distanceFromMembraneSetting = readMyXml.readMembraneDistanceMeasurement;
 
                     nucleusChannel = readMyXml.readNucleusChannel;
                     cytoplasmChannel = readMyXml.readCytoplasmChannel;

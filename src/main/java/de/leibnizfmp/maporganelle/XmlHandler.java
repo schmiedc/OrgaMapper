@@ -3,6 +3,7 @@ package de.leibnizfmp.maporganelle;
 import ij.IJ;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,6 +36,7 @@ class XmlHandler {
     double readHighCircNuc;
 
     // settings for cell area segmentation
+    boolean readInvertCellImage;
     float readKernelSizeCellArea;
     double readRollBallRadiusCellArea;
     int readManualThresholdCellArea;
@@ -56,12 +58,14 @@ class XmlHandler {
     // image settings
     boolean readCalibrationSetting;
     double readPxSizeMicron;
+    boolean readMembraneDistanceMeasurement;
     int readNucleusChannel;
     int readCytoplasmChannel;
     int readOrganelleChannel;
     int readMeasure;
-
     String readFileFormat;
+
+    String readOrgaMapperVersion;
 
     /**
      * reads the xml settings file
@@ -79,6 +83,51 @@ class XmlHandler {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(xmlFile);
+
+
+        // This is done to make it the loading of the settings file backwards compatible
+        NodeList orgaMapperVersionPresence = doc.getElementsByTagName("OrgaMapperVersion");
+
+        if (orgaMapperVersionPresence.getLength() > 0) {
+
+            readOrgaMapperVersion = doc.getElementsByTagName("OrgaMapperVersion").item(0).getTextContent();
+            IJ.log("OrgaMapper Settings file version: " + readOrgaMapperVersion);
+
+        } else {
+
+            IJ.log("OrgaMapper Settings file version: 1.0.0");
+
+        }
+
+        // This is done to make it the loading of the settings file backwards compatible
+        NodeList invertCellImagePresence = doc.getElementsByTagName("invertCellImage");
+
+        if (invertCellImagePresence.getLength() > 0) {
+
+            readInvertCellImage = Boolean.parseBoolean(doc.getElementsByTagName("invertCellImage").item(0).getTextContent());
+            IJ.log("invertCellImage Setting found");
+
+        } else {
+
+            readInvertCellImage = false;
+            IJ.log("invertCellImage Setting missing");
+
+        }
+
+        // This is done to make it the loading of the settings file backwards compatible
+        NodeList membraneDistancePresence = doc.getElementsByTagName("membraneDistanceMeasurement");
+
+        if (membraneDistancePresence.getLength() > 0) {
+
+            readMembraneDistanceMeasurement = Boolean.parseBoolean(doc.getElementsByTagName("membraneDistanceMeasurement").item(0).getTextContent());
+            IJ.log("membraneDistanceMeasurement Setting found");
+
+        } else {
+
+            readMembraneDistanceMeasurement = false;
+            IJ.log("membraneDistanceMeasurement Setting missing");
+
+        }
 
         // get nodes of tag name
         readKernelSizeNuc = Float.parseFloat(doc.getElementsByTagName("kernelSizeNuc").item(0).getTextContent());
@@ -115,33 +164,34 @@ class XmlHandler {
     /**
      * writes xml settings file
      *
-     * @param outputPath directory for saving results
-     * @param getKernelSizeNuc filter size for filtering nuclei
-     * @param getRollingBallRadiusNuc rolling ball background radius for neuclei
-     * @param getThresholdNuc threshold nucleus segmentation
-     * @param getErosionNuc erosion for nucleus segmentation
-     * @param getMinSizeNuc minimum size of nuclei
-     * @param getMaxSizeNuc maximum size of nuclei
-     * @param getLowCircNuc minimum circularity of nuclei
-     * @param getHighCircNuc maximum circularity of nuclei
-     * @param getKernelSizeCellArea filter size for nuclei segmentation
+     * @param outputPath                   directory for saving results
+     * @param getKernelSizeNuc             filter size for filtering nuclei
+     * @param getRollingBallRadiusNuc      rolling ball background radius for neuclei
+     * @param getThresholdNuc              threshold nucleus segmentation
+     * @param getErosionNuc                erosion for nucleus segmentation
+     * @param getMinSizeNuc                minimum size of nuclei
+     * @param getMaxSizeNuc                maximum size of nuclei
+     * @param getLowCircNuc                minimum circularity of nuclei
+     * @param getHighCircNuc               maximum circularity of nuclei
+     * @param getKernelSizeCellArea        filter size for nuclei segmentation
      * @param getRollingBallRadiusCellArea rolling ball radius for cell segmentation
-     * @param getManualThresholdCellArea manual threshold for cell area
-     * @param getSigmaGaussCellSep sigma gaussian blur
-     * @param getProminenceCellSep prominence for watershed
-     * @param getMinCellSize minimum cell size
-     * @param getMaxCellSize maximum cell size
-     * @param getLowCircCellSize minimum circularity of cells
-     * @param getHighCircCelLSize maximum circularity of cells
-     * @param getSigmaLoGOrga sigma for LoG3D for organelle detection
-     * @param getProminenceOrga prominence for organelle detection
-     * @param getCalibrationSetting global intensity threshold for background segmentation
-     * @param getPxSizeMicron pixel size
-     * @param getNucleusChannel number for nucleus channel
-     * @param getCytoplasmChannel number for cytoplams channel
-     * @param getOrganelleChannel number for organelle channel
-     * @param getMeasure number for measurement channel
-     * @param getFileFormat string for file format ending
+     * @param getManualThresholdCellArea   manual threshold for cell area
+     * @param getSigmaGaussCellSep         sigma gaussian blur
+     * @param getProminenceCellSep         prominence for watershed
+     * @param getMinCellSize               minimum cell size
+     * @param getMaxCellSize               maximum cell size
+     * @param getLowCircCellSize           minimum circularity of cells
+     * @param getHighCircCelLSize          maximum circularity of cells
+     * @param getSigmaLoGOrga              sigma for LoG3D for organelle detection
+     * @param getProminenceOrga            prominence for organelle detection
+     * @param getCalibrationSetting        global intensity threshold for background segmentation
+     * @param getPxSizeMicron              pixel size
+     * @param getNucleusChannel            number for nucleus channel
+     * @param getCytoplasmChannel          number for cytoplams channel
+     * @param getOrganelleChannel          number for organelle channel
+     * @param getMeasure                   number for measurement channel
+     * @param getFileFormat                string for file format ending
+     * @param getOrgaMapperVersion         Adds version number to settings file
      */
     void xmlWriter(String outputPath,
                    String fileName,
@@ -170,14 +220,19 @@ class XmlHandler {
                    int getCytoplasmChannel,
                    int getOrganelleChannel,
                    int getMeasure,
-                   String getFileFormat){
+                   String getFileFormat,
+                   String getOrgaMapperVersion,
+                   boolean getInvertCellImage,
+                   boolean getMembraneDistanceMeasurement){
 
         // Write the content into XML file
         String filePath = outputPath + fileName;
 
         try
         {
-
+            String orgaMapperVersion = getOrgaMapperVersion;
+            String invertCellImage = Boolean.toString(getInvertCellImage);
+            String membraneDistanceMeasurement = Boolean.toString(getMembraneDistanceMeasurement);
             String kernelSizeNuc = Float.toString(getKernelSizeNuc);
             String rollingBallRadiusNuc = Double.toString(getRollingBallRadiusNuc);
             String erosionNuc = Integer.toString(getErosionNuc);
@@ -208,9 +263,13 @@ class XmlHandler {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
 
-            // pHluorinSettings as root element
+            // OrgaMapper Settings as root element
             Element rootElement = doc.createElement("MapOrganelleSettings");
             doc.appendChild(rootElement);
+
+            Element settingsOrgaMapperVersion = doc. createElement("OrgaMapperVersion");
+            settingsOrgaMapperVersion.setTextContent(orgaMapperVersion);
+            rootElement.appendChild(settingsOrgaMapperVersion);
 
             Element settingsKernelSizeNuc = doc.createElement("kernelSizeNuc");
             settingsKernelSizeNuc.setTextContent(kernelSizeNuc);
@@ -243,6 +302,10 @@ class XmlHandler {
             Element sethighCircNuc = doc.createElement("highCircNuc");
             sethighCircNuc.setTextContent(highCircNuc);
             rootElement.appendChild(sethighCircNuc);
+
+            Element setInvertCellImage = doc.createElement("invertCellImage");
+            setInvertCellImage.setTextContent(invertCellImage);
+            rootElement.appendChild(setInvertCellImage);
 
             Element setkernelSizeCellArea = doc.createElement("kernelSizeCellArea");
             setkernelSizeCellArea.setTextContent(kernelSizeCellArea);
@@ -295,6 +358,10 @@ class XmlHandler {
             Element setpxSizeMicron = doc.createElement("pxSizeMicron");
             setpxSizeMicron.setTextContent(pxSizeMicron);
             rootElement.appendChild(setpxSizeMicron);
+
+            Element setMembraneDistanceMeasurement = doc.createElement("membraneDistanceMeasurement");
+            setMembraneDistanceMeasurement.setTextContent(membraneDistanceMeasurement);
+            rootElement.appendChild(setMembraneDistanceMeasurement);
 
             Element setnucleusChannel = doc.createElement("nucleusChannel");
             setnucleusChannel.setTextContent(nucleusChannel);
