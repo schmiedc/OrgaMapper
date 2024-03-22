@@ -53,9 +53,10 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         ij.command().run(MapOrganelle.class, true);
 
         boolean runTest1 = false;
-        boolean runTest2 = true;
+        boolean runTest2 = false;
+        boolean runTest3 = true;
 
-        if ( runTest1 || runTest2 ) {
+        if ( runTest1 || runTest2 || runTest3 ) {
 
             //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
             //String testInDir = "/home/schmiedc/Desktop/Test/test_tif/input/";
@@ -86,13 +87,19 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
 
                 IJ.log("Test 1 done");
 
-            } else {
+            } else if ( runTest2 ) {
                 IJ.log("Run test 2");
                 InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
                 guiTest.createWindow();
 
                 //BatchProcessor processBatch = new BatchProcessor(testInDir, testOutDir, fileListTest, fileEnding, channelNumber);
                 //processBatch.processImage();
+
+            } else if (runTest3) {
+
+                IJ.log("Test External segmentation GUI");
+                ExtSegDetectGUI guiTest = new ExtSegDetectGUI(true, false, false);
+                guiTest.createWindow();
 
             }
 
