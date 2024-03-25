@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.OpenDialog;
 import ij.measure.Calibration;
+import ij.plugin.ChannelSplitter;
 import org.scijava.util.ArrayUtils;
 import org.xml.sax.SAXException;
 
@@ -830,7 +831,9 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            externalSegmentationLoader.visualizeExternalSegmentation(
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            externalSegmentation.visualizeExternalSegmentation(
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange);
@@ -897,7 +900,9 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            externalSegmentationLoader.visualizeExternalSegmentation(
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            externalSegmentation.visualizeExternalSegmentation(
                                     newImage,
                                     previewImage,
                                     setDisplayRange);
@@ -926,32 +931,6 @@ public class PreviewGui extends JPanel {
         public void actionPerformed(ActionEvent a) {
 
             IJ.log("Starting preview for cell segmentation");
-
-            boolean invertCellImageSetting = checkInvertCellImage.isSelected();
-            Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
-            float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
-            Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
-            Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
-            int cellAreaThresholdFloat = cellAreaThreshold.intValue();
-            Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
-            Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
-
-            Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
-            Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
-            Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
-            Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
-            boolean cellFilterCheck = checkFilterCellFilter.isSelected();
-
-            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
-            float nucFilterSize = nucFilterSizeDouble.floatValue();
-            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
-            String nucThreshold = (String) thresholdListBack.getSelectedItem();
-            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
-            int nucErosion = nucErosionDouble.intValue();
-            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
-            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
-            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
-            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
 
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
@@ -1016,10 +995,65 @@ public class PreviewGui extends JPanel {
 
                         }
 
+                        ImagePlus nucleiMask;
+
+                        if (useInternalNucleusSegmentation) {
+
+                            // open individual channels
+                            ImagePlus[] imp_channels = ChannelSplitter.split(selectedImage);
+                            ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
+
+                            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+                            float nucFilterSize = nucFilterSizeDouble.floatValue();
+                            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+                            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+                            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+                            int nucErosion = nucErosionDouble.intValue();
+                            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+                            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+                            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+                            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+                            nucleiMask = NucleusSegmenter.segmentNuclei(
+                                    nucleus,
+                                    nucFilterSize ,
+                                    nucRollBallRadius,
+                                    nucThreshold,
+                                    nucErosion,
+                                    nucMinSize,
+                                    nucMaxSize,
+                                    nucLowCirc ,
+                                    nucHighCirc );
+
+                        } else {
+
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            nucleiMask = externalSegmentation.createExternalNucleusMask(
+                                    selectedImage.getCalibration());
+
+                        }
+
+                        boolean invertCellImageSetting = checkInvertCellImage.isSelected();
+                        Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+                        float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+                        Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+                        Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+                        int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+                        Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+                        Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+                        Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+                        Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+                        Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+                        Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+                        boolean cellFilterCheck = checkFilterCellFilter.isSelected();
+
                         SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
                         visualizer.visualizeCellSegments(selectedImage,
                                 previewImage,
+                                nucleiMask,
                                 cellAreaFilterSizeFloat,
                                 cellAreaRollBall,
                                 cellAreaThresholdFloat,
@@ -1031,14 +1065,6 @@ public class PreviewGui extends JPanel {
                                 cellFilterHighCirc,
                                 cellFilterCheck,
                                 setDisplayRange,
-                                nucFilterSize,
-                                nucRollBallRadius,
-                                nucThreshold,
-                                nucErosion,
-                                nucMinSize,
-                                nucMaxSize,
-                                nucLowCirc,
-                                nucHighCirc,
                                 invertCellImageSetting);
 
                         IJ.showProgress(1);
@@ -1048,13 +1074,13 @@ public class PreviewGui extends JPanel {
                         IJ.log("Selected file: " + selectedFile);
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openWithMultiseriesBF(selectedFile);
+                        ImagePlus newImage = previewImage.openWithMultiseriesBF(selectedFile);
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
 
                             Calibration calibration = Image.calibrate(pxSizeMicronSetting);
-                            originalImage.setCalibration(calibration);
+                            newImage.setCalibration(calibration);
                             IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
                         } else {
@@ -1063,11 +1089,67 @@ public class PreviewGui extends JPanel {
 
                         }
 
+                        ImagePlus nucleiMask;
+
+                        if (useInternalNucleusSegmentation) {
+
+                            // open individual channels
+                            ImagePlus[] imp_channels = ChannelSplitter.split(newImage);
+                            ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
+
+                            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+                            float nucFilterSize = nucFilterSizeDouble.floatValue();
+                            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+                            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+                            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+                            int nucErosion = nucErosionDouble.intValue();
+                            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+                            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+                            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+                            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+                            nucleiMask = NucleusSegmenter.segmentNuclei(
+                                    nucleus,
+                                    nucFilterSize ,
+                                    nucRollBallRadius,
+                                    nucThreshold,
+                                    nucErosion,
+                                    nucMinSize,
+                                    nucMaxSize,
+                                    nucLowCirc ,
+                                    nucHighCirc );
+
+
+                        } else {
+
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            nucleiMask = externalSegmentation.createExternalNucleusMask(
+                                    newImage.getCalibration());
+
+                        }
+
+                        boolean invertCellImageSetting = checkInvertCellImage.isSelected();
+                        Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+                        float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+                        Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+                        Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+                        int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+                        Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+                        Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+                        Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+                        Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+                        Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+                        Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+                        boolean cellFilterCheck = checkFilterCellFilter.isSelected();
+
                         SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
                         visualizer.visualizeCellSegments(
-                                originalImage,
+                                newImage,
                                 previewImage,
+                                nucleiMask,
                                 cellAreaFilterSizeFloat,
                                 cellAreaRollBall,
                                 cellAreaThresholdFloat,
@@ -1079,17 +1161,7 @@ public class PreviewGui extends JPanel {
                                 cellFilterHighCirc,
                                 cellFilterCheck,
                                 setDisplayRange,
-                                nucFilterSize,
-                                nucRollBallRadius,
-                                nucThreshold,
-                                nucErosion,
-                                nucMinSize,
-                                nucMaxSize,
-                                nucLowCirc,
-                                nucHighCirc,
                                 invertCellImageSetting);
-
-                        IJ.showProgress(1);
 
                     }
 
@@ -1108,21 +1180,6 @@ public class PreviewGui extends JPanel {
         public void actionPerformed(ActionEvent a) {
 
             IJ.log("Starting preview for cell segmentation");
-
-            Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
-            Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
-            boolean organellteFilterCheck = checkFilterOrganelle.isSelected();
-
-            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
-            float nucFilterSize = nucFilterSizeDouble.floatValue();
-            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
-            String nucThreshold = (String) thresholdListBack.getSelectedItem();
-            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
-            int nucErosion = nucErosionDouble.intValue();
-            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
-            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
-            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
-            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
 
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
@@ -1186,11 +1243,60 @@ public class PreviewGui extends JPanel {
 
                         }
 
+                        ImagePlus nucleiMask;
+
+                        if (useInternalNucleusSegmentation) {
+
+                            // open individual channels
+                            ImagePlus[] imp_channels = ChannelSplitter.split(selectedImage);
+                            ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
+
+                            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+                            float nucFilterSize = nucFilterSizeDouble.floatValue();
+                            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+                            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+                            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+                            int nucErosion = nucErosionDouble.intValue();
+                            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+                            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+                            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+                            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+                            nucleiMask = NucleusSegmenter.segmentNuclei(
+                                    nucleus,
+                                    nucFilterSize ,
+                                    nucRollBallRadius,
+                                    nucThreshold,
+                                    nucErosion,
+                                    nucMinSize,
+                                    nucMaxSize,
+                                    nucLowCirc ,
+                                    nucHighCirc );
+
+
+                        } else {
+
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            nucleiMask = externalSegmentation.createExternalNucleusMask(
+                                    selectedImage.getCalibration());
+
+                        }
+
+                        Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+                        Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+                        boolean organellteFilterCheck = checkFilterOrganelle.isSelected();
+
                         SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        visualizer.visualizeSpots(selectedImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
-                                    setDisplayRange,
-                                    nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                        visualizer.visualizeSpots(
+                                selectedImage,
+                                previewImage,
+                                nucleiMask,
+                                organelleLoGSigma,
+                                organelleProminence,
+                                organellteFilterCheck,
+                                setDisplayRange);
 
                         IJ.showProgress(1);
 
@@ -1199,13 +1305,13 @@ public class PreviewGui extends JPanel {
                         IJ.log("Selected file: " + selectedFile);
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openWithMultiseriesBF(selectedFile);
+                        ImagePlus newImage = previewImage.openWithMultiseriesBF(selectedFile);
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
 
                             Calibration calibration = Image.calibrate(pxSizeMicronSetting);
-                            originalImage.setCalibration(calibration);
+                            newImage.setCalibration(calibration);
                             IJ.log("Pixel size overwritten by: " + pxSizeMicronSetting);
 
                         } else {
@@ -1214,11 +1320,60 @@ public class PreviewGui extends JPanel {
 
                         }
 
+                        ImagePlus nucleiMask;
+
+                        if (useInternalNucleusSegmentation) {
+
+                            // open individual channels
+                            ImagePlus[] imp_channels = ChannelSplitter.split(newImage);
+                            ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
+
+                            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+                            float nucFilterSize = nucFilterSizeDouble.floatValue();
+                            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+                            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+                            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+                            int nucErosion = nucErosionDouble.intValue();
+                            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+                            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+                            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+                            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+                            nucleiMask = NucleusSegmenter.segmentNuclei(
+                                    nucleus,
+                                    nucFilterSize ,
+                                    nucRollBallRadius,
+                                    nucThreshold,
+                                    nucErosion,
+                                    nucMinSize,
+                                    nucMaxSize,
+                                    nucLowCirc ,
+                                    nucHighCirc );
+
+
+                        } else {
+
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            nucleiMask = externalSegmentation.createExternalNucleusMask(
+                                    newImage.getCalibration());
+
+                        }
+
+                        Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+                        Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+                        boolean organellteFilterCheck = checkFilterOrganelle.isSelected();
+
                         SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        visualizer.visualizeSpots(originalImage, previewImage, organelleLoGSigma, organelleProminence, organellteFilterCheck,
-                                setDisplayRange,
-                                nucFilterSize, nucRollBallRadius, nucThreshold, nucErosion, nucMinSize, nucMaxSize, nucLowCirc, nucHighCirc);
+                        visualizer.visualizeSpots(
+                                newImage,
+                                previewImage,
+                                nucleiMask,
+                                organelleLoGSigma,
+                                organelleProminence,
+                                organellteFilterCheck,
+                                setDisplayRange);
 
                         IJ.showProgress(1);
 
@@ -1240,7 +1395,6 @@ public class PreviewGui extends JPanel {
         public  void actionPerformed(ActionEvent e) {
 
             IJ.log("Starting preview for nuclei segmentation");
-
 
             // dataset settings
             String nucChannel = (String) nucleusChannelList.getSelectedItem();
@@ -1333,7 +1487,8 @@ public class PreviewGui extends JPanel {
                         cellFilterHighCirc,
                         organelleLoGSigma,
                         organelleProminence,
-                        invertCellImageSetting);
+                        invertCellImageSetting,
+                        useInternalNucleusSegmentation);
 
                 processing.processImage();
 

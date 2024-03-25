@@ -46,6 +46,7 @@ public class BatchProcessor {
     private final double sigmaLoGOrga;
     private final double prominenceOrga;
     private final boolean invertCellImageSetting;
+    private final boolean useInternalNucleusSegmentation;
 
     void processImage() {
 
@@ -105,17 +106,31 @@ public class BatchProcessor {
             nucleus.setOverlay(null);
 
             // get nucleus masks
-            // TODO: add external nucleus segmentation
-            ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(
-                    nucleus,
-                    kernelSizeNuc,
-                    rollingBallRadiusNuc,
-                    thresholdNuc,
-                    erosionNuc,
-                    minSizeNuc,
-                    maxSizeNuc,
-                    lowCircNuc,
-                    highCircNuc);
+            ImagePlus nucleusMask;
+
+            // TODO: add use useInternalNucleusSegmentation
+            if (useInternalNucleusSegmentation) {
+
+                nucleusMask = NucleusSegmenter.segmentNuclei(
+                        nucleus,
+                        kernelSizeNuc,
+                        rollingBallRadiusNuc,
+                        thresholdNuc,
+                        erosionNuc,
+                        minSizeNuc,
+                        maxSizeNuc,
+                        lowCircNuc,
+                        highCircNuc);
+
+            } else {
+
+                ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                nucleusMask = externalSegmentation.createExternalNucleusMask(
+                        image.getCalibration());
+
+            }
+
 
             // get cell segmentations
             ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(
@@ -144,13 +159,11 @@ public class BatchProcessor {
 
             RoiManager manager;
 
-            // TODO: loop in external nucleus segmentation
             manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);
 
             IJ.log("Found " + manager.getCount() + " cell(s)");
 
             // lysosome detection
-            // TODO: loop in external nucleus segmentation
             ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
             ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
 
@@ -165,7 +178,6 @@ public class BatchProcessor {
 
                 IJ.log("No measure channel selected");
 
-                // TODO: loop in external nucleus segmentation
                 resultLists = DistanceMeasure.measureCell(
                         manager,
                         nucleusMask,
@@ -187,7 +199,6 @@ public class BatchProcessor {
 
                 backgroundMeasure = BackgroundMeasure.measureDetectionBackground(backgroundMask, measure);
 
-                // TODO: loop in external nucleus segmentation
                 resultLists = DistanceMeasure.measureCell(
                         manager,
                         nucleusMask,
@@ -236,7 +247,6 @@ public class BatchProcessor {
             }
 
             // save result images
-            // TODO: loop in external nucleus segmentation
             BatchResultSaver.saveResultImages(
                     outputDir,
                     fileName,
@@ -320,7 +330,8 @@ public class BatchProcessor {
                    double getHighCircCelLSize,
                    double getSigmaLoGOrga,
                    double getProminenceOrga,
-                   boolean getInvertCellImageSetting) {
+                   boolean getInvertCellImageSetting,
+                   boolean getUseInternalNucleusSegmentation) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -367,6 +378,7 @@ public class BatchProcessor {
         // settings for organelle detection
         sigmaLoGOrga = getSigmaLoGOrga;
         prominenceOrga = getProminenceOrga;
+        useInternalNucleusSegmentation = getUseInternalNucleusSegmentation;
 
 
 

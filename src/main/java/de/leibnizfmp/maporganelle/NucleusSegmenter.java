@@ -77,7 +77,6 @@ public class NucleusSegmenter {
         IJ.log("Erode mask " + erosion + "x");
         ByteProcessor unfilteredMaskByteProcessor = filteredMask.getProcessor().convertToByteProcessor();
         unfilteredMaskByteProcessor.invertLut();
-        //unfilteredMaskByteProcessor.invert();
 
         Binary binaryProcessorFill = new Binary();
         binaryProcessorFill.setup("fill holes", filteredMask );
