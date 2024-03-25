@@ -17,13 +17,31 @@ import ij.process.ImageProcessor;
 
 public class CellSeparator {
 
-    static ImagePlus separateCells( ImagePlus nucleus, ImagePlus cytoplasm, double sigmaGauss, double prominence ) {
+    static ImagePlus separateCells(ImagePlus nucleus, ImagePlus cytoplasm, double sigmaGauss, double prominence, boolean invertCellImageSetting) {
 
         Calibration calibration = nucleus.getCalibration();
 
         IJ.log("Gauss filter with sigma: " + sigmaGauss);
+
+        ImagePlus cellImageDup;
+
+        if (invertCellImageSetting) {
+
+            IJ.log("Inverting cell image to segment membrane signal");
+            ImagePlus cellImageDupIntermediate = cytoplasm.duplicate();
+            ImageProcessor cellImageDupProcessor = cellImageDupIntermediate.getProcessor();
+            cellImageDupProcessor.invert();
+            cellImageDup = new ImagePlus("invertedCellMask", cellImageDupProcessor);
+
+        } else {
+
+            cellImageDup = cytoplasm.duplicate();
+            IJ.log("Cell image not inverted");
+
+        }
+
         ImageCalculator calculator = new ImageCalculator();
-        ImagePlus nucleusCytoplasm = calculator.run("Add 32-bit", nucleus, cytoplasm);
+        ImagePlus nucleusCytoplasm = calculator.run("Add 32-bit", nucleus, cellImageDup);
         ImageProcessor nucleusCytoplasmProcessor = nucleusCytoplasm.getProcessor().convertToShort(true);
         nucleusCytoplasmProcessor.blurGaussian(sigmaGauss);
 

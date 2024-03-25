@@ -223,7 +223,7 @@ public class SegmentationVisualizer {
                 manualThresholdCellArea,
                 invertCellImage);
 
-        ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells);
+        ImagePlus separatedCells = CellSeparator.separateCells(nucleus, cytoplasm, gaussSeparateCells, prominenceSeparatedCells, invertCellImage);
 
         ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask, separatedCells, minCellSize, maxCellSize, lowCellCirc, highCellCirc);
 

@@ -16,14 +16,13 @@ import ij.process.ImageProcessor;
  */
 public class CellAreaSegmenter {
 
-    static ImagePlus segmentCellArea(ImagePlus image, float kernelSize, double rollingBallRadius, int manualThreshold, boolean invertCellImageSetting) {
+    static ImagePlus segmentCellArea(ImagePlus cytoplasm, float kernelSize, double rollingBallRadius, int manualThreshold, boolean invertCellImageSetting) {
 
-        Calibration calibration = image.getCalibration();
+        Calibration calibration = cytoplasm.getCalibration();
 
         IJ.log("Median filter with radius: " + kernelSize);
-        ImagePlus cellImageDup = image.duplicate();
+        ImagePlus cellImageDup = cytoplasm.duplicate();
 
-        // TODO: invert cell image to segment using membrane signal
         ImageProcessor cellImageDupProcessor = cellImageDup.getProcessor();
 
         if (invertCellImageSetting) {

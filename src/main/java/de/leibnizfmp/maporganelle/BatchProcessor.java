@@ -114,12 +114,13 @@ public class BatchProcessor {
                     lowCircNuc,
                     highCircNuc);
 
-            // get filtered cell ROIs
+            //
             ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm,
                     kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea, invertCellImageSetting);
 
+            //
             ImagePlus separatedCells = CellSeparator.separateCells(nucleus,
-                    cytoplasm, sigmaGaussCellSep, prominenceCellSep);
+                    cytoplasm, sigmaGaussCellSep, prominenceCellSep, invertCellImageSetting);
 
             ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask,
                     separatedCells, minCellSize, maxCellSize, lowCircCellSize, highCircCelLSize);
