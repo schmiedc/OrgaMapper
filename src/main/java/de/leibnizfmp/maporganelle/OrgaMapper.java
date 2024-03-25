@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  */
 @Plugin(type = Command.class, menuPath = "Plugins>Cellular Imaging>Map Organelle")
-public class MapOrganelle<T extends RealType<T>>  implements Command {
+public class OrgaMapper<T extends RealType<T>>  implements Command {
 
     @Override
     public void run() {
@@ -50,7 +50,7 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         final ImageJ ij = new ImageJ();
         Prefs.blackBackground = true;
 
-        ij.command().run(MapOrganelle.class, true);
+        ij.command().run(OrgaMapper.class, true);
 
         boolean runTest1 = false;
         boolean runTest2 = true;
