@@ -830,7 +830,7 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(
+                            externalSegmentationLoader.visualizeExternalSegmentation(
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange);
@@ -897,7 +897,7 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(
+                            externalSegmentationLoader.visualizeExternalSegmentation(
                                     newImage,
                                     previewImage,
                                     setDisplayRange);

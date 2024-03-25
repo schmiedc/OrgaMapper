@@ -11,7 +11,7 @@ import ij.process.ImageProcessor;
 
 import java.io.File;
 
-public class externalNucleusSegmentationLoader {
+public class externalSegmentationLoader {
 
     static void visualizeExternalSegmentation(ImagePlus originalImage,
                                               Image imageObject,
@@ -22,9 +22,9 @@ public class externalNucleusSegmentationLoader {
         String inputFile = "HeLa_NucSeg_1.tif";
 
         // loads the label image
-        ImagePlus nucleusImage = IJ.openImage(directory + File.separator + inputFile);
+        ImagePlus labelImage = IJ.openImage(directory + File.separator + inputFile);
 
-        RoiManager roiManager = label2Roi(nucleusImage);
+        RoiManager roiManager = label2Roi(labelImage);
 
         // takes the original image and visualizes ROIs on top of it
         originalImage.setC( imageObject.nucleus );
@@ -55,8 +55,8 @@ public class externalNucleusSegmentationLoader {
      * Converts gray scale label image to ROIs
      * After: https://github.com/BIOP/ijp-LaRoMe/blob/master/src/main/java/ch/epfl/biop/ij2command/Labels2Rois.java
      *
-     * @param labelImage
-     * @return
+     * @param labelImage a gray scale label image
+     * @return ROI Manager with ROIs from label image
      */
     private static RoiManager label2Roi(ImagePlus labelImage) {
 
@@ -103,11 +103,8 @@ public class externalNucleusSegmentationLoader {
 
         }
 
-
         return manager;
 
     }
-
-
 
 }

@@ -104,6 +104,7 @@ public class BatchProcessor {
             nucleus.setOverlay(null);
 
             // get nucleus masks
+            // TODO: add external nucleus segmentation
             ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(
                     nucleus,
                     kernelSizeNuc,
