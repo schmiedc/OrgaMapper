@@ -72,7 +72,8 @@ public class BatchProcessor {
             int seriesNumber = Integer.parseInt(seriesNumberString);
 
             // define and open image
-            Image processingImage = new Image(inputDir,
+            Image processingImage = new Image(
+                    inputDir,
                     fileFormat,
                     channelNumber,
                     seriesNumber,
@@ -142,11 +143,14 @@ public class BatchProcessor {
                     highCircCelLSize);
 
             RoiManager manager;
+
+            // TODO: loop in external nucleus segmentation
             manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);
 
             IJ.log("Found " + manager.getCount() + " cell(s)");
 
             // lysosome detection
+            // TODO: loop in external nucleus segmentation
             ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
             ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
 
@@ -160,7 +164,10 @@ public class BatchProcessor {
             if ( measureChannel == 0) {
 
                 IJ.log("No measure channel selected");
-                resultLists = DistanceMeasure.measureCell(manager,
+
+                // TODO: loop in external nucleus segmentation
+                resultLists = DistanceMeasure.measureCell(
+                        manager,
                         nucleusMask,
                         detectionsFiltered,
                         organelle,
@@ -180,7 +187,9 @@ public class BatchProcessor {
 
                 backgroundMeasure = BackgroundMeasure.measureDetectionBackground(backgroundMask, measure);
 
-                resultLists = DistanceMeasure.measureCell(manager,
+                // TODO: loop in external nucleus segmentation
+                resultLists = DistanceMeasure.measureCell(
+                        manager,
                         nucleusMask,
                         detectionsFiltered,
                         organelle,
@@ -227,25 +236,51 @@ public class BatchProcessor {
             }
 
             // save result images
-            BatchResultSaver.saveResultImages(outputDir, fileName, nucleusMask, cytoplasm, manager, nucleus, organelle, detectionsFiltered);
+            // TODO: loop in external nucleus segmentation
+            BatchResultSaver.saveResultImages(
+                    outputDir,
+                    fileName,
+                    nucleusMask,
+                    cytoplasm,
+                    manager,
+                    nucleus,
+                    organelle,
+                    detectionsFiltered);
 
             // results for value measurement too large for large datasets save measurement for each image
-            BatchResultSaver.saveIntensityProfiles(nucIntensityProfiles, saveDir, "intensityDistance.csv" , measureChannel);
+            BatchResultSaver.saveIntensityProfiles(
+                    nucIntensityProfiles,
+                    saveDir,
+                    "intensityDistance.csv" , measureChannel);
 
             if (distanceFromMembraneSetting) {
 
-                BatchResultSaver.saveIntensityProfiles(membraneIntensityProfilesAll, saveDir, "intensityDistanceFromMembrane.csv" , measureChannel);
+                BatchResultSaver.saveIntensityProfiles(
+                        membraneIntensityProfilesAll,
+                        saveDir,
+                        "intensityDistanceFromMembrane.csv" , measureChannel);
 
             }
 
         }
 
-        BatchResultSaver.saveCellMeasure(cellMeasureAll, outputDir,"cellMeasurements.csv", measureChannel);
-        BatchResultSaver.saveDistanceMeasure(nucDistanceMeasureAll, outputDir, "organelleDistance.csv", measureChannel);
+        BatchResultSaver.saveCellMeasure(
+                cellMeasureAll,
+                outputDir,
+                "cellMeasurements.csv",
+                measureChannel);
+        BatchResultSaver.saveDistanceMeasure(
+                nucDistanceMeasureAll,
+                outputDir,
+                "organelleDistance.csv", measureChannel);
 
         if (distanceFromMembraneSetting) {
 
-            BatchResultSaver.saveDistanceMeasure(membraneDistanceMeasureAll, outputDir, "organelleDistanceFromMembrane.csv", measureChannel);
+            BatchResultSaver.saveDistanceMeasure(
+                    membraneDistanceMeasureAll,
+                    outputDir,
+                    "organelleDistanceFromMembrane.csv",
+                    measureChannel);
 
         }
 
