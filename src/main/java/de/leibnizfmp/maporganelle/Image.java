@@ -306,7 +306,7 @@ public class Image {
         nucleus = nucleusChannel;
         cytoplasm = cytoplasmChannel;
         organelle = organelleChannel;
-        measure = measureChannel ;
+        measure = measureChannel;
 
     }
 

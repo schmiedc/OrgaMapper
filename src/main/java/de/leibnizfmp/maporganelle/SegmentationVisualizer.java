@@ -96,7 +96,7 @@ public class SegmentationVisualizer {
     }
 
     /**
-     * visualization of the background segmentation
+     * visualization of the nucleus segmentation
      *
      * @param originalImage     the original image for vis
      * @param imageObject       image for segmentation of the nucleus

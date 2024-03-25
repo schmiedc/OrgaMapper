@@ -104,7 +104,8 @@ public class BatchProcessor {
             nucleus.setOverlay(null);
 
             // get nucleus masks
-            ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(nucleus,
+            ImagePlus nucleusMask = NucleusSegmenter.segmentNuclei(
+                    nucleus,
                     kernelSizeNuc,
                     rollingBallRadiusNuc,
                     thresholdNuc,
@@ -114,16 +115,30 @@ public class BatchProcessor {
                     lowCircNuc,
                     highCircNuc);
 
-            //
-            ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(cytoplasm,
-                    kernelSizeCellArea, rollingBallRadiusCellArea, manualThresholdCellArea, invertCellImageSetting);
+            // get cell segmentations
+            ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(
+                    cytoplasm,
+                    kernelSizeCellArea,
+                    rollingBallRadiusCellArea,
+                    manualThresholdCellArea,
+                    invertCellImageSetting);
 
-            //
-            ImagePlus separatedCells = CellSeparator.separateCells(nucleus,
-                    cytoplasm, sigmaGaussCellSep, prominenceCellSep, invertCellImageSetting);
+            // get separated cells
+            ImagePlus separatedCells = CellSeparator.separateCells(
+                    nucleus,
+                    cytoplasm,
+                    sigmaGaussCellSep,
+                    prominenceCellSep,
+                    invertCellImageSetting);
 
-            ImagePlus filteredCells = CellFilter.filterByCellSize(backgroundMask,
-                    separatedCells, minCellSize, maxCellSize, lowCircCellSize, highCircCelLSize);
+            // filter cells for size and circularity
+            ImagePlus filteredCells = CellFilter.filterByCellSize(
+                    backgroundMask,
+                    separatedCells, 
+                    minCellSize,
+                    maxCellSize,
+                    lowCircCellSize,
+                    highCircCelLSize);
 
             RoiManager manager;
             manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);

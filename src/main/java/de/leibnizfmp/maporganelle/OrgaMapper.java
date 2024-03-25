@@ -52,23 +52,21 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
 
         ij.command().run(OrgaMapper.class, true);
 
-        boolean runTest1 = false;
-        boolean runTest2 = true;
+        boolean runTest1 = true;
+        boolean runTest2 = false;
         boolean runTest3 = false;
 
         if ( runTest1 || runTest2 || runTest3 ) {
 
-            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/Plugin_InputTest/";
-            //String testInDir = "/home/schmiedc/Desktop/Test/test_tif/input/";
-            String testInDir = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/2023-02-29_Feature_External-Detection/input/";
-            //String testInDir = "/data1/FMP_Docs/Projects/orgaPosJ_ME/TestDataSet_2ndChannel/";
-            //String testOutDir = "/home/schmiedc/Desktop/Test/test_tif/output/";
-            String testOutDir = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/2023-02-29_Feature_External-Detection/output/";
-            //int channelNumber = 4;
-            String fileEnding = ".tif";
+            String testInDir = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input/";
+
+            String testOutDir = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/output/";
+
             //String fileEnding = ".nd2";
-            //String settings = "/home/schmiedc/Desktop/Test/test_tif/input/2020-10-09T121957-settings.xml";
-            String settings = "";
+            String fileEnding = ".tif";
+
+            //String settings = "";
+            String settings = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/2024-03-21T191005-settings.xml";
 
             if ( runTest1 ) {
 
@@ -82,12 +80,13 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
                 ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 1));
 
                 IJ.log("Run test 1");
-                PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157);
+                PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157, 1, 2, 3);
                 guiTest.setUpGui();
 
                 IJ.log("Test 1 done");
 
             } else if ( runTest2 ) {
+
                 IJ.log("Run test 2");
                 InputGuiFiji guiTest = new InputGuiFiji(testInDir, testOutDir, fileEnding, settings);
                 guiTest.createWindow();

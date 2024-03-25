@@ -41,10 +41,17 @@ public class PreviewGui extends JPanel {
     private final String outputDir;
     private final ArrayList<String> fileList;
 
+    // Settings for GUI
+    private boolean useInternalNucleusSegmentation = false;
+    private boolean useInternalCellSegmentation = true;
+    private boolean useInternalOrganelleSegmentation = true;
+
+    //TODO: need parameters for external segmentation
+
     // list of files
     private JList list;
 
-    // settings for nucleus settings
+    // settings for nucleus segmentation
     private float kernelSizeNuc;
     private double rollingBallRadiusNuc;
     private String thresholdNuc;
@@ -54,6 +61,49 @@ public class PreviewGui extends JPanel {
     private double lowCircNuc;
     private double highCircNuc;
 
+    // settings for cell area segmentation
+    private boolean invertCellImageSetting;
+    private float kernelSizeCellArea;
+    private double rollingBallRadiusCellArea;
+    private int manualThresholdCellArea;
+
+    // settings for cell separator
+    private double sigmaGaussCellSep;
+    private double prominenceCellSep;
+
+    // settings for cell filter size
+    private double minCellSize;
+    private double maxCellSize;
+    private double lowCircCellSize;
+    private double highCircCelLSize;
+
+    // settings for organelle detection
+    private double sigmaLoGOrga;
+    private double prominenceOrga;
+
+    // image settings
+    private boolean calibrationSetting;
+    private boolean distanceFromMembraneSetting;
+    private double pxSizeMicron;
+    private final int channelNumber;
+    private int nucleusChannel;
+    private int cytoplasmChannel;
+    private int organelleChannel;
+    private int measure;
+
+    // GUI elements for image settings
+    JComboBox nucleusChannelList;
+    JComboBox cytoplasmChannelList;
+    JComboBox organelleChannelList;
+    JComboBox measureChannelList;
+    private static File settingsFile = null;
+    private String fileFormat;
+    private boolean setDisplayRange = false;
+    JCheckBox checkCalibration;
+    JCheckBox checkDistanceFromMembrane;
+    private SpinnerModel doubleSpinnerPixelSize;
+
+    // GUI elements for Nucleus segmentation
     SpinnerModel doubleSpinKernelSizeNuc;
     SpinnerModel doubleSpinrollingBallRadiusNuc;
     JComboBox<String> thresholdListBack;
@@ -63,72 +113,25 @@ public class PreviewGui extends JPanel {
     SpinnerModel doubleSpinLowCirc;
     SpinnerModel doubleSpinHighCirc;
 
-    // settings for cell area segmentation
-    private boolean invertCellImageSetting;
-    private float kernelSizeCellArea;
-    private double rollingBallRadiusCellArea;
-    private int manualThresholdCellArea;
-
-    JCheckBox checkInvertCellImage;
-    SpinnerModel doubleSpinKernelCellArea;
-    SpinnerModel doubleSpinRollBallCellArea;
-    SpinnerModel doubleSpinThresholdCellArea;
-
-    // settings for cell separator
-    private double sigmaGaussCellSep;
-    private double prominenceCellSep;
-
-    SpinnerModel doubleSpinGaussCellSep;
-    SpinnerModel doubleSpinProminenceCellSep;
-
-    // settings for cell filter size
-    private double minCellSize;
-    private double maxCellSize;
-    private double lowCircCellSize;
-    private double highCircCelLSize;
-
+    // GUI elements for cell segmentation
     SpinnerModel doubleSpinMinSizeCellFilter;
     SpinnerModel doubleSpinMaxSizeCellFilter;
     SpinnerModel doubleSpinLowCircCellFilter;
     SpinnerModel doubleSpinHighCircCellFilter;
     JCheckBox checkFilterCellFilter;
+    SpinnerModel doubleSpinGaussCellSep;
+    SpinnerModel doubleSpinProminenceCellSep;
+    JCheckBox checkInvertCellImage;
+    SpinnerModel doubleSpinKernelCellArea;
+    SpinnerModel doubleSpinRollBallCellArea;
+    SpinnerModel doubleSpinThresholdCellArea;
 
-    // settings for organelle detection
-    private double sigmaLoGOrga;
-    private double prominenceOrga;
-
+    // GUI elements for Organelle detection
     SpinnerModel doubleSpinnerLoGOragenelle;
     SpinnerModel doubleSpinnerProminenceOrganelle;
     JCheckBox checkFilterOrganelle;
 
-    // image settings
-    private boolean calibrationSetting;
-
-    private boolean distanceFromMembraneSetting;
-
-    private double pxSizeMicron;
-    private final int channelNumber;
-    private int nucleusChannel;
-    private int cytoplasmChannel;
-    private int organelleChannel;
-    private int measure;
-
-    JComboBox nucleusChannelList;
-    JComboBox cytoplasmChannelList;
-    JComboBox organelleChannelList;
-    JComboBox measureChannelList;
-
-    private static File settingsFile = null;
-
-    private String fileFormat;
-    private boolean setDisplayRange = false;
-
-    JCheckBox checkCalibration;
-
-    JCheckBox checkDistanceFromMembrane;
-
-    private SpinnerModel doubleSpinnerPixelSize;
-
+    // GUI elements Boxes
     Box nucSegBox = new Box(BoxLayout.Y_AXIS);
     Box cellSegBox = new Box(BoxLayout.Y_AXIS);
     Box organelleBox = new Box(BoxLayout.Y_AXIS);
@@ -138,7 +141,6 @@ public class PreviewGui extends JPanel {
     // tabbed pane
     private final JTabbedPane tabbedPane = new JTabbedPane();
     JFrame theFrame;
-
     private Border blackline;
 
     void setUpGui() {
@@ -228,78 +230,88 @@ public class PreviewGui extends JPanel {
 
     private void setUpNucleiTab() {
 
-        // box with titled borders
-        Box segmentationBox = new Box(BoxLayout.Y_AXIS);
-        TitledBorder titleSegmentation;
-        blackline = BorderFactory.createLineBorder(Color.black);
-        titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
-        segmentationBox.setBorder(titleSegmentation);
+        if (useInternalNucleusSegmentation) {
 
-        doubleSpinKernelSizeNuc = new SpinnerNumberModel(kernelSizeNuc, 0.0, 50.0, 1.0);
-        String spinBackLabel1 = "Median filter size: ";
-        String spinBackUnit1 = "px";
-        Box spinnerBack1 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelSizeNuc, spinBackUnit1);
-        segmentationBox.add(spinnerBack1);
+            // box with titled borders
+            Box segmentationBox = new Box(BoxLayout.Y_AXIS);
 
-        doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(rollingBallRadiusNuc, 0.0, 10000, 1.0);
-        String spinBackLabel2 = "Rolling ball radius: ";
-        String spinBackUnit2 = "px";
-        Box spinnerBack2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel2, doubleSpinrollingBallRadiusNuc, spinBackUnit2);
-        segmentationBox.add(spinnerBack2);
+            TitledBorder titleSegmentation;
+            blackline = BorderFactory.createLineBorder(Color.black);
+            titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
+            segmentationBox.setBorder(titleSegmentation);
 
-        thresholdListBack = new JComboBox<>(thresholdString);
-        JLabel thresholdListBackLabel  = new JLabel("Select threshold: ");
-        Box thresholdListBackBox= new Box(BoxLayout.X_AXIS);
-        thresholdListBack.setMaximumSize(new Dimension(Integer.MAX_VALUE, thresholdListBack.getMinimumSize().height));
-        // get index of selected threshold using arrayUtils
-        int indexOfThreshold = ArrayUtils.indexOf(thresholdString, thresholdNuc);
-        // set this index as selected in the threshold list
-        thresholdListBack.setSelectedIndex(indexOfThreshold);
+            doubleSpinKernelSizeNuc = new SpinnerNumberModel(kernelSizeNuc, 0.0, 50.0, 1.0);
+            String spinBackLabel1 = "Median filter size: ";
+            String spinBackUnit1 = "px";
+            Box spinnerBack1 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelSizeNuc, spinBackUnit1);
+            segmentationBox.add(spinnerBack1);
 
-        thresholdListBackBox.add(thresholdListBackLabel);
-        thresholdListBackBox.add(thresholdListBack);
-        segmentationBox.add(thresholdListBackBox);
+            doubleSpinrollingBallRadiusNuc = new SpinnerNumberModel(rollingBallRadiusNuc, 0.0, 10000, 1.0);
+            String spinBackLabel2 = "Rolling ball radius: ";
+            String spinBackUnit2 = "px";
+            Box spinnerBack2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel2, doubleSpinrollingBallRadiusNuc, spinBackUnit2);
+            segmentationBox.add(spinnerBack2);
 
-        doubleSpinErosionNuc = new SpinnerNumberModel(erosionNuc, 0.0, 10, 1.0);
-        String spinBackLabel3 = "Erode: ";
-        String spinBackUnit3 = "x";
-        Box spinnerBack3 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel3, doubleSpinErosionNuc, spinBackUnit3);
-        segmentationBox.add(spinnerBack3);
+            thresholdListBack = new JComboBox<>(thresholdString);
+            JLabel thresholdListBackLabel  = new JLabel("Select threshold: ");
+            Box thresholdListBackBox= new Box(BoxLayout.X_AXIS);
+            thresholdListBack.setMaximumSize(new Dimension(Integer.MAX_VALUE, thresholdListBack.getMinimumSize().height));
+            // get index of selected threshold using arrayUtils
+            int indexOfThreshold = ArrayUtils.indexOf(thresholdString, thresholdNuc);
 
-        nucSegBox.add(segmentationBox);
+            // set this index as selected in the threshold list
+            thresholdListBack.setSelectedIndex(indexOfThreshold);
+            thresholdListBackBox.add(thresholdListBackLabel);
+            thresholdListBackBox.add(thresholdListBack);
+            segmentationBox.add(thresholdListBackBox);
 
-        // box with titled borders
-        Box filterBox = new Box(BoxLayout.Y_AXIS);
-        TitledBorder titleFilter;
-        blackline = BorderFactory.createLineBorder(Color.black);
-        titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
-        filterBox.setBorder(titleFilter);
+            doubleSpinErosionNuc = new SpinnerNumberModel(erosionNuc, 0.0, 10, 1.0);
+            String spinBackLabel3 = "Erode: ";
+            String spinBackUnit3 = "x";
+            Box spinnerBack3 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel3, doubleSpinErosionNuc, spinBackUnit3);
+            segmentationBox.add(spinnerBack3);
 
-        doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,10000000,10.0);
-        String minSizeLabel = "Minimum size: ";
-        String minUnitLabel = "µm²";
-        Box spinnerNuc4 = PreviewLabeledSpinner.addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSize, minUnitLabel);
-        filterBox.add(spinnerNuc4);
+            nucSegBox.add(segmentationBox);
 
-        doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,10000000,10.0);
-        String maxSizeLabel = "Maximum size: ";
-        String maxUnitLabel = "µm²";
-        Box spinnerNuc5 = PreviewLabeledSpinner.addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSize, maxUnitLabel);
-        filterBox.add(spinnerNuc5);
+            // box with titled borders
+            Box filterBox = new Box(BoxLayout.Y_AXIS);
+            TitledBorder titleFilter;
+            blackline = BorderFactory.createLineBorder(Color.black);
+            titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
+            filterBox.setBorder(titleFilter);
 
-        doubleSpinLowCirc = new SpinnerNumberModel(lowCircNuc,0.0,1.0,0.1);
-        String minCircLabel = "Minimum circularity: ";
-        String minCircUnit = "";
-        Box lowCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCirc, minCircUnit);
-        filterBox.add(lowCircBox);
+            doubleSpinMinSize = new SpinnerNumberModel(minSizeNuc,0.0,10000000,10.0);
+            String minSizeLabel = "Minimum size: ";
+            String minUnitLabel = "µm²";
+            Box spinnerNuc4 = PreviewLabeledSpinner.addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSize, minUnitLabel);
+            filterBox.add(spinnerNuc4);
 
-        doubleSpinHighCirc = new SpinnerNumberModel(highCircNuc,0.0,1.0,0.1);
-        String highCircLabel = "Maximum circularity: ";
-        String highCircUnit = "";
-        Box highCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCirc, highCircUnit);
-        filterBox.add(highCircBox);
+            doubleSpinMaxSize = new SpinnerNumberModel(maxSizeNuc,0.0,10000000,10.0);
+            String maxSizeLabel = "Maximum size: ";
+            String maxUnitLabel = "µm²";
+            Box spinnerNuc5 = PreviewLabeledSpinner.addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSize, maxUnitLabel);
+            filterBox.add(spinnerNuc5);
 
-        nucSegBox.add(filterBox);
+            doubleSpinLowCirc = new SpinnerNumberModel(lowCircNuc,0.0,1.0,0.1);
+            String minCircLabel = "Minimum circularity: ";
+            String minCircUnit = "";
+            Box lowCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCirc, minCircUnit);
+            filterBox.add(lowCircBox);
+
+            doubleSpinHighCirc = new SpinnerNumberModel(highCircNuc,0.0,1.0,0.1);
+            String highCircLabel = "Maximum circularity: ";
+            String highCircUnit = "";
+            Box highCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCirc, highCircUnit);
+            filterBox.add(highCircBox);
+
+            nucSegBox.add(filterBox);
+
+        } else {
+
+            JLabel externalNucleusSegmentationLabel = new JLabel("External Segmentation:");
+            nucSegBox.add(externalNucleusSegmentationLabel);
+
+        }
 
         // setup Buttons
         JButton previewButton = new JButton("Preview");
@@ -310,97 +322,107 @@ public class PreviewGui extends JPanel {
 
     private void setUpCellsTab() {
 
-        // box with titled borders
-        Box segmentationBox = new Box(BoxLayout.Y_AXIS);
-        TitledBorder titleSegmentation;
-        blackline = BorderFactory.createLineBorder(Color.black);
-        titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
-        segmentationBox.setBorder(titleSegmentation);
+        if (useInternalCellSegmentation) {
 
-        checkInvertCellImage = new JCheckBox("Invert Cell Image");
-        checkInvertCellImage.setSelected(invertCellImageSetting);
-        checkInvertCellImage.setToolTipText("For segmentation based on cell membrane you can try to invert the cell image");
-        segmentationBox.add(checkInvertCellImage);
+            // box with titled borders
+            Box segmentationBox = new Box(BoxLayout.Y_AXIS);
+            TitledBorder titleSegmentation;
+            blackline = BorderFactory.createLineBorder(Color.black);
+            titleSegmentation = BorderFactory.createTitledBorder(blackline, "Segmentation: ");
+            segmentationBox.setBorder(titleSegmentation);
 
-        doubleSpinKernelCellArea = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
-        String spinBackLabel1 = "Median filter size: ";
-        String spinBackUnit1 = "px";
-        Box spinnerBack1 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelCellArea, spinBackUnit1);
-        segmentationBox.add(spinnerBack1);
+            checkInvertCellImage = new JCheckBox("Invert Cell Image");
+            checkInvertCellImage.setSelected(invertCellImageSetting);
+            checkInvertCellImage.setToolTipText("For segmentation based on cell membrane you can try to invert the cell image");
+            segmentationBox.add(checkInvertCellImage);
 
-        doubleSpinRollBallCellArea = new SpinnerNumberModel(rollingBallRadiusCellArea, 0.0, 10000, 1.0);
-        String spinBackLabel2 = "Rolling ball radius: ";
-        String spinBackUnit2 = "px";
-        Box spinnerBack2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel2, doubleSpinRollBallCellArea, spinBackUnit2);
-        segmentationBox.add(spinnerBack2);
+            doubleSpinKernelCellArea = new SpinnerNumberModel(kernelSizeCellArea, 0.0, 50.0, 1.0);
+            String spinBackLabel1 = "Median filter size: ";
+            String spinBackUnit1 = "px";
+            Box spinnerBack1 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel1, doubleSpinKernelCellArea, spinBackUnit1);
+            segmentationBox.add(spinnerBack1);
 
-        doubleSpinThresholdCellArea = new SpinnerNumberModel(manualThresholdCellArea, 0.0, 65536, 1.0);
-        String spinBackLabel3 = "Global Threshold: ";
-        String spinBackUnit3 = "A.U.";
-        Box spinnerBack3 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel3, doubleSpinThresholdCellArea, spinBackUnit3);
-        segmentationBox.add(spinnerBack3);
+            doubleSpinRollBallCellArea = new SpinnerNumberModel(rollingBallRadiusCellArea, 0.0, 10000, 1.0);
+            String spinBackLabel2 = "Rolling ball radius: ";
+            String spinBackUnit2 = "px";
+            Box spinnerBack2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel2, doubleSpinRollBallCellArea, spinBackUnit2);
+            segmentationBox.add(spinnerBack2);
 
-        cellSegBox.add(segmentationBox);
+            doubleSpinThresholdCellArea = new SpinnerNumberModel(manualThresholdCellArea, 0.0, 65536, 1.0);
+            String spinBackLabel3 = "Global Threshold: ";
+            String spinBackUnit3 = "A.U.";
+            Box spinnerBack3 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinBackLabel3, doubleSpinThresholdCellArea, spinBackUnit3);
+            segmentationBox.add(spinnerBack3);
 
-        // settings for cell separator
-        //private double prominenceCellSep;
-        Box separationBox = new Box(BoxLayout.Y_AXIS);
-        TitledBorder titleSeparation;
-        blackline = BorderFactory.createLineBorder(Color.black);
-        titleSeparation = BorderFactory.createTitledBorder(blackline, "Watershed settings: ");
-        separationBox.setBorder(titleSeparation);
+            cellSegBox.add(segmentationBox);
 
-        doubleSpinGaussCellSep = new SpinnerNumberModel(sigmaGaussCellSep, 0.0, 100.0, 1.0);
-        String spinGaussCellSep = "Gaussian sigma: ";
-        String spinGaussCellSepUnit = "px";
-        Box spinnerGaussCellSep = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinGaussCellSep, doubleSpinGaussCellSep, spinGaussCellSepUnit);
-        separationBox.add(spinnerGaussCellSep);
+            // settings for cell separator
+            //private double prominenceCellSep;
+            Box separationBox = new Box(BoxLayout.Y_AXIS);
+            TitledBorder titleSeparation;
+            blackline = BorderFactory.createLineBorder(Color.black);
+            titleSeparation = BorderFactory.createTitledBorder(blackline, "Watershed settings: ");
+            separationBox.setBorder(titleSeparation);
 
-        doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,65536, 0.1);
-        String spinLabelProminence = "Prominence: ";
-        String spinUnitProminence = "A.U.";
-        Box spinSpot2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
-        separationBox.add(spinSpot2);
+            doubleSpinGaussCellSep = new SpinnerNumberModel(sigmaGaussCellSep, 0.0, 100.0, 1.0);
+            String spinGaussCellSep = "Gaussian sigma: ";
+            String spinGaussCellSepUnit = "px";
+            Box spinnerGaussCellSep = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinGaussCellSep, doubleSpinGaussCellSep, spinGaussCellSepUnit);
+            separationBox.add(spinnerGaussCellSep);
 
-        cellSegBox.add(separationBox);
+            doubleSpinProminenceCellSep = new SpinnerNumberModel(prominenceCellSep, 0.0,65536, 0.1);
+            String spinLabelProminence = "Prominence: ";
+            String spinUnitProminence = "A.U.";
+            Box spinSpot2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinLabelProminence, doubleSpinProminenceCellSep, spinUnitProminence);
+            separationBox.add(spinSpot2);
 
-        // settings for cell filter size
-        Box filterBox = new Box(BoxLayout.Y_AXIS);
-        TitledBorder titleFilter;
-        blackline = BorderFactory.createLineBorder(Color.black);
-        titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
-        filterBox.setBorder(titleFilter);
+            cellSegBox.add(separationBox);
 
-        doubleSpinMinSizeCellFilter = new SpinnerNumberModel(minCellSize,0.0,10000000,10.0);
-        String minSizeLabel = "Minimum size: ";
-        String minUnitLabel = "µm²";
-        Box spinnerNuc4 = PreviewLabeledSpinner.addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSizeCellFilter, minUnitLabel);
-        filterBox.add(spinnerNuc4);
+            // settings for cell filter size
+            Box filterBox = new Box(BoxLayout.Y_AXIS);
+            TitledBorder titleFilter;
+            blackline = BorderFactory.createLineBorder(Color.black);
+            titleFilter = BorderFactory.createTitledBorder(blackline, "Filter:");
+            filterBox.setBorder(titleFilter);
 
-        doubleSpinMaxSizeCellFilter = new SpinnerNumberModel(maxCellSize,0.0,10000000,10.0);
-        String maxSizeLabel = "Maximum size: ";
-        String maxUnitLabel = "µm²";
-        Box spinnerNuc5 = PreviewLabeledSpinner.addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSizeCellFilter, maxUnitLabel);
-        filterBox.add(spinnerNuc5);
+            doubleSpinMinSizeCellFilter = new SpinnerNumberModel(minCellSize,0.0,10000000,10.0);
+            String minSizeLabel = "Minimum size: ";
+            String minUnitLabel = "µm²";
+            Box spinnerNuc4 = PreviewLabeledSpinner.addLabeledSpinnerUnit(minSizeLabel, doubleSpinMinSizeCellFilter, minUnitLabel);
+            filterBox.add(spinnerNuc4);
 
-        doubleSpinLowCircCellFilter = new SpinnerNumberModel(lowCircCellSize,0.0,1.0,0.1);
-        String minCircLabel = "Minimum circularity: ";
-        String minCircUnit = "";
-        Box lowCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCircCellFilter, minCircUnit);
-        filterBox.add(lowCircBox);
+            doubleSpinMaxSizeCellFilter = new SpinnerNumberModel(maxCellSize,0.0,10000000,10.0);
+            String maxSizeLabel = "Maximum size: ";
+            String maxUnitLabel = "µm²";
+            Box spinnerNuc5 = PreviewLabeledSpinner.addLabeledSpinnerUnit(maxSizeLabel, doubleSpinMaxSizeCellFilter, maxUnitLabel);
+            filterBox.add(spinnerNuc5);
 
-        doubleSpinHighCircCellFilter = new SpinnerNumberModel(highCircCelLSize,0.0,1.0,0.1);
-        String highCircLabel = "Maximum circularity: ";
-        String highCircUnit = "";
-        Box highCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCircCellFilter, highCircUnit);
-        filterBox.add(highCircBox);
+            doubleSpinLowCircCellFilter = new SpinnerNumberModel(lowCircCellSize,0.0,1.0,0.1);
+            String minCircLabel = "Minimum circularity: ";
+            String minCircUnit = "";
+            Box lowCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(minCircLabel, doubleSpinLowCircCellFilter, minCircUnit);
+            filterBox.add(lowCircBox);
 
-        checkFilterCellFilter = new JCheckBox("Filter by nuclei?");
-        checkFilterCellFilter.setSelected(false);
-        checkFilterCellFilter.setToolTipText("Only affects visualization");
-        filterBox.add(checkFilterCellFilter);
+            doubleSpinHighCircCellFilter = new SpinnerNumberModel(highCircCelLSize,0.0,1.0,0.1);
+            String highCircLabel = "Maximum circularity: ";
+            String highCircUnit = "";
+            Box highCircBox = PreviewLabeledSpinner.addLabeledSpinnerUnit(highCircLabel, doubleSpinHighCircCellFilter, highCircUnit);
+            filterBox.add(highCircBox);
 
-        cellSegBox.add(filterBox);
+            checkFilterCellFilter = new JCheckBox("Filter by nuclei?");
+            checkFilterCellFilter.setSelected(false);
+            checkFilterCellFilter.setToolTipText("Only affects visualization");
+            filterBox.add(checkFilterCellFilter);
+
+            cellSegBox.add(filterBox);
+
+        } else {
+
+            JLabel externalCellsSegmentationLabel = new JLabel("External Segmentation:");
+            cellSegBox.add(externalCellsSegmentationLabel);
+
+        }
+
         // setup Buttons
         JButton previewButton = new JButton("Preview");
         previewButton.addActionListener(new MyPreviewCellListener());
@@ -410,32 +432,41 @@ public class PreviewGui extends JPanel {
 
     private void setUpOrganellesTab() {
 
-        //box with titled borders
-        Box detectionBox = new Box(BoxLayout.Y_AXIS);
-        TitledBorder titleDetection;
-        blackline = BorderFactory.createLineBorder(Color.black);
-        titleDetection = BorderFactory.createTitledBorder(blackline, "Detect number & position of spots");
-        detectionBox.setBorder(titleDetection);
+        if (useInternalOrganelleSegmentation) {
 
-        // Spinner for some number input
-        doubleSpinnerLoGOragenelle = new SpinnerNumberModel(sigmaLoGOrga, 0.0,50.0, 0.1);
-        String spinLabelSpot1 = "LoG sigma: ";
-        String spinUnitSpot1 = "px";
-        Box spinSpot1 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGOragenelle, spinUnitSpot1);
-        detectionBox.add(spinSpot1);
+            //box with titled borders
+            Box detectionBox = new Box(BoxLayout.Y_AXIS);
+            TitledBorder titleDetection;
+            blackline = BorderFactory.createLineBorder(Color.black);
+            titleDetection = BorderFactory.createTitledBorder(blackline, "Detect number & position of spots");
+            detectionBox.setBorder(titleDetection);
 
-        doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,65536, 0.1);
-        String spinLabelSpot2 = "Prominence: ";
-        String spinUnitSpot2 = "A.U.";
-        Box spinSpot2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
-        detectionBox.add(spinSpot2);
+            // Spinner for some number input
+            doubleSpinnerLoGOragenelle = new SpinnerNumberModel(sigmaLoGOrga, 0.0,50.0, 0.1);
+            String spinLabelSpot1 = "LoG sigma: ";
+            String spinUnitSpot1 = "px";
+            Box spinSpot1 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinLabelSpot1, doubleSpinnerLoGOragenelle, spinUnitSpot1);
+            detectionBox.add(spinSpot1);
 
-        organelleBox.add(detectionBox);
+            doubleSpinnerProminenceOrganelle = new SpinnerNumberModel(prominenceOrga, 0.0,65536, 0.1);
+            String spinLabelSpot2 = "Prominence: ";
+            String spinUnitSpot2 = "A.U.";
+            Box spinSpot2 = PreviewLabeledSpinner.addLabeledSpinnerUnit(spinLabelSpot2, doubleSpinnerProminenceOrganelle, spinUnitSpot2);
+            detectionBox.add(spinSpot2);
 
-        checkFilterOrganelle = new JCheckBox("Filter in nucleus?");
-        checkFilterOrganelle.setToolTipText("Only affects visualization");
-        checkFilterOrganelle.setSelected(false);
-        organelleBox.add(checkFilterOrganelle);
+            organelleBox.add(detectionBox);
+
+            checkFilterOrganelle = new JCheckBox("Filter in nucleus?");
+            checkFilterOrganelle.setToolTipText("Only affects visualization");
+            checkFilterOrganelle.setSelected(false);
+            organelleBox.add(checkFilterOrganelle);
+
+        } else {
+
+            JLabel externalOrganelleSegmentationLabel = new JLabel("External Segmentation:");
+            organelleBox.add(externalOrganelleSegmentationLabel);
+
+        }
 
         // setup Buttons
         JButton previewButton = new JButton("Preview");
@@ -696,17 +727,7 @@ public class PreviewGui extends JPanel {
 
             IJ.log("Starting preview for nuclei segmentation");
 
-            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
-            float nucFilterSize = nucFilterSizeDouble.floatValue();
-            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
-            String nucThreshold = (String) thresholdListBack.getSelectedItem();
-            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
-            int nucErosion= nucErosionDouble.intValue();
-            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
-            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
-            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
-            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
-
+            // settings important for internal and external segmentation
             boolean calibrationSetting = checkCalibration.isSelected();
             Double pxSizeMicronSetting = (Double) doubleSpinnerPixelSize.getValue();
 
@@ -772,35 +793,62 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                        if (useInternalNucleusSegmentation) {
 
-                        visualizer.visualizeNucleiSegments(selectedImage,
-                                previewImage,
-                                nucFilterSize,
-                                nucRollBallRadius,
-                                nucThreshold,
-                                nucErosion,
-                                nucMinSize,
-                                nucMaxSize,
-                                nucLowCirc,
-                                nucHighCirc,
-                                setDisplayRange);
+                            IJ.log("Using internal nucleus segmentation");
 
-                        IJ.showProgress(1);
+                            // internal segmentation specific settings
+                            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+                            float nucFilterSize = nucFilterSizeDouble.floatValue();
+                            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+                            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+                            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+                            int nucErosion= nucErosionDouble.intValue();
+                            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+                            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+                            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+                            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeNucleiSegments(selectedImage,
+                                    previewImage,
+                                    nucFilterSize,
+                                    nucRollBallRadius,
+                                    nucThreshold,
+                                    nucErosion,
+                                    nucMinSize,
+                                    nucMaxSize,
+                                    nucLowCirc,
+                                    nucHighCirc,
+                                    setDisplayRange);
+
+                            IJ.showProgress(1);
+
+                        } else {
+
+                            IJ.log("Using external nucleus segmentation");
+
+                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(selectedImage,
+                                    previewImage,
+                                    setDisplayRange);
+
+                        }
+
 
                     } else {
 
                         IJ.log("Selected file: " + selectedFile);
 
                         // segment background and show for validation
-                        ImagePlus originalImage = previewImage.openWithMultiseriesBF(selectedFile);
+                        ImagePlus newImage = previewImage.openWithMultiseriesBF(selectedFile);
 
                         setDisplayRange = true;
 
                         if (calibrationSetting) {
 
                             Calibration calibration = Image.calibrate(pxSizeMicronSetting);
-                            originalImage.setCalibration(calibration);
+                            newImage.setCalibration(calibration);
                             IJ.log("Metadata will be overwritten.");
                             IJ.log("Pixel size set to: " + pxSizeMicronSetting);
 
@@ -810,21 +858,48 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                        if (useInternalNucleusSegmentation) {
 
-                        visualizer.visualizeNucleiSegments(originalImage,
-                                previewImage,
-                                nucFilterSize,
-                                nucRollBallRadius,
-                                nucThreshold,
-                                nucErosion,
-                                nucMinSize,
-                                nucMaxSize,
-                                nucLowCirc,
-                                nucHighCirc,
-                                setDisplayRange);
+                            IJ.log("Using internal nucleus segmentation");
 
-                        IJ.showProgress(1);
+                            // internal segmentation specific settings
+                            Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
+                            float nucFilterSize = nucFilterSizeDouble.floatValue();
+                            Double nucRollBallRadius = (Double) doubleSpinrollingBallRadiusNuc.getValue();
+                            String nucThreshold = (String) thresholdListBack.getSelectedItem();
+                            Double nucErosionDouble = (Double) doubleSpinErosionNuc.getValue();
+                            int nucErosion= nucErosionDouble.intValue();
+                            Double nucMinSize = (Double) doubleSpinMinSize.getValue();
+                            Double nucMaxSize = (Double) doubleSpinMaxSize.getValue();
+                            Double nucLowCirc = (Double) doubleSpinLowCirc.getValue();
+                            Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
+
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeNucleiSegments(newImage,
+                                    previewImage,
+                                    nucFilterSize,
+                                    nucRollBallRadius,
+                                    nucThreshold,
+                                    nucErosion,
+                                    nucMinSize,
+                                    nucMaxSize,
+                                    nucLowCirc,
+                                    nucHighCirc,
+                                    setDisplayRange);
+
+                            IJ.showProgress(1);
+
+                        } else {
+
+                            IJ.log("Using external nucleus segmentation");
+
+                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(newImage,
+                                    previewImage,
+                                    setDisplayRange);
+
+                        }
+
                     }
 
                 } else {
@@ -1512,6 +1587,57 @@ public class PreviewGui extends JPanel {
             }
 
         }
+    }
+
+    // default PreviewGUI constructor will be loaded when no settings file is present
+    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber, double pixelSize, int getNucleusChannel, int getCytoplasmChannel, int getOrganelleChannel) {
+
+        inputDir = inputDirectory;
+        outputDir = outputDirectory;
+        fileList = filesToProcess;
+        fileFormat = format;
+        channelNumber = getChannelNumber;
+        pxSizeMicron = pixelSize;
+
+        // settings for nucleus settings
+        kernelSizeNuc = 5;
+        rollingBallRadiusNuc = 15;
+        thresholdNuc = "Otsu";
+        erosionNuc = 0;
+        minSizeNuc = 50;
+        maxSizeNuc = 500;
+        lowCircNuc = 0.5;
+        highCircNuc = 1.00;
+
+        // settings for cell area segmentation
+        invertCellImageSetting = false;
+        kernelSizeCellArea = 10;
+        rollingBallRadiusCellArea = 150;
+        manualThresholdCellArea = 700;
+
+        // settings for cell separator
+        sigmaGaussCellSep = 15;
+        prominenceCellSep = 1000;
+
+        // settings for cell filter size
+        minCellSize = 500;
+        maxCellSize = 50000;
+        lowCircCellSize = 0.3;
+        highCircCelLSize = 1.0;
+
+        // settings for organelle detection
+        sigmaLoGOrga = 2;
+        prominenceOrga = 200;
+
+        // image settings
+        calibrationSetting = false;
+        distanceFromMembraneSetting = false;
+
+        nucleusChannel = getNucleusChannel;
+        cytoplasmChannel = getCytoplasmChannel;
+        organelleChannel = getOrganelleChannel;
+        measure = 0;
+
     }
 
     // default PreviewGUI constructor will be loaded when no settings file is present

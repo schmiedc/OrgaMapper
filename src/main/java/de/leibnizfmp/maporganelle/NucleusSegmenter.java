@@ -19,8 +19,15 @@ import ij.process.ImageProcessor;
 
 public class NucleusSegmenter {
 
-    static ImagePlus segmentNuclei(ImagePlus image, float kernelSize, double rollingBallRadius, String threshold, int erosion,
-                            double minSize, double maxSize, double lowCirc, double highCirc ) {
+    static ImagePlus segmentNuclei(ImagePlus image,
+                                   float kernelSize,
+                                   double rollingBallRadius,
+                                   String threshold,
+                                   int erosion,
+                                   double minSize,
+                                   double maxSize,
+                                   double lowCirc,
+                                   double highCirc ) {
 
         // extract calibration and convert size filter from micron to px
         Calibration calibration = image.getCalibration();
