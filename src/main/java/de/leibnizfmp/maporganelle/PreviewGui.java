@@ -811,7 +811,8 @@ public class PreviewGui extends JPanel {
 
                             SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                            visualizer.visualizeNucleiSegments(selectedImage,
+                            visualizer.visualizeNucleiSegments(
+                                    selectedImage,
                                     previewImage,
                                     nucFilterSize,
                                     nucRollBallRadius,
@@ -829,7 +830,8 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(selectedImage,
+                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(
+                                    selectedImage,
                                     previewImage,
                                     setDisplayRange);
 
@@ -876,7 +878,8 @@ public class PreviewGui extends JPanel {
 
                             SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                            visualizer.visualizeNucleiSegments(newImage,
+                            visualizer.visualizeNucleiSegments(
+                                    newImage,
                                     previewImage,
                                     nucFilterSize,
                                     nucRollBallRadius,
@@ -894,7 +897,8 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(newImage,
+                            externalNucleusSegmentationLoader.visualizeExternalSegmentation(
+                                    newImage,
                                     previewImage,
                                     setDisplayRange);
 

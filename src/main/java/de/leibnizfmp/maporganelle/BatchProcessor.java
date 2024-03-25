@@ -134,7 +134,7 @@ public class BatchProcessor {
             // filter cells for size and circularity
             ImagePlus filteredCells = CellFilter.filterByCellSize(
                     backgroundMask,
-                    separatedCells, 
+                    separatedCells,
                     minCellSize,
                     maxCellSize,
                     lowCircCellSize,
@@ -250,56 +250,6 @@ public class BatchProcessor {
 
         IJ.log("== Batch processing finished ==");
         IJ.showProgress(1);
-
-    }
-
-    BatchProcessor( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber) {
-
-        inputDir = inputDirectory;
-        outputDir = outputDirectory;
-
-        fileList = filesToProcess;
-        fileFormat = format;
-        channelNumber = getChannelNumber;
-
-        // image settings
-        nucleusChannel = 1;
-        cytoplasmChannel = 2;
-        organelleChannel = 3;
-        measureChannel = 4;
-        calibrationSetting = false;
-        pxSizeMicron = 0.1567095;
-        distanceFromMembraneSetting = false;
-
-         // settings for nucleus settings
-        invertCellImageSetting = false;
-        kernelSizeNuc = 5;
-        rollingBallRadiusNuc = 50;
-        thresholdNuc = "Otsu";
-        erosionNuc = 2;
-        minSizeNuc = 100;
-        maxSizeNuc = 20000;
-        lowCircNuc = 0.0;
-        highCircNuc = 1.00;
-
-        // settings for cell area segmentation
-        kernelSizeCellArea = 10;
-        rollingBallRadiusCellArea = 50;
-        manualThresholdCellArea = 200;
-
-        // settings for cell separator
-        sigmaGaussCellSep = 15;
-        prominenceCellSep = 500;
-
-        // settings for cell filter size
-        minCellSize = 100;
-        maxCellSize = 150000;
-        lowCircCellSize = 0.0;
-        highCircCelLSize = 1.0;
-
-        // settings for organelle detection
-        sigmaLoGOrga = 2;
-        prominenceOrga = 200;
 
     }
 
