@@ -53,8 +53,8 @@ public class MapOrganelle<T extends RealType<T>>  implements Command {
         ij.command().run(MapOrganelle.class, true);
 
         boolean runTest1 = false;
-        boolean runTest2 = false;
-        boolean runTest3 = true;
+        boolean runTest2 = true;
+        boolean runTest3 = false;
 
         if ( runTest1 || runTest2 || runTest3 ) {
 
