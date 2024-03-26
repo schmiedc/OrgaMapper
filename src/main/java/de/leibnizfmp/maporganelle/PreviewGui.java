@@ -47,9 +47,14 @@ public class PreviewGui extends JPanel {
     private boolean useInternalCellSegmentation = false;
     private boolean useInternalDetection = false;
 
+    // TODO: Pass directories from ExtSegGUI
     private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
     private String extCellSegmentationDirectory = extNucleusSegmentationDirectory;
     private String extDetectionDirectory = extNucleusSegmentationDirectory;
+
+
+
+    // TODO: Construct externalFileName
     private String nucleusInputFile = "HeLa_NucSeg_1.tif";
     private String cellInputFile = "HeLa_CellSeg_1.tif";
     private String organelleInputFile = "HeLa_Detect_1.tif";
@@ -525,7 +530,7 @@ public class PreviewGui extends JPanel {
         checkDistanceFromMembrane.setSelected(distanceFromMembraneSetting);
         boxSettings.add(checkDistanceFromMembrane);
 
-        // here we create a Array list for selecting different numbers for the channels
+        // here we create an Array list for selecting different numbers for the channels
         ArrayList<String> channelString = new ArrayList<>();
         channelString.add( "ignore" );
         channelString.add( "select" );

@@ -77,7 +77,7 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
                     System.out.println(file);
                 }
 
-                ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 1));
+                ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 3));
 
                 IJ.log("Run test 1");
                 PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157, 1, 2, 3);

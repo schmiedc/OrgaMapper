@@ -14,6 +14,13 @@ import java.util.Objects;
 
 public class ExternalSegmentationLoader {
 
+    String createExternalFileName(String baseName, String SegmentationSuffix, String FileEnding){
+
+        // Add segmentationSuffix and return
+        return baseName + "_" + SegmentationSuffix + "." + FileEnding;
+
+    }
+
     ImagePlus createExternalSegmentationMask(String externalSegmentationDirectory,
                                              String FileName,
                                              Calibration calibration) {

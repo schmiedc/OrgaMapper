@@ -70,7 +70,7 @@ public class Image {
     @Deprecated
     ImagePlus openImage(String inputFile) {
 
-        // open a example pHlorin image
+        // open an image
         IJ.log("Opening file: " + inputFile);
         ImagePlus image = IJ.openImage(directory + File.separator + inputFile);
         image.setTitle(inputFile);
