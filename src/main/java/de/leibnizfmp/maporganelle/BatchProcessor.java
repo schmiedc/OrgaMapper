@@ -48,6 +48,7 @@ public class BatchProcessor {
     private final boolean invertCellImageSetting;
     private final boolean useInternalNucleusSegmentation;
     private final boolean useInternalCellSegmentation;
+    private final boolean useInternalDetection;
 
     void processImage() {
 
@@ -183,10 +184,23 @@ public class BatchProcessor {
 
             }
 
-            // TODO: Add useInternalOrganelleSegmentation
-            // lysosome detection
-            ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
-            ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
+            ImagePlus detectionsFiltered;
+
+            // Detection of organelles
+            if (useInternalDetection) {
+
+                // lysosome detection
+                ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
+                detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);
+
+            } else {
+
+                ExternalSegmentationLoader loadDetectionMask = new ExternalSegmentationLoader();
+                detectionsFiltered = loadDetectionMask.createExternalSegmentationMask(
+                        image.getCalibration(),
+                        "HeLa_Detect_1.tif");
+
+            }
 
             // measure background in organelle channel
             double backgroundOrganelle = BackgroundMeasure.measureDetectionBackground(backgroundMask, organelle);
@@ -353,7 +367,8 @@ public class BatchProcessor {
                    double getProminenceOrga,
                    boolean getInvertCellImageSetting,
                    boolean getUseInternalNucleusSegmentation,
-                   boolean getUseInternalCellSegmentation) {
+                   boolean getUseInternalCellSegmentation,
+                   boolean getUseInternalDetection) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -400,8 +415,11 @@ public class BatchProcessor {
         // settings for organelle detection
         sigmaLoGOrga = getSigmaLoGOrga;
         prominenceOrga = getProminenceOrga;
+
+        // settings for external segmentation / detection
         useInternalNucleusSegmentation = getUseInternalNucleusSegmentation;
         useInternalCellSegmentation = getUseInternalCellSegmentation;
+        useInternalDetection = getUseInternalDetection;
 
     }
 
