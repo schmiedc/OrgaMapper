@@ -20,10 +20,10 @@ public class ExternalSegmentationLoader {
     static String nucleusInputFile = "HeLa_NucSeg_1.tif";
     static String cellInputFile = "HeLa_CellSeg_1.tif";
 
-    ImagePlus createExternalNucleusMask(Calibration calibration) {
+    ImagePlus createExternalSegmentationMask(Calibration calibration, String FileName) {
 
         // loads the label image
-        ImagePlus labelImage = IJ.openImage(directory + File.separator + nucleusInputFile);
+        ImagePlus labelImage = IJ.openImage(directory + File.separator + FileName);
 
         ImageProcessor labelImageProcessor = labelImage.getProcessor();
         labelImageProcessor.threshold(1);
@@ -44,12 +44,11 @@ public class ExternalSegmentationLoader {
 
     }
 
+
     void visualizeExternalSegmentation(ImagePlus originalImage,
                                        Image imageObject,
                                        boolean setDisplayRange,
                                        String channelSelector) {
-
-
 
         IJ.log("Starting visualization for external segmentation");
 
@@ -57,7 +56,8 @@ public class ExternalSegmentationLoader {
         // TODO: there is an issue with some floating around ROIs that only vanish after setting this:
         originalImage.setRoi((Roi) null);
 
-        RoiManager roiManager = null;
+        RoiManager roiManager = new RoiManager(false);
+        roiManager.reset();
         
         // Remove any overlays in original image
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
@@ -121,8 +121,8 @@ public class ExternalSegmentationLoader {
      */
     private static RoiManager label2Roi(ImagePlus labelImage) {
 
-        // create new ROI manager and reset it
-        RoiManager manager = new RoiManager();
+        // create new ROI manager
+        RoiManager manager = new RoiManager(false);
         manager.reset();
 
         ImageProcessor labelImageProcessor = labelImage.getProcessor();

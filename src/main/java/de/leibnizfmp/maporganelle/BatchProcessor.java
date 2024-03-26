@@ -47,6 +47,7 @@ public class BatchProcessor {
     private final double prominenceOrga;
     private final boolean invertCellImageSetting;
     private final boolean useInternalNucleusSegmentation;
+    private final boolean useInternalCellSegmentation;
 
     void processImage() {
 
@@ -125,42 +126,62 @@ public class BatchProcessor {
 
                 ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
-                nucleusMask = externalSegmentation.createExternalNucleusMask(
-                        image.getCalibration());
+                nucleusMask = externalSegmentation.createExternalSegmentationMask(
+                        image.getCalibration(),
+                        "HeLa_NucSeg_1.tif");
 
             }
 
-            // TODO: Add useInternalCellSegmentation
-            // get cell segmentations
-            ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(
-                    cytoplasm,
-                    kernelSizeCellArea,
-                    rollingBallRadiusCellArea,
-                    manualThresholdCellArea,
-                    invertCellImageSetting);
-
-            // get separated cells
-            ImagePlus separatedCells = CellSeparator.separateCells(
-                    nucleus,
-                    cytoplasm,
-                    sigmaGaussCellSep,
-                    prominenceCellSep,
-                    invertCellImageSetting);
-
-            // filter cells for size and circularity
-            ImagePlus filteredCells = CellFilter.filterByCellSize(
-                    backgroundMask,
-                    separatedCells,
-                    minCellSize,
-                    maxCellSize,
-                    lowCircCellSize,
-                    highCircCelLSize);
-
+            // get cell ROI manager
             RoiManager manager;
+            ImagePlus backgroundMask;
 
-            manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);
+            if (useInternalCellSegmentation) {
 
-            IJ.log("Found " + manager.getCount() + " cell(s)");
+                IJ.log("Using internal segmentation");
+
+                // get cell segmentations
+                backgroundMask = CellAreaSegmenter.segmentCellArea(
+                        cytoplasm,
+                        kernelSizeCellArea,
+                        rollingBallRadiusCellArea,
+                        manualThresholdCellArea,
+                        invertCellImageSetting);
+
+                // get separated cells
+                ImagePlus separatedCells = CellSeparator.separateCells(
+                        nucleus,
+                        cytoplasm,
+                        sigmaGaussCellSep,
+                        prominenceCellSep,
+                        invertCellImageSetting);
+
+                // filter cells for size and circularity
+                ImagePlus filteredCells = CellFilter.filterByCellSize(
+                        backgroundMask,
+                        separatedCells,
+                        minCellSize,
+                        maxCellSize,
+                        lowCircCellSize,
+                        highCircCelLSize);
+
+                manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);
+
+                IJ.log("Found " + manager.getCount() + " cell(s)");
+
+            } else {
+
+                ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                manager = externalSegmentation.createExternalCellROIs();
+
+                // IMPORTANT: The external cell segmentation is used to define background area.
+                // This can be a useful approximation of the background. But also might not be!!
+                backgroundMask = externalSegmentation.createExternalSegmentationMask(
+                        image.getCalibration(),
+                        "HeLa_CellSeg_1.tif");
+
+            }
 
             // TODO: Add useInternalOrganelleSegmentation
             // lysosome detection
@@ -169,8 +190,8 @@ public class BatchProcessor {
 
             // measure background in organelle channel
             double backgroundOrganelle = BackgroundMeasure.measureDetectionBackground(backgroundMask, organelle);
-
             double backgroundMeasure = -1;
+
             ArrayList<ArrayList<ArrayList<String>>> resultLists;
 
             // performing measurements in measurement channel if selected
@@ -331,7 +352,8 @@ public class BatchProcessor {
                    double getSigmaLoGOrga,
                    double getProminenceOrga,
                    boolean getInvertCellImageSetting,
-                   boolean getUseInternalNucleusSegmentation) {
+                   boolean getUseInternalNucleusSegmentation,
+                   boolean getUseInternalCellSegmentation) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -379,8 +401,7 @@ public class BatchProcessor {
         sigmaLoGOrga = getSigmaLoGOrga;
         prominenceOrga = getProminenceOrga;
         useInternalNucleusSegmentation = getUseInternalNucleusSegmentation;
-
-
+        useInternalCellSegmentation = getUseInternalCellSegmentation;
 
     }
 

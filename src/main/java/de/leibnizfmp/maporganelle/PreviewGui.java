@@ -420,6 +420,21 @@ public class PreviewGui extends JPanel {
             JLabel externalCellsSegmentationLabel = new JLabel("External Segmentation:");
             cellSegBox.add(externalCellsSegmentationLabel);
 
+            JLabel externalCellsSegmentationLabel2 = new JLabel(" ");
+            cellSegBox.add(externalCellsSegmentationLabel2);
+
+            JLabel externalCellsSegmentationLabel3 = new JLabel("Important:");
+            cellSegBox.add(externalCellsSegmentationLabel3);
+
+            JLabel externalCellsSegmentationLabel4 = new JLabel("Organelle background is measured");
+            cellSegBox.add(externalCellsSegmentationLabel4);
+
+            JLabel externalCellsSegmentationLabel5 = new JLabel("outside of cell segmentations");
+            cellSegBox.add(externalCellsSegmentationLabel5);
+
+            JLabel externalCellsSegmentationLabel6 = new JLabel(" ");
+            cellSegBox.add(externalCellsSegmentationLabel6);
+
         }
 
         // setup Buttons
@@ -591,19 +606,53 @@ public class PreviewGui extends JPanel {
 
         IJ.log( "saving settings" );
 
-        Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
-        float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
-        Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
-        Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
-        int cellAreaThresholdFloat = cellAreaThreshold.intValue();
-        Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
-        Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+        // settings for cell segmentation
+        boolean invertCellImageSetting;
+        Double cellAreaFilterSize;
+        float cellAreaFilterSizeFloat;
+        Double cellAreaRollBall;
+        Double cellAreaThreshold;
+        int cellAreaThresholdFloat;
+        Double cellSepGaussCellSep;
+        Double cellSepProminence;
+        Double cellFilterMinSize;
+        Double cellFilterMaxSize;
+        Double cellFilterLowCirc;
+        Double cellFilterHighCirc;
 
-        boolean invertCellImageSetting = checkInvertCellImage.isSelected();
-        Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
-        Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
-        Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
-        Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+        if (useInternalCellSegmentation) {
+
+            invertCellImageSetting = checkInvertCellImage.isSelected();
+            cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+            cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+            cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+            cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+            cellAreaThresholdFloat = cellAreaThreshold.intValue();
+            cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+            cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+            cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+            cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+            cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+            cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+
+        } else {
+
+            invertCellImageSetting = false;
+            cellAreaFilterSize = 15.0;
+            cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+            cellAreaRollBall = 150.0;
+            cellAreaThreshold = 700.0;
+            cellAreaThresholdFloat = cellAreaThreshold.intValue();
+
+            cellSepGaussCellSep = 15.0;
+            cellSepProminence =  1000.0;
+            cellFilterMinSize = 500.0;
+            cellFilterMaxSize = 50000.0;
+            cellFilterLowCirc = 0.3;
+            cellFilterHighCirc = 1.0;
+
+        }
 
         Double nucFilterSizeDouble = (Double) doubleSpinKernelSizeNuc.getValue();
         float nucFilterSize = nucFilterSizeDouble.floatValue();
@@ -1029,8 +1078,9 @@ public class PreviewGui extends JPanel {
 
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalNucleusMask(
-                                    selectedImage.getCalibration());
+                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
+                                    selectedImage.getCalibration(),
+                                    "HeLa_NucSeg_1.tif");
 
                         }
 
@@ -1138,8 +1188,9 @@ public class PreviewGui extends JPanel {
 
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalNucleusMask(
-                                    newImage.getCalibration());
+                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
+                                    newImage.getCalibration(),
+                                    "HeLa_NucSeg_1.tif");
 
                         }
 
@@ -1306,8 +1357,9 @@ public class PreviewGui extends JPanel {
 
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalNucleusMask(
-                                    selectedImage.getCalibration());
+                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
+                                    selectedImage.getCalibration(),
+                                    "HeLa_NucSeg_1.tif");
 
                         }
 
@@ -1378,13 +1430,13 @@ public class PreviewGui extends JPanel {
                                     nucLowCirc ,
                                     nucHighCirc );
 
-
                         } else {
 
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalNucleusMask(
-                                    newImage.getCalibration());
+                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
+                                    newImage.getCalibration(),
+                                    "HeLa_NucSeg_1.tif");
 
                         }
 
@@ -1447,19 +1499,52 @@ public class PreviewGui extends JPanel {
             Double nucHighCirc = (Double) doubleSpinHighCirc.getValue();
 
             // settings for cell segmentation
-            boolean invertCellImageSetting = checkInvertCellImage.isSelected();
-            Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
-            float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
-            Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
-            Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
-            int cellAreaThresholdFloat = cellAreaThreshold.intValue();
-            Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
-            Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+            boolean invertCellImageSetting;
+            Double cellAreaFilterSize;
+            float cellAreaFilterSizeFloat;
+            Double cellAreaRollBall;
+            Double cellAreaThreshold;
+            int cellAreaThresholdFloat;
+            Double cellSepGaussCellSep;
+            Double cellSepProminence;
+            Double cellFilterMinSize;
+            Double cellFilterMaxSize;
+            Double cellFilterLowCirc;
+            Double cellFilterHighCirc;
 
-            Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
-            Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
-            Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
-            Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+            if (useInternalCellSegmentation) {
+
+                invertCellImageSetting = checkInvertCellImage.isSelected();
+                cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+                cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+                cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+                cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+                cellAreaThresholdFloat = cellAreaThreshold.intValue();
+                cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+                cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+
+                cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+                cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+                cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+                cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+
+            } else {
+
+                invertCellImageSetting = false;
+                cellAreaFilterSize = 15.0;
+                cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+                cellAreaRollBall = 150.0;
+                cellAreaThreshold = 700.0;
+                cellAreaThresholdFloat = cellAreaThreshold.intValue();
+
+                cellSepGaussCellSep = 15.0;
+                cellSepProminence =  1000.0;
+                cellFilterMinSize = 500.0;
+                cellFilterMaxSize = 50000.0;
+                cellFilterLowCirc = 0.3;
+                cellFilterHighCirc = 1.0;
+
+            }
 
             // settings for organelle detection
             Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
@@ -1516,7 +1601,8 @@ public class PreviewGui extends JPanel {
                         organelleLoGSigma,
                         organelleProminence,
                         invertCellImageSetting,
-                        useInternalNucleusSegmentation);
+                        useInternalNucleusSegmentation,
+                        useInternalCellSegmentation );
 
                 processing.processImage();
 
