@@ -318,6 +318,9 @@ public class PreviewGui extends JPanel {
             JLabel externalNucleusSegmentationLabel = new JLabel("External Segmentation:");
             nucSegBox.add(externalNucleusSegmentationLabel);
 
+            JLabel externalNucleusSegmentationLabel2 = new JLabel(" ");
+            nucSegBox.add(externalNucleusSegmentationLabel2);
+
         }
 
         // setup Buttons
@@ -485,8 +488,11 @@ public class PreviewGui extends JPanel {
 
         } else {
 
-            JLabel externalOrganelleSegmentationLabel = new JLabel("External Segmentation:");
+            JLabel externalOrganelleSegmentationLabel = new JLabel("External Detection:");
             organelleBox.add(externalOrganelleSegmentationLabel);
+
+            JLabel externalOrganelleSegmentationLabel2 = new JLabel(" ");
+            organelleBox.add(externalOrganelleSegmentationLabel2);
 
         }
 
