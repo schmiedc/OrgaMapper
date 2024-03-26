@@ -44,7 +44,7 @@ public class PreviewGui extends JPanel {
 
     // external segmentation settings
     private boolean useInternalNucleusSegmentation = false;
-    private boolean useInternalCellSegmentation = true;
+    private boolean useInternalCellSegmentation = false;
     private boolean useInternalDetection = false;
 
     private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
@@ -1126,10 +1126,12 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    null, "HeLa_NucSeg_1.tif", selectedImage.getCalibration()
+                            nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
+                                    extNucleusSegmentationDirectory,
+                                    nucleusInputFile,
+                                    selectedImage.getCalibration()
                             );
 
                         }
@@ -1236,10 +1238,12 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    null, "HeLa_NucSeg_1.tif", newImage.getCalibration()
+                            nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
+                                    extNucleusSegmentationDirectory,
+                                    nucleusInputFile,
+                                    newImage.getCalibration()
                             );
 
                         }
@@ -1405,10 +1409,12 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    null, "HeLa_NucSeg_1.tif", selectedImage.getCalibration()
+                            nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
+                                    extNucleusSegmentationDirectory ,
+                                    nucleusInputFile,
+                                    selectedImage.getCalibration()
                             );
 
                         }
@@ -1437,6 +1443,8 @@ public class PreviewGui extends JPanel {
                             ExternalSegmentationLoader visualizeExternalDetection = new ExternalSegmentationLoader();
 
                             visualizeExternalDetection.visualizeExternalSpots(
+                                    extDetectionDirectory,
+                                    organelleInputFile,
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange);
@@ -1527,6 +1535,8 @@ public class PreviewGui extends JPanel {
                             ExternalSegmentationLoader visualizeExternalDetection = new ExternalSegmentationLoader();
 
                             visualizeExternalDetection.visualizeExternalSpots(
+                                    extDetectionDirectory,
+                                    organelleInputFile,
                                     newImage,
                                     previewImage,
                                     setDisplayRange);

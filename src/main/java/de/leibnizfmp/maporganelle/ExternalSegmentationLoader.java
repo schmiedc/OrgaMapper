@@ -19,7 +19,9 @@ public class ExternalSegmentationLoader {
     static String cellInputFile = "HeLa_CellSeg_1.tif";
     static String organelleInputFile = "HeLa_Detect_1.tif";
 
-    ImagePlus createExternalSegmentationMask(String externalSegmentationDirectory, String FileName, Calibration calibration) {
+    ImagePlus createExternalSegmentationMask(String externalSegmentationDirectory,
+                                             String FileName,
+                                             Calibration calibration) {
 
         // loads the label image
         ImagePlus labelImage = IJ.openImage(externalSegmentationDirectory + File.separator + FileName);
@@ -42,7 +44,9 @@ public class ExternalSegmentationLoader {
         return roiManager;
 
     }
-    void visualizeExternalSpots(ImagePlus originalImage,
+    void visualizeExternalSpots(String externalDetectionDirectory,
+                                String externalDetectionFileName,
+                                ImagePlus originalImage,
                                 Image imageObject,
                                 boolean setDisplayRange) {
 
@@ -53,7 +57,7 @@ public class ExternalSegmentationLoader {
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus organelle = imp_channels[imageObject.organelle - 1];
 
-        ImagePlus labelImage = IJ.openImage(directory + File.separator + organelleInputFile);
+        ImagePlus labelImage = IJ.openImage(externalDetectionDirectory + File.separator + externalDetectionFileName);
 
         // get detections as polygons and put on image as roi
         MaximumFinder maxima = new MaximumFinder();
