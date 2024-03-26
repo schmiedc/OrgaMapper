@@ -2,12 +2,10 @@ package de.leibnizfmp.maporganelle;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.gui.Overlay;
-import ij.gui.PolygonRoi;
-import ij.gui.Roi;
-import ij.gui.Wand;
+import ij.gui.*;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
+import ij.plugin.filter.MaximumFinder;
 import ij.plugin.frame.RoiManager;
 import ij.process.ImageProcessor;
 
@@ -19,6 +17,7 @@ public class ExternalSegmentationLoader {
     static String directory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
     static String nucleusInputFile = "HeLa_NucSeg_1.tif";
     static String cellInputFile = "HeLa_CellSeg_1.tif";
+    static String organelleInputFile = "HeLa_Detect_1.tif";
 
     ImagePlus createExternalSegmentationMask(Calibration calibration, String FileName) {
 
@@ -43,7 +42,43 @@ public class ExternalSegmentationLoader {
         return roiManager;
 
     }
+    void visualizeExternalSpots(ImagePlus originalImage,
+                                Image imageObject,
+                                boolean setDisplayRange) {
 
+        originalImage.setOverlay(null);
+        // TODO: there is an issue with some floating around ROIs that only vanish after setting this:
+        originalImage.setRoi((Roi) null);
+
+        ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
+        ImagePlus organelle = imp_channels[imageObject.organelle - 1];
+
+        ImagePlus labelImage = IJ.openImage(directory + File.separator + organelleInputFile);
+
+        // get detections as polygons and put on image as roi
+        MaximumFinder maxima = new MaximumFinder();
+        ImageProcessor getMaxima = labelImage.getProcessor().convertToByteProcessor();
+        java.awt.Polygon detections = maxima.getMaxima(getMaxima, 1, false);
+        PointRoi roi = new PointRoi(detections);
+
+        originalImage.setC( imageObject.organelle );
+        originalImage.setRoi(roi);
+        originalImage.show();
+
+        if (setDisplayRange) {
+
+            double rangeMin = originalImage.getDisplayRangeMin();
+            double newLower = rangeMin * 1.75;
+            double rangeMax = originalImage.getDisplayRangeMax();
+            double newUpper = (rangeMax / 2);
+
+            originalImage.setDisplayRange(newLower, newUpper);
+
+        }
+
+        IJ.log("Organelle visualization done: " + detections.npoints + " detection(s)");
+
+    }
 
     void visualizeExternalSegmentation(ImagePlus originalImage,
                                        Image imageObject,

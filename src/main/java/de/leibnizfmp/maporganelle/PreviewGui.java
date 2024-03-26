@@ -44,8 +44,8 @@ public class PreviewGui extends JPanel {
 
     // Settings for GUI
     private boolean useInternalNucleusSegmentation = true;
-    private boolean useInternalCellSegmentation = false;
-    private boolean useInternalOrganelleSegmentation = true;
+    private boolean useInternalCellSegmentation = true;
+    private boolean useInternalOrganelleSegmentation = false;
 
     // list of files
     private JList list;
@@ -1363,22 +1363,35 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
-                        Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
-                        boolean organellteFilterCheck = checkFilterOrganelle.isSelected();
+                        if (useInternalOrganelleSegmentation) {
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                            Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+                            Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+                            boolean organelleFilterCheck = checkFilterOrganelle.isSelected();
 
-                        visualizer.visualizeSpots(
-                                selectedImage,
-                                previewImage,
-                                nucleiMask,
-                                organelleLoGSigma,
-                                organelleProminence,
-                                organellteFilterCheck,
-                                setDisplayRange);
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        IJ.showProgress(1);
+                            visualizer.visualizeSpots(
+                                    selectedImage,
+                                    previewImage,
+                                    nucleiMask,
+                                    organelleLoGSigma,
+                                    organelleProminence,
+                                    organelleFilterCheck,
+                                    setDisplayRange);
+
+                            IJ.showProgress(1);
+
+                        } else {
+
+                            ExternalSegmentationLoader visualizeExternalDetection = new ExternalSegmentationLoader();
+
+                            visualizeExternalDetection.visualizeExternalSpots(
+                                    selectedImage,
+                                    previewImage,
+                                    setDisplayRange);
+
+                        }
 
                     } else {
 
@@ -1440,22 +1453,35 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
-                        Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
-                        boolean organellteFilterCheck = checkFilterOrganelle.isSelected();
+                        if (useInternalOrganelleSegmentation) {
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                            Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
+                            Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
+                            boolean organelleFilterCheck = checkFilterOrganelle.isSelected();
 
-                        visualizer.visualizeSpots(
-                                newImage,
-                                previewImage,
-                                nucleiMask,
-                                organelleLoGSigma,
-                                organelleProminence,
-                                organellteFilterCheck,
-                                setDisplayRange);
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        IJ.showProgress(1);
+                            visualizer.visualizeSpots(
+                                    newImage,
+                                    previewImage,
+                                    nucleiMask,
+                                    organelleLoGSigma,
+                                    organelleProminence,
+                                    organelleFilterCheck,
+                                    setDisplayRange);
+
+                            IJ.showProgress(1);
+
+                        } else {
+
+                            ExternalSegmentationLoader visualizeExternalDetection = new ExternalSegmentationLoader();
+
+                            visualizeExternalDetection.visualizeExternalSpots(
+                                    newImage,
+                                    previewImage,
+                                    setDisplayRange);
+
+                        }
 
                     }
 
