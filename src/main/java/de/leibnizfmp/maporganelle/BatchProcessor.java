@@ -133,11 +133,11 @@ public class BatchProcessor {
 
             } else {
 
-                ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                nucleusMask = externalSegmentation.createExternalSegmentationMask(
-                        image.getCalibration(),
-                        "HeLa_NucSeg_1.tif");
+                nucleusMask = externalNucleusSegmentation.createExternalSegmentationMask(
+                        extNucleusSegmentationDirectory, externalNucleusInputFile, image.getCalibration()
+                );
 
             }
 
@@ -180,15 +180,15 @@ public class BatchProcessor {
 
             } else {
 
-                ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                ExternalSegmentationLoader externalCellSegmentation = new ExternalSegmentationLoader();
 
-                manager = externalSegmentation.createExternalCellROIs(extCellSegmentationDirectory, externalCellInputFile);
+                manager = externalCellSegmentation.createExternalCellROIs(extCellSegmentationDirectory, externalCellInputFile);
 
                 // IMPORTANT: The external cell segmentation is used to define background area.
                 // This can be a useful approximation of the background. But also might not be!!
-                backgroundMask = externalSegmentation.createExternalSegmentationMask(
-                        image.getCalibration(),
-                        "HeLa_CellSeg_1.tif");
+                backgroundMask = externalCellSegmentation.createExternalSegmentationMask(
+                        extCellSegmentationDirectory, externalCellInputFile, image.getCalibration()
+                );
 
             }
 
@@ -205,8 +205,8 @@ public class BatchProcessor {
 
                 ExternalSegmentationLoader loadDetectionMask = new ExternalSegmentationLoader();
                 detectionsFiltered = loadDetectionMask.createExternalSegmentationMask(
-                        image.getCalibration(),
-                        "HeLa_Detect_1.tif");
+                        extDetectionDirectory, externalOrganelleInputFile, image.getCalibration()
+                );
 
             }
 

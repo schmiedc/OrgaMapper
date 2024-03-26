@@ -19,10 +19,10 @@ public class ExternalSegmentationLoader {
     static String cellInputFile = "HeLa_CellSeg_1.tif";
     static String organelleInputFile = "HeLa_Detect_1.tif";
 
-    ImagePlus createExternalSegmentationMask(Calibration calibration, String FileName) {
+    ImagePlus createExternalSegmentationMask(String externalSegmentationDirectory, String FileName, Calibration calibration) {
 
         // loads the label image
-        ImagePlus labelImage = IJ.openImage(directory + File.separator + FileName);
+        ImagePlus labelImage = IJ.openImage(externalSegmentationDirectory + File.separator + FileName);
 
         ImageProcessor labelImageProcessor = labelImage.getProcessor();
         labelImageProcessor.threshold(1);

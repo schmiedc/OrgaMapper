@@ -1129,8 +1129,8 @@ public class PreviewGui extends JPanel {
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
                             nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    selectedImage.getCalibration(),
-                                    "HeLa_NucSeg_1.tif");
+                                    null, "HeLa_NucSeg_1.tif", selectedImage.getCalibration()
+                            );
 
                         }
 
@@ -1239,8 +1239,8 @@ public class PreviewGui extends JPanel {
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
                             nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    newImage.getCalibration(),
-                                    "HeLa_NucSeg_1.tif");
+                                    null, "HeLa_NucSeg_1.tif", newImage.getCalibration()
+                            );
 
                         }
 
@@ -1408,8 +1408,8 @@ public class PreviewGui extends JPanel {
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
                             nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    selectedImage.getCalibration(),
-                                    "HeLa_NucSeg_1.tif");
+                                    null, "HeLa_NucSeg_1.tif", selectedImage.getCalibration()
+                            );
 
                         }
 
@@ -1498,8 +1498,8 @@ public class PreviewGui extends JPanel {
                             ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
                             nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    newImage.getCalibration(),
-                                    "HeLa_NucSeg_1.tif");
+                                    null, "HeLa_NucSeg_1.tif", newImage.getCalibration()
+                            );
 
                         }
 
