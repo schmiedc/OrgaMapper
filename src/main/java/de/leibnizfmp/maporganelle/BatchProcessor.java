@@ -46,9 +46,17 @@ public class BatchProcessor {
     private final double sigmaLoGOrga;
     private final double prominenceOrga;
     private final boolean invertCellImageSetting;
+
+    // settings for external segmentation
     private final boolean useInternalNucleusSegmentation;
     private final boolean useInternalCellSegmentation;
     private final boolean useInternalDetection;
+    private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
+    private String extCellSegmentationDirectory = extNucleusSegmentationDirectory;
+    private String extDetectionDirectory = extNucleusSegmentationDirectory;
+    private String externalNucleusInputFile = "HeLa_NucSeg_1.tif";
+    private String externalCellInputFile = "HeLa_CellSeg_1.tif";
+    private String externalOrganelleInputFile = "HeLa_Detect_1.tif";
 
     void processImage() {
 
@@ -174,7 +182,7 @@ public class BatchProcessor {
 
                 ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
 
-                manager = externalSegmentation.createExternalCellROIs();
+                manager = externalSegmentation.createExternalCellROIs(extCellSegmentationDirectory, externalCellInputFile);
 
                 // IMPORTANT: The external cell segmentation is used to define background area.
                 // This can be a useful approximation of the background. But also might not be!!

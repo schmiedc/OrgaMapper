@@ -34,9 +34,9 @@ public class ExternalSegmentationLoader {
         return mask;
     }
 
-    RoiManager createExternalCellROIs() {
+    RoiManager createExternalCellROIs(String externalCellSegmentationDirectory, String FileName) {
 
-        ImagePlus labelImage = IJ.openImage(directory + File.separator + cellInputFile);
+        ImagePlus labelImage = IJ.openImage(externalCellSegmentationDirectory + File.separator + FileName);
         RoiManager roiManager = label2Roi(labelImage);
 
         return roiManager;

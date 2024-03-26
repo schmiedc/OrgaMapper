@@ -42,10 +42,18 @@ public class PreviewGui extends JPanel {
     private final String outputDir;
     private final ArrayList<String> fileList;
 
-    // Settings for GUI
+    // external segmentation settings
     private boolean useInternalNucleusSegmentation = false;
     private boolean useInternalCellSegmentation = true;
-    private boolean useInternalOrganelleSegmentation = false;
+    private boolean useInternalDetection = false;
+
+    private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
+    private String extCellSegmentationDirectory = extNucleusSegmentationDirectory;
+    private String extDetectionDirectory = extNucleusSegmentationDirectory;
+    private String nucleusInputFile = "HeLa_NucSeg_1.tif";
+    private String cellInputFile = "HeLa_CellSeg_1.tif";
+    private String organelleInputFile = "HeLa_Detect_1.tif";
+
 
     // list of files
     private JList list;
@@ -446,7 +454,7 @@ public class PreviewGui extends JPanel {
 
     private void setUpOrganellesTab() {
 
-        if (useInternalOrganelleSegmentation) {
+        if (useInternalDetection) {
 
             //box with titled borders
             Box detectionBox = new Box(BoxLayout.Y_AXIS);
@@ -698,7 +706,7 @@ public class PreviewGui extends JPanel {
         Double organelleLoGSigma;
         Double organelleProminence;
 
-        if (useInternalOrganelleSegmentation) {
+        if (useInternalDetection) {
 
             organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
             organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
@@ -1405,7 +1413,7 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        if (useInternalOrganelleSegmentation) {
+                        if (useInternalDetection) {
 
                             Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
                             Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
@@ -1495,7 +1503,7 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        if (useInternalOrganelleSegmentation) {
+                        if (useInternalDetection) {
 
                             Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
                             Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
@@ -1646,7 +1654,7 @@ public class PreviewGui extends JPanel {
             Double organelleLoGSigma;
             Double organelleProminence;
 
-            if (useInternalOrganelleSegmentation) {
+            if (useInternalDetection) {
 
                 organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
                 organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
