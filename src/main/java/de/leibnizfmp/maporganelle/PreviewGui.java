@@ -55,9 +55,9 @@ public class PreviewGui extends JPanel {
 
 
     // TODO: Construct externalFileName
-    private String nucleusInputFile = "HeLa_NucSeg_1.tif";
-    private String cellInputFile = "HeLa_CellSeg_1.tif";
-    private String organelleInputFile = "HeLa_Detect_1.tif";
+    private String nucleusInputFile = "HeLa_1_NucSeg.tif";
+    private String cellInputFile = "HeLa_1_CellSeg.tif";
+    private String organelleInputFile = "HeLa_1_Detect.tif";
 
 
     // list of files
@@ -1522,10 +1522,12 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                            nucleiMask = externalSegmentation.createExternalSegmentationMask(
-                                    null, "HeLa_NucSeg_1.tif", newImage.getCalibration()
+                            nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
+                                    extNucleusSegmentationDirectory,
+                                    nucleusInputFile,
+                                    newImage.getCalibration()
                             );
 
                         }

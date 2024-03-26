@@ -54,9 +54,9 @@ public class BatchProcessor {
     private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
     private String extCellSegmentationDirectory = extNucleusSegmentationDirectory;
     private String extDetectionDirectory = extNucleusSegmentationDirectory;
-    private String externalNucleusInputFile = "HeLa_NucSeg_1.tif";
-    private String externalCellInputFile = "HeLa_CellSeg_1.tif";
-    private String externalOrganelleInputFile = "HeLa_Detect_1.tif";
+    private String externalNucleusInputFile = "HeLa_1_NucSeg.tif";
+    private String externalCellInputFile = "HeLa_1_CellSeg.tif";
+    private String externalOrganelleInputFile = "HeLa_1_Detect.tif";
 
     void processImage() {
 
