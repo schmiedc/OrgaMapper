@@ -928,9 +928,11 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                            externalSegmentation.visualizeExternalSegmentation(
+                            externalNucleusSegmentation.visualizeExternalSegmentation(
+                                    extNucleusSegmentationDirectory,
+                                    nucleusInputFile,
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange,
@@ -998,9 +1000,11 @@ public class PreviewGui extends JPanel {
 
                             IJ.log("Using external nucleus segmentation");
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
-                            externalSegmentation.visualizeExternalSegmentation(
+                            externalNucleusSegmentation.visualizeExternalSegmentation(
+                                    extNucleusSegmentationDirectory,
+                                    nucleusInputFile,
                                     newImage,
                                     previewImage,
                                     setDisplayRange,
@@ -1175,9 +1179,11 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalCellSegmentation = new ExternalSegmentationLoader();
 
-                            externalSegmentation.visualizeExternalSegmentation(
+                            externalCellSegmentation.visualizeExternalSegmentation(
+                                    extCellSegmentationDirectory,
+                                    cellInputFile,
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange,
@@ -1286,9 +1292,11 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
-                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+                            ExternalSegmentationLoader externalCellSegmentation = new ExternalSegmentationLoader();
 
-                            externalSegmentation.visualizeExternalSegmentation(
+                            externalCellSegmentation.visualizeExternalSegmentation(
+                                    extCellSegmentationDirectory,
+                                    cellInputFile,
                                     newImage,
                                     previewImage,
                                     setDisplayRange,

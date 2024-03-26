@@ -14,11 +14,6 @@ import java.util.Objects;
 
 public class ExternalSegmentationLoader {
 
-    static String directory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
-    static String nucleusInputFile = "HeLa_NucSeg_1.tif";
-    static String cellInputFile = "HeLa_CellSeg_1.tif";
-    static String organelleInputFile = "HeLa_Detect_1.tif";
-
     ImagePlus createExternalSegmentationMask(String externalSegmentationDirectory,
                                              String FileName,
                                              Calibration calibration) {
@@ -84,7 +79,8 @@ public class ExternalSegmentationLoader {
 
     }
 
-    void visualizeExternalSegmentation(ImagePlus originalImage,
+    void visualizeExternalSegmentation(String externalSegmentationDirectory,
+                                       String externalSegmentationFileName, ImagePlus originalImage,
                                        Image imageObject,
                                        boolean setDisplayRange,
                                        String channelSelector) {
@@ -107,9 +103,8 @@ public class ExternalSegmentationLoader {
 
         if (Objects.equals(channelSelector, "nucleus")) {
 
-            // TODO: need to be get user defined
             // loads the nucleus label image
-            ImagePlus labelImage = IJ.openImage(directory + File.separator + nucleusInputFile);
+            ImagePlus labelImage = IJ.openImage(externalSegmentationDirectory + File.separator + externalSegmentationFileName);
             roiManager = label2Roi(labelImage);
 
             originalImage.setC( imageObject.nucleus);
@@ -117,9 +112,8 @@ public class ExternalSegmentationLoader {
 
         } else if (Objects.equals(channelSelector, "cytoplasm")) {
 
-            // TODO: need to be get user defined
             // loads the cell label image
-            ImagePlus labelImage = IJ.openImage(directory + File.separator + cellInputFile);
+            ImagePlus labelImage = IJ.openImage(externalSegmentationDirectory + File.separator + externalSegmentationFileName);
             roiManager = label2Roi(labelImage);
 
             originalImage.setC( imageObject.cytoplasm );
