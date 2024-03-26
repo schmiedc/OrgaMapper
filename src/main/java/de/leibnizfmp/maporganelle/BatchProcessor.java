@@ -108,7 +108,6 @@ public class BatchProcessor {
             // get nucleus masks
             ImagePlus nucleusMask;
 
-            // TODO: add use useInternalNucleusSegmentation
             if (useInternalNucleusSegmentation) {
 
                 nucleusMask = NucleusSegmenter.segmentNuclei(
@@ -131,7 +130,7 @@ public class BatchProcessor {
 
             }
 
-
+            // TODO: Add useInternalCellSegmentation
             // get cell segmentations
             ImagePlus backgroundMask = CellAreaSegmenter.segmentCellArea(
                     cytoplasm,
@@ -163,6 +162,7 @@ public class BatchProcessor {
 
             IJ.log("Found " + manager.getCount() + " cell(s)");
 
+            // TODO: Add useInternalOrganelleSegmentation
             // lysosome detection
             ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
             ImagePlus detectionsFiltered = DetectionFilter.filterByNuclei(nucleusMask, detections);

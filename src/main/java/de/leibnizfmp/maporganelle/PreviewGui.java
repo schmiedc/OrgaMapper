@@ -43,11 +43,9 @@ public class PreviewGui extends JPanel {
     private final ArrayList<String> fileList;
 
     // Settings for GUI
-    private boolean useInternalNucleusSegmentation = false;
-    private boolean useInternalCellSegmentation = true;
+    private boolean useInternalNucleusSegmentation = true;
+    private boolean useInternalCellSegmentation = false;
     private boolean useInternalOrganelleSegmentation = true;
-
-    //TODO: need parameters for external segmentation
 
     // list of files
     private JList list;
@@ -836,7 +834,8 @@ public class PreviewGui extends JPanel {
                             externalSegmentation.visualizeExternalSegmentation(
                                     selectedImage,
                                     previewImage,
-                                    setDisplayRange);
+                                    setDisplayRange,
+                                    "nucleus");
 
                         }
 
@@ -905,7 +904,8 @@ public class PreviewGui extends JPanel {
                             externalSegmentation.visualizeExternalSegmentation(
                                     newImage,
                                     previewImage,
-                                    setDisplayRange);
+                                    setDisplayRange,
+                                    "nucleus");
 
                         }
 
@@ -1034,40 +1034,54 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        boolean invertCellImageSetting = checkInvertCellImage.isSelected();
-                        Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
-                        float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
-                        Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
-                        Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
-                        int cellAreaThresholdFloat = cellAreaThreshold.intValue();
-                        Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
-                        Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+                        if (useInternalCellSegmentation) {
 
-                        Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
-                        Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
-                        Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
-                        Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
-                        boolean cellFilterCheck = checkFilterCellFilter.isSelected();
+                            boolean invertCellImageSetting = checkInvertCellImage.isSelected();
+                            Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+                            float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+                            Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+                            Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+                            int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+                            Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+                            Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                            Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+                            Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+                            Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+                            Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+                            boolean cellFilterCheck = checkFilterCellFilter.isSelected();
 
-                        visualizer.visualizeCellSegments(selectedImage,
-                                previewImage,
-                                nucleiMask,
-                                cellAreaFilterSizeFloat,
-                                cellAreaRollBall,
-                                cellAreaThresholdFloat,
-                                cellSepGaussCellSep,
-                                cellSepProminence,
-                                cellFilterMinSize,
-                                cellFilterMaxSize,
-                                cellFilterLowCirc,
-                                cellFilterHighCirc,
-                                cellFilterCheck,
-                                setDisplayRange,
-                                invertCellImageSetting);
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
 
-                        IJ.showProgress(1);
+                            visualizer.visualizeCellSegments(selectedImage,
+                                    previewImage,
+                                    nucleiMask,
+                                    cellAreaFilterSizeFloat,
+                                    cellAreaRollBall,
+                                    cellAreaThresholdFloat,
+                                    cellSepGaussCellSep,
+                                    cellSepProminence,
+                                    cellFilterMinSize,
+                                    cellFilterMaxSize,
+                                    cellFilterLowCirc,
+                                    cellFilterHighCirc,
+                                    cellFilterCheck,
+                                    setDisplayRange,
+                                    invertCellImageSetting);
+
+                            IJ.showProgress(1);
+
+                        } else {
+
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            externalSegmentation.visualizeExternalSegmentation(
+                                    selectedImage,
+                                    previewImage,
+                                    setDisplayRange,
+                                    "cytoplasm");
+
+                        }
 
                     } else {
 
@@ -1129,39 +1143,53 @@ public class PreviewGui extends JPanel {
 
                         }
 
-                        boolean invertCellImageSetting = checkInvertCellImage.isSelected();
-                        Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
-                        float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
-                        Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
-                        Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
-                        int cellAreaThresholdFloat = cellAreaThreshold.intValue();
-                        Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
-                        Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
+                        if (useInternalCellSegmentation) {
 
-                        Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
-                        Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
-                        Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
-                        Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
-                        boolean cellFilterCheck = checkFilterCellFilter.isSelected();
+                            boolean invertCellImageSetting = checkInvertCellImage.isSelected();
+                            Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
+                            float cellAreaFilterSizeFloat = cellAreaFilterSize.floatValue();
+                            Double cellAreaRollBall = (Double) doubleSpinRollBallCellArea.getValue();
+                            Double cellAreaThreshold = (Double)  doubleSpinThresholdCellArea.getValue();
+                            int cellAreaThresholdFloat = cellAreaThreshold.intValue();
+                            Double cellSepGaussCellSep = (Double) doubleSpinGaussCellSep.getValue();
+                            Double cellSepProminence = (Double) doubleSpinProminenceCellSep.getValue();
 
-                        SegmentationVisualizer visualizer = new SegmentationVisualizer();
+                            Double cellFilterMinSize = (Double) doubleSpinMinSizeCellFilter.getValue();
+                            Double cellFilterMaxSize = (Double) doubleSpinMaxSizeCellFilter.getValue();
+                            Double cellFilterLowCirc = (Double) doubleSpinLowCircCellFilter.getValue();
+                            Double cellFilterHighCirc = (Double) doubleSpinHighCircCellFilter.getValue();
+                            boolean cellFilterCheck = checkFilterCellFilter.isSelected();
 
-                        visualizer.visualizeCellSegments(
-                                newImage,
-                                previewImage,
-                                nucleiMask,
-                                cellAreaFilterSizeFloat,
-                                cellAreaRollBall,
-                                cellAreaThresholdFloat,
-                                cellSepGaussCellSep,
-                                cellSepProminence,
-                                cellFilterMinSize,
-                                cellFilterMaxSize,
-                                cellFilterLowCirc,
-                                cellFilterHighCirc,
-                                cellFilterCheck,
-                                setDisplayRange,
-                                invertCellImageSetting);
+                            SegmentationVisualizer visualizer = new SegmentationVisualizer();
+
+                            visualizer.visualizeCellSegments(
+                                    newImage,
+                                    previewImage,
+                                    nucleiMask,
+                                    cellAreaFilterSizeFloat,
+                                    cellAreaRollBall,
+                                    cellAreaThresholdFloat,
+                                    cellSepGaussCellSep,
+                                    cellSepProminence,
+                                    cellFilterMinSize,
+                                    cellFilterMaxSize,
+                                    cellFilterLowCirc,
+                                    cellFilterHighCirc,
+                                    cellFilterCheck,
+                                    setDisplayRange,
+                                    invertCellImageSetting);
+
+                        } else {
+
+                            ExternalSegmentationLoader externalSegmentation = new ExternalSegmentationLoader();
+
+                            externalSegmentation.visualizeExternalSegmentation(
+                                    newImage,
+                                    previewImage,
+                                    setDisplayRange,
+                                    "cytoplasm");
+
+                        }
 
                     }
 

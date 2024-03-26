@@ -12,16 +12,18 @@ import ij.plugin.frame.RoiManager;
 import ij.process.ImageProcessor;
 
 import java.io.File;
+import java.util.Objects;
 
 public class ExternalSegmentationLoader {
 
     static String directory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
-    static String inputFile = "HeLa_NucSeg_1.tif";
+    static String nucleusInputFile = "HeLa_NucSeg_1.tif";
+    static String cellInputFile = "HeLa_CellSeg_1.tif";
 
     ImagePlus createExternalNucleusMask(Calibration calibration) {
 
         // loads the label image
-        ImagePlus labelImage = IJ.openImage(directory + File.separator + inputFile);
+        ImagePlus labelImage = IJ.openImage(directory + File.separator + nucleusInputFile);
 
         ImageProcessor labelImageProcessor = labelImage.getProcessor();
         labelImageProcessor.threshold(1);
@@ -33,33 +35,62 @@ public class ExternalSegmentationLoader {
         return mask;
     }
 
-    void visualizeExternalSegmentation(ImagePlus originalImage,
-                                              Image imageObject,
-                                              boolean setDisplayRange) {
+    RoiManager createExternalCellROIs() {
 
-        // TODO: need to be get user defined
+        ImagePlus labelImage = IJ.openImage(directory + File.separator + cellInputFile);
+        RoiManager roiManager = label2Roi(labelImage);
+
+        return roiManager;
+
+    }
+
+    void visualizeExternalSegmentation(ImagePlus originalImage,
+                                       Image imageObject,
+                                       boolean setDisplayRange,
+                                       String channelSelector) {
+
+
 
         IJ.log("Starting visualization for external segmentation");
 
         originalImage.setOverlay(null);
-
         // TODO: there is an issue with some floating around ROIs that only vanish after setting this:
         originalImage.setRoi((Roi) null);
 
+        RoiManager roiManager = null;
+        
+        // Remove any overlays in original image
         ImagePlus[] imp_channels = ChannelSplitter.split(originalImage);
         ImagePlus nucleus = imp_channels[imageObject.nucleus - 1];
         ImagePlus cytoplasm = imp_channels[imageObject.cytoplasm - 1];
-        ImagePlus organelle = imp_channels[imageObject.organelle - 1];
         nucleus.setOverlay(null);
         cytoplasm.setOverlay(null);
-        organelle.setOverlay(null);
 
-        // loads the label image
-        ImagePlus labelImage = IJ.openImage(directory + File.separator + inputFile);
-        RoiManager roiManager = label2Roi(labelImage);
+        if (Objects.equals(channelSelector, "nucleus")) {
 
-        originalImage.setC( imageObject.nucleus );
-        originalImage.setOverlay(null);
+            // TODO: need to be get user defined
+            // loads the nucleus label image
+            ImagePlus labelImage = IJ.openImage(directory + File.separator + nucleusInputFile);
+            roiManager = label2Roi(labelImage);
+
+            originalImage.setC( imageObject.nucleus);
+            originalImage.setOverlay(null);
+
+        } else if (Objects.equals(channelSelector, "cytoplasm")) {
+
+            // TODO: need to be get user defined
+            // loads the cell label image
+            ImagePlus labelImage = IJ.openImage(directory + File.separator + cellInputFile);
+            roiManager = label2Roi(labelImage);
+
+            originalImage.setC( imageObject.cytoplasm );
+            originalImage.setOverlay(null);
+
+        } else {
+
+            IJ.error("Incorrect channel setting");
+
+        }
 
         roiManager.moveRoisToOverlay(originalImage);
         Overlay overlay = originalImage.getOverlay();
