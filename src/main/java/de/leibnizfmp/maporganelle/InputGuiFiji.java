@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import ij.io.OpenDialog;
 import org.xml.sax.SAXException;
 
+import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +45,6 @@ class InputGuiFiji {
         showSettingsSwitch = true;
         testMode = false;
     }
-
 
     /**
      * Constructor to change only the directories
@@ -141,6 +141,10 @@ class InputGuiFiji {
 
             gdPlus.addFileField("Settings File", defaultSettingsFile, 50);
 
+            gdPlus.addCheckbox("External nucleus segmentation", false);
+            gdPlus.addCheckbox("External cell segmentation", false);
+            gdPlus.addCheckbox("External detection", false);
+
         }
 
         gdPlus.showDialog();
@@ -159,6 +163,15 @@ class InputGuiFiji {
             if ( showSettingsSwitch ) {
 
                 settingsFile = new File(defaultSettingsFile = gdPlus.getNextString());
+
+                boolean externalNucleusSegmentation = gdPlus.getNextBoolean();
+                boolean externalCellSegmentation = gdPlus.getNextBoolean();
+                boolean externalDetection = gdPlus.getNextBoolean();
+
+                IJ.log("externalNucleusSegmentation: " + externalNucleusSegmentation);
+                IJ.log("externalCellSegmentation: " + externalCellSegmentation);
+                IJ.log("externalDetection: " + externalDetection);
+
             }
 
             // display error message if there is no input and output directory
