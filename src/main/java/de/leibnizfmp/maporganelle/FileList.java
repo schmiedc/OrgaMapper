@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class FileList {
 
-    String suffix;
+    private String suffix;
 
     /**
      * walks through input directory
@@ -61,9 +61,10 @@ public class FileList {
      * @param inputDir input directory
      * @return list containing file names as string for processing
      */
-    ArrayList<String> getFileMultiSeriesList(String inputDir) {
+    FileListProperties getFileMultiSeriesList(String inputDir) {
 
         List<String> fileList = null;
+        boolean multiSeriesSwitch = false;
 
         Path inputPath = Paths.get(inputDir);
 
@@ -88,6 +89,8 @@ public class FileList {
 
         for (String testFile : fileList) {
 
+            IJ.log("Found file: " + testFile);
+
             ImageReader reader = new ImageReader();
             try {
 
@@ -106,22 +109,43 @@ public class FileList {
 
             }
 
-            int seriesNumber = reader.getSeriesCount();
-            IJ.log(seriesNumber + " image(s) for " + testFile);
+            int seriesCount = reader.getSeriesCount();
 
-            for (int seriesIndex = 0; seriesIndex < seriesNumber; seriesIndex++) {
+            if (seriesCount > 1) {
+
+                IJ.log("File is a multi series file");
+                IJ.log(seriesCount + " images for " + testFile);
+                multiSeriesSwitch = true;
+
+                for (int seriesIndex = 0; seriesIndex < seriesCount; seriesIndex++) {
+
+                    String nameWithoutExt = testFile.substring(0, testFile.lastIndexOf("."));
+
+                    String seriesName = nameWithoutExt + "_S" + seriesIndex;
+                    fileNameList.add(seriesName);
+
+                }
+
+            } else if (seriesCount == 1) {
+
+                IJ.log("File is a multi series file");
+                IJ.log(seriesCount + " images for " + testFile);
+                multiSeriesSwitch = false;
 
                 String nameWithoutExt = testFile.substring(0, testFile.lastIndexOf("."));
 
-                String seriesName = nameWithoutExt + "_S" + seriesIndex;
+                String seriesName = nameWithoutExt + "_S0";
                 fileNameList.add(seriesName);
+
+            } else {
+
+                IJ.error("File reader error");
+
             }
 
         }
 
-        // casts list to arrayList
-
-        return new ArrayList<>(fileNameList);
+        return new FileListProperties(new ArrayList<>(fileNameList), multiSeriesSwitch);
 
     }
 

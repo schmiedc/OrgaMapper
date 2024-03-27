@@ -186,9 +186,10 @@ class InputGuiFiji {
                 String outputFileString = outputDirectory.toString();
                 setDefaultDirectory(outputFileString);
 
-
                 // generates the file list that is fed to the preview GUI
-                ArrayList<String> fileList = getFileList.getFileMultiSeriesList(checkTrailingSlash(inputFileString));
+                FileListProperties fileListProperties = getFileList.getFileMultiSeriesList(checkTrailingSlash(inputFileString));
+                ArrayList<String> fileList = fileListProperties.fileList;
+                boolean multiSeriesSwitch = fileListProperties.multiSeriesSwitch;
 
                 if (fileList.isEmpty()) {
 

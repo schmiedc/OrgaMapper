@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class ExternalSegmentationLoader {
 
-    // TODO: generalize to multiseries file
+    // TODO: generalize to multi series file
     String createExternalFileNameSingleSeries(String baseName, String SegmentationSuffix, String FileEnding){
 
         // Add segmentationSuffix and return
