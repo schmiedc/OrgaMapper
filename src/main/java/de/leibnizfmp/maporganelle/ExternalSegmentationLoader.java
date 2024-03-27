@@ -18,7 +18,7 @@ public class ExternalSegmentationLoader {
     String createExternalFileNameSingleSeries(String baseName,
                                               String SegmentationSuffix,
                                               String fileEnding,
-                                              String seriesNumber,
+                                              Integer seriesNumber,
                                               boolean multiSeries){
         String fileName;
 

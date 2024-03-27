@@ -59,6 +59,7 @@ public class BatchProcessor {
     private String externalNucleusSegmentationSuffix = "NucSeg";
     private String externalCellSegmentationSuffix = "CellSeg";
     private String externalDetectionFileString = "Detect";
+    private boolean multiSeries = false;
 
     void processImage() {
 
@@ -144,7 +145,9 @@ public class BatchProcessor {
                 String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalNucleusSegmentationSuffix,
-                        externalSegmentationFileEnding, null, false);
+                        externalSegmentationFileEnding,
+                        seriesNumber,
+                        multiSeries);
 
                 nucleusMask = externalNucleusSegmentation.createExternalSegmentationMask(
                         externalNucleusSegmentationDirectory, externalNucleusFileName, image.getCalibration());
@@ -195,7 +198,9 @@ public class BatchProcessor {
                 String externalCelLSegmentationFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalCellSegmentationSuffix,
-                        externalSegmentationFileEnding, null, false);
+                        externalSegmentationFileEnding,
+                        seriesNumber,
+                        multiSeries);
 
                 manager = externalCellSegmentation.createExternalCellROIs(
                         externalCellSegmentationDirectory,
@@ -232,7 +237,9 @@ public class BatchProcessor {
                 String externalDetectionFileName = loadDetectionMask.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalDetectionFileString,
-                        externalSegmentationFileEnding, null, false);
+                        externalSegmentationFileEnding,
+                        seriesNumber,
+                        multiSeries);
 
                 detectionsFiltered = loadDetectionMask.createExternalSegmentationMask(
                         externalDetectionDirectory,

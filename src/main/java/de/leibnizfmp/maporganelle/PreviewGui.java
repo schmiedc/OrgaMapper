@@ -55,6 +55,7 @@ public class PreviewGui extends JPanel {
     private String externalNucleusSegmentationSuffix = "NucSeg";
     private String externalCellSegmentationSuffix = "CellSeg";
     private String externalDetectionSuffix = "Detect";
+    private boolean multiSeries = false;
 
     // list of files
     private JList list;
@@ -946,7 +947,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalNucleusSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             externalNucleusSegmentation.visualizeExternalSegmentation(
                                     externalNucleusSegmentationDirectory,
@@ -1023,7 +1026,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalNucleusSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             externalNucleusSegmentation.visualizeExternalSegmentation(
                                     externalNucleusSegmentationDirectory,
@@ -1167,7 +1172,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalNucleusSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
                                     externalNucleusSegmentationDirectory,
@@ -1225,7 +1232,9 @@ public class PreviewGui extends JPanel {
                             String externalCellFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalCellSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             externalCellSegmentation.visualizeExternalSegmentation(
                                     externalCellSegmentationDirectory,
@@ -1299,7 +1308,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalNucleusSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
                                     externalNucleusSegmentationDirectory,
@@ -1356,7 +1367,9 @@ public class PreviewGui extends JPanel {
                             String externalCellFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalCellSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             externalCellSegmentation.visualizeExternalSegmentation(
                                     externalCellSegmentationDirectory,
@@ -1495,7 +1508,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalNucleusSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
                                     externalNucleusSegmentationDirectory,
@@ -1535,7 +1550,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = visualizeExternalDetection.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalDetectionSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             visualizeExternalDetection.visualizeExternalSpots(
                                     externalDetectionDirectory,
@@ -1607,7 +1624,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalNucleusSegmentationSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
                                     externalNucleusSegmentationDirectory,
@@ -1647,7 +1666,9 @@ public class PreviewGui extends JPanel {
                             String externalNucleusFileName = visualizeExternalDetection.createExternalFileNameSingleSeries(
                                     fileNameWOtExt,
                                     externalDetectionSuffix,
-                                    externalSegmentationFileEnding, null, false);
+                                    externalSegmentationFileEnding,
+                                    seriesNumber,
+                                    multiSeries);
 
                             visualizeExternalDetection.visualizeExternalSpots(
                                     externalDetectionDirectory,
