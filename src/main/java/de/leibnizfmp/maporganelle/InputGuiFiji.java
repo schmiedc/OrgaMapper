@@ -83,7 +83,7 @@ class InputGuiFiji {
      * @param inputString input string
      * @return input string with trailing slash for OS
      */
-    private static String checkTrailingSlash(String inputString) {
+    static String checkTrailingSlash(String inputString) {
 
         return inputString.endsWith(File.separator) ? inputString : inputString + File.separator;
     }
@@ -280,6 +280,84 @@ class InputGuiFiji {
                     } else if (settingsFile != null && settingsFile.exists() && ( externalNucleusSegmentation || externalCellSegmentation || externalDetection) ) {
 
                         IJ.log("Settings File exists. Now comes external seg gui");
+
+                        String settingsFileString = settingsFile.toString();
+
+                        IJ.log("Found xml settings file: " + settingsFileString);
+                        XmlHandler readMyXml = new XmlHandler();
+
+                        try {
+
+                            // reads settings file
+                            readMyXml.xmlReader(settingsFileString);
+
+                            String selectedFile = fileList.get(0);
+                            ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
+                            int channelN = imageForMetadata.getNChannels();
+
+                            ExtSegDetectGUI extSegDetectGUI = new ExtSegDetectGUI(
+                                    checkTrailingSlash(inputFileString),
+                                    checkTrailingSlash(outputFileString),
+                                    fileList,
+                                    fileFormat,
+                                    channelN,
+                                    readMyXml.readKernelSizeNuc,
+                                    readMyXml.readRollingBallRadiusNuc,
+                                    readMyXml.readThresholdNuc,
+                                    readMyXml.readErosionNuc,
+                                    readMyXml.readMinSizeNuc,
+                                    readMyXml.readMaxSizeNuc,
+                                    readMyXml.readLowCircNuc,
+                                    readMyXml.readHighCircNuc,
+                                    readMyXml.readInvertCellImage,
+                                    readMyXml.readKernelSizeCellArea,
+                                    readMyXml.readRollBallRadiusCellArea,
+                                    readMyXml.readManualThresholdCellArea,
+                                    readMyXml.readSigmaGaussCellSep,
+                                    readMyXml.readProminenceCellSep,
+                                    readMyXml.readMinCellSize,
+                                    readMyXml.readMaxCellSize,
+                                    readMyXml.readLowCircCellSize,
+                                    readMyXml.readHighCircCelLSize,
+                                    readMyXml.readSigmaLoGOrga,
+                                    readMyXml.readProminenceOrga,
+                                    readMyXml.readCalibrationSetting,
+                                    readMyXml.readPxSizeMicron,
+                                    readMyXml.readMembraneDistanceMeasurement,
+                                    readMyXml.readNucleusChannel,
+                                    readMyXml.readCytoplasmChannel,
+                                    readMyXml.readOrganelleChannel,
+                                    readMyXml.readMeasure,
+                                    multiSeries,
+                                    externalNucleusSegmentation,
+                                    externalCellSegmentation,
+                                    externalDetection);
+
+                            // instantiates previewGui
+                            extSegDetectGUI.createWindow();
+
+                        } catch (ParserConfigurationException ex) {
+
+                            ex.printStackTrace();
+                            IJ.log("ERROR: XML reader, Parser Configuration exception");
+                            IJ.error("Please select a valid .xml or leave empty");
+                            settingsFile = null;
+
+                        } catch (IOException ex) {
+
+                            ex.printStackTrace();
+                            IJ.log("ERROR: XML reader, IOException");
+                            IJ.error("Please select a valid .xml or leave empty");
+                            settingsFile = null;
+
+                        } catch (SAXException ex) {
+
+                            ex.printStackTrace();
+                            IJ.log("ERROR: XML reader, SAXException");
+                            IJ.error("Please select a valid .xml or leave empty");
+                            settingsFile = null;
+
+                        }
 
                     } else {
 

@@ -40,6 +40,7 @@ public class ExternalSegmentationLoader {
                                              String FileName,
                                              Calibration calibration) {
 
+        IJ.log("External directory " + externalSegmentationDirectory);
         IJ.log("External segmentation file processed " + FileName);
         // loads the label image
         ImagePlus labelImage = IJ.openImage(externalSegmentationDirectory + File.separator + FileName);

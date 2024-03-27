@@ -2283,6 +2283,89 @@ public class PreviewGui extends JPanel {
 
     }
 
+    // default PreviewGUI constructor will be loaded when no settings file is present
+    // No external segmentation is provided
+    PreviewGui (String inputDirectory,
+                String outputDirectory,
+                ArrayList<String> filesToProcess,
+                String format,
+                int getChannelNumber,
+                double pixelSize,
+                boolean getMultiSeries,
+                boolean getUseInternalNucleusSegmentation,
+                boolean getUseInternalCellSegmentation,
+                boolean getUseInternalDetection,
+                String getExternalNucleusSegmentationDirectory,
+                String getExternalCellSegmentationDirectory,
+                String getExternalDetectionDirectory,
+                String getExternalSegmentationFileEnding,
+                String getExternalNucleusSegmentationSuffix,
+                String getExternalCellSegmentationSuffix,
+                String getExternalDetectionSuffix) {
+
+        inputDir = inputDirectory;
+        outputDir = outputDirectory;
+        fileList = filesToProcess;
+        fileFormat = format;
+        channelNumber = getChannelNumber;
+        pxSizeMicron = pixelSize;
+
+        // settings for nucleus settings
+        kernelSizeNuc = 5;
+        rollingBallRadiusNuc = 15;
+        thresholdNuc = "Otsu";
+        erosionNuc = 0;
+        minSizeNuc = 50;
+        maxSizeNuc = 500;
+        lowCircNuc = 0.5;
+        highCircNuc = 1.00;
+
+        // settings for cell area segmentation
+        invertCellImageSetting = false;
+        kernelSizeCellArea = 10;
+        rollingBallRadiusCellArea = 150;
+        manualThresholdCellArea = 700;
+
+        // settings for cell separator
+        sigmaGaussCellSep = 15;
+        prominenceCellSep = 1000;
+
+        // settings for cell filter size
+        minCellSize = 500;
+        maxCellSize = 50000;
+        lowCircCellSize = 0.3;
+        highCircCelLSize = 1.0;
+
+        // settings for organelle detection
+        sigmaLoGOrga = 2;
+        prominenceOrga = 200;
+
+        // image settings
+        calibrationSetting = false;
+        distanceFromMembraneSetting = false;
+
+        nucleusChannel = 0;
+        cytoplasmChannel = 0;
+        organelleChannel = 0;
+        measure = 0;
+
+        // external segmentation settings
+        useInternalNucleusSegmentation = !getUseInternalNucleusSegmentation;
+        useInternalCellSegmentation = !getUseInternalCellSegmentation;
+        useInternalDetection = !getUseInternalDetection;
+
+        externalNucleusSegmentationDirectory =  getExternalNucleusSegmentationDirectory;
+        externalCellSegmentationDirectory = getExternalCellSegmentationDirectory;
+        externalDetectionDirectory = getExternalDetectionDirectory;
+        externalSegmentationFileEnding = getExternalSegmentationFileEnding;
+        externalNucleusSegmentationSuffix = getExternalNucleusSegmentationSuffix;
+        externalCellSegmentationSuffix = getExternalCellSegmentationSuffix;
+        externalDetectionSuffix = getExternalDetectionSuffix;
+
+        multiSeries = getMultiSeries;
+
+    }
+
     // This constructor is called by the InputGUI to load the Preview GUI with an existing settings file
     // Without loading external segmentations
     PreviewGui (String inputDirectory,
@@ -2380,7 +2463,110 @@ public class PreviewGui extends JPanel {
         multiSeries = getMultiSeries;
     }
 
+    PreviewGui (String inputDirectory,
+                String outputDirectory,
+                ArrayList<String> filesToProcess,
+                String format,
+                int getChannelNumber,
+                float getKernelSizeNuc,
+                double getRollingBallRadiusNuc,
+                String getThresholdNuc,
+                int getErosionNuc,
+                double getMinSizeNuc,
+                double getMaxSizeNuc,
+                double getLowCircNuc,
+                double getHighCircNuc,
+                boolean getInvertCellImageSetting,
+                float getKernelSizeCellArea,
+                double getRollingBallRadiusCellArea,
+                int getManualThresholdCellArea,
+                double getSigmaGaussCellSep,
+                double getProminenceCellSep,
+                double getMinCellSize,
+                double getMaxCellSize,
+                double getLowCircCellSize,
+                double getHighCircCelLSize,
+                double getSigmaLoGOrga,
+                double getProminenceOrga,
+                boolean getCalibrationSetting,
+                double getPxSizeMicron,
+                boolean getdistanceFromMembraneSetting,
+                int getNucleusChannel,
+                int getCytoplasmChannel,
+                int getOrganelleChannel,
+                int getMeasure,
+                boolean getMultiSeries,
+                boolean getUseInternalNucleusSegmentation,
+                boolean getUseInternalCellSegmentation,
+                boolean getUseInternalDetection,
+                String getExternalNucleusSegmentationDirectory,
+                String getExternalCellSegmentationDirectory,
+                String getExternalDetectionDirectory,
+                String getExternalSegmentationFileEnding,
+                String getExternalNucleusSegmentationSuffix,
+                String getExternalCellSegmentationSuffix,
+                String getExternalDetectionSuffix) {
 
+        inputDir = inputDirectory;
+        outputDir = outputDirectory;
+        fileList = filesToProcess;
+        fileFormat = format;
+        channelNumber = getChannelNumber;
+
+        // settings for nucleus settings
+        kernelSizeNuc = getKernelSizeNuc;
+        rollingBallRadiusNuc = getRollingBallRadiusNuc;
+        thresholdNuc = getThresholdNuc;
+        erosionNuc = getErosionNuc;
+        minSizeNuc = getMinSizeNuc;
+        maxSizeNuc = getMaxSizeNuc;
+        lowCircNuc = getLowCircNuc;
+        highCircNuc = getHighCircNuc;
+
+        // settings for cell area segmentation
+        invertCellImageSetting = getInvertCellImageSetting;
+        kernelSizeCellArea = getKernelSizeCellArea;
+        rollingBallRadiusCellArea = getRollingBallRadiusCellArea;
+        manualThresholdCellArea = getManualThresholdCellArea;
+
+        // settings for cell separator
+        sigmaGaussCellSep = getSigmaGaussCellSep;
+        prominenceCellSep = getProminenceCellSep;
+
+        // settings for cell filter size
+        minCellSize = getMinCellSize;
+        maxCellSize = getMaxCellSize;
+        lowCircCellSize = getLowCircCellSize;
+        highCircCelLSize = getHighCircCelLSize;
+
+        // settings for organelle detection
+        sigmaLoGOrga = getSigmaLoGOrga;
+        prominenceOrga = getProminenceOrga;
+
+        // image settings
+        calibrationSetting = getCalibrationSetting;
+        pxSizeMicron = getPxSizeMicron;
+        distanceFromMembraneSetting = getdistanceFromMembraneSetting;
+        nucleusChannel = getNucleusChannel;
+        cytoplasmChannel = getCytoplasmChannel;
+        organelleChannel = getOrganelleChannel;
+        measure = getMeasure;
+
+        // external segmentation settings
+        useInternalNucleusSegmentation = !getUseInternalNucleusSegmentation;
+        useInternalCellSegmentation = !getUseInternalCellSegmentation;
+        useInternalDetection = !getUseInternalDetection;
+
+        externalNucleusSegmentationDirectory =  getExternalNucleusSegmentationDirectory;
+        externalCellSegmentationDirectory = getExternalCellSegmentationDirectory;
+        externalDetectionDirectory = getExternalDetectionDirectory;
+        externalSegmentationFileEnding = getExternalSegmentationFileEnding;
+        externalNucleusSegmentationSuffix = getExternalNucleusSegmentationSuffix;
+        externalCellSegmentationSuffix = getExternalCellSegmentationSuffix;
+        externalDetectionSuffix = getExternalDetectionSuffix;
+
+        multiSeries = getMultiSeries;
+    }
 
 }
 
