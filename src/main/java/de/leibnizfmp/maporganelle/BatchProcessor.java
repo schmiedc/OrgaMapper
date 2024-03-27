@@ -144,7 +144,7 @@ public class BatchProcessor {
                 String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalNucleusSegmentationSuffix,
-                        externalSegmentationFileEnding);
+                        externalSegmentationFileEnding, null, false);
 
                 nucleusMask = externalNucleusSegmentation.createExternalSegmentationMask(
                         externalNucleusSegmentationDirectory, externalNucleusFileName, image.getCalibration());
@@ -195,7 +195,7 @@ public class BatchProcessor {
                 String externalCelLSegmentationFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalCellSegmentationSuffix,
-                        externalSegmentationFileEnding);
+                        externalSegmentationFileEnding, null, false);
 
                 manager = externalCellSegmentation.createExternalCellROIs(
                         externalCellSegmentationDirectory,
@@ -232,7 +232,7 @@ public class BatchProcessor {
                 String externalDetectionFileName = loadDetectionMask.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalDetectionFileString,
-                        externalSegmentationFileEnding);
+                        externalSegmentationFileEnding, null, false);
 
                 detectionsFiltered = loadDetectionMask.createExternalSegmentationMask(
                         externalDetectionDirectory,

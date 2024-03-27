@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class FileListProperties {
     public final ArrayList<String> fileList;
-    public final boolean multiSeriesSwitch;
-    public FileListProperties(ArrayList<String> fileList, boolean multiSeriesSwitch) {
+    public final boolean multiSeries;
+    public FileListProperties(ArrayList<String> fileList, boolean multiSeries) {
 
         this.fileList = fileList;
-        this.multiSeriesSwitch = multiSeriesSwitch;
+        this.multiSeries = multiSeries;
 
     }
 

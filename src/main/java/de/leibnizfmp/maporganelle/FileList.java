@@ -64,7 +64,7 @@ public class FileList {
     FileListProperties getFileMultiSeriesList(String inputDir) {
 
         List<String> fileList = null;
-        boolean multiSeriesSwitch = false;
+        boolean multiSeries = false;
 
         Path inputPath = Paths.get(inputDir);
 
@@ -115,7 +115,7 @@ public class FileList {
 
                 IJ.log("File is a multi series file");
                 IJ.log(seriesCount + " images for " + testFile);
-                multiSeriesSwitch = true;
+                multiSeries = true;
 
                 for (int seriesIndex = 0; seriesIndex < seriesCount; seriesIndex++) {
 
@@ -130,7 +130,7 @@ public class FileList {
 
                 IJ.log("File is a multi series file");
                 IJ.log(seriesCount + " images for " + testFile);
-                multiSeriesSwitch = false;
+                multiSeries = false;
 
                 String nameWithoutExt = testFile.substring(0, testFile.lastIndexOf("."));
 
@@ -145,7 +145,7 @@ public class FileList {
 
         }
 
-        return new FileListProperties(new ArrayList<>(fileNameList), multiSeriesSwitch);
+        return new FileListProperties(new ArrayList<>(fileNameList), multiSeries);
 
     }
 

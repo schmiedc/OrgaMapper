@@ -75,7 +75,7 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
                 // generates the file list that is fed to the preview GUI
                 FileListProperties fileListProperties = getFileList.getFileMultiSeriesList(testInDir);
                 ArrayList<String> fileList = fileListProperties.fileList;
-                boolean multiSeriesSwitch = fileListProperties.multiSeriesSwitch;
+                boolean multiSeriesSwitch = fileListProperties.multiSeries;
 
                 for (String file : fileList) {
                     System.out.println(file);

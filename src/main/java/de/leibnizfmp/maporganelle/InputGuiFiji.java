@@ -189,7 +189,7 @@ class InputGuiFiji {
                 // generates the file list that is fed to the preview GUI
                 FileListProperties fileListProperties = getFileList.getFileMultiSeriesList(checkTrailingSlash(inputFileString));
                 ArrayList<String> fileList = fileListProperties.fileList;
-                boolean multiSeriesSwitch = fileListProperties.multiSeriesSwitch;
+                boolean multiSeries = fileListProperties.multiSeries;
 
                 if (fileList.isEmpty()) {
 

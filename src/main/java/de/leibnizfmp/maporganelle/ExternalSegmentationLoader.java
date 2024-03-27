@@ -15,10 +15,24 @@ import java.util.Objects;
 public class ExternalSegmentationLoader {
 
     // TODO: generalize to multi series file
-    String createExternalFileNameSingleSeries(String baseName, String SegmentationSuffix, String FileEnding){
+    String createExternalFileNameSingleSeries(String baseName,
+                                              String SegmentationSuffix,
+                                              String fileEnding,
+                                              String seriesNumber,
+                                              boolean multiSeries){
+        String fileName;
+
+        if (multiSeries) {
+
+            fileName = baseName + "_" + seriesNumber + "_" + SegmentationSuffix + fileEnding;
+
+        } else {
+
+            fileName = baseName + "_" + SegmentationSuffix + fileEnding;
+        }
 
         // Add segmentationSuffix and return
-        return baseName + "_" + SegmentationSuffix + FileEnding;
+        return fileName;
 
     }
 
