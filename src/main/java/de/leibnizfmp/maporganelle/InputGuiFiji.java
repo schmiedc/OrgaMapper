@@ -78,6 +78,20 @@ class InputGuiFiji {
     }
 
     /**
+     * default constructor
+     */
+    InputGuiFiji() {
+
+        InputDirectory = "Choose Directory";
+        OutputDirectory = "Choose Directory";
+        defaultFileFormat = ".tif";
+        defaultSettingsFile = "Choose a File or leave empty";
+        settingsFile = null;
+        showSettingsSwitch = true;
+        testMode = false;
+    }
+
+    /**
      * checks inputString for trailing slash if not adds the file separator to it
      *
      * @param inputString input string

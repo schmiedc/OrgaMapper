@@ -29,10 +29,10 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
 
         Prefs.blackBackground = true;
 
-        IJ.log("Starting map-organelle plugin");
+        IJ.log("Starting OrgaMapper plugin");
 
-        //InputGuiFiji start = new InputGuiFiji();
-        //start.createWindow();
+        InputGuiFiji start = new InputGuiFiji();
+        start.createWindow();
 
     }
 
@@ -53,7 +53,7 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
         ij.command().run(OrgaMapper.class, true);
 
         boolean runTest1 = false;
-        boolean runTest2 = true;
+        boolean runTest2 = false;
         boolean runTest3 = false;
 
         if ( runTest1 || runTest2 || runTest3 ) {
