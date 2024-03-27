@@ -51,6 +51,7 @@ public class BatchProcessor {
     private final boolean useInternalNucleusSegmentation;
     private final boolean useInternalCellSegmentation;
     private final boolean useInternalDetection;
+    // TODO: get external segmentation / detection setting from PreviewGUI
     private String externalNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
     private String externalCellSegmentationDirectory = externalNucleusSegmentationDirectory;
     private String externalDetectionDirectory = externalNucleusSegmentationDirectory;
@@ -146,8 +147,7 @@ public class BatchProcessor {
                         externalSegmentationFileEnding);
 
                 nucleusMask = externalNucleusSegmentation.createExternalSegmentationMask(
-                        externalNucleusSegmentationDirectory, externalNucleusFileName, image.getCalibration()
-                );
+                        externalNucleusSegmentationDirectory, externalNucleusFileName, image.getCalibration());
 
             }
 

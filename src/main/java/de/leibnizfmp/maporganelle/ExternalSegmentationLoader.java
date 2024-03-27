@@ -56,6 +56,8 @@ public class ExternalSegmentationLoader {
                                 Image imageObject,
                                 boolean setDisplayRange) {
 
+        IJ.log("External detection file processed " + externalDetectionFileName);
+
         originalImage.setOverlay(null);
         // TODO: there is an issue with some floating around ROIs that only vanish after setting this:
         originalImage.setRoi((Roi) null);
@@ -91,12 +93,13 @@ public class ExternalSegmentationLoader {
     }
 
     void visualizeExternalSegmentation(String externalSegmentationDirectory,
-                                       String externalSegmentationFileName, ImagePlus originalImage,
+                                       String externalSegmentationFileName,
+                                       ImagePlus originalImage,
                                        Image imageObject,
                                        boolean setDisplayRange,
                                        String channelSelector) {
 
-        IJ.log("Starting visualization for external segmentation");
+        IJ.log("External segmentation file processed " + externalSegmentationFileName);
 
         originalImage.setOverlay(null);
         // TODO: there is an issue with some floating around ROIs that only vanish after setting this:

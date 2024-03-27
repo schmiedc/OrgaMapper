@@ -47,18 +47,14 @@ public class PreviewGui extends JPanel {
     private boolean useInternalCellSegmentation = false;
     private boolean useInternalDetection = false;
 
-    // TODO: Pass directories from ExtSegGUI
-    private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
-    private String extCellSegmentationDirectory = extNucleusSegmentationDirectory;
-    private String extDetectionDirectory = extNucleusSegmentationDirectory;
-
-
-
-    // TODO: Construct externalFileName
-    private String nucleusInputFile = "HeLa_1_NucSeg.tif";
-    private String cellInputFile = "HeLa_1_CellSeg.tif";
-    private String organelleInputFile = "HeLa_1_Detect.tif";
-
+    // TODO: get external segmentation / detection setting from ExtSegDetectGUI
+    private String externalNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
+    private String externalCellSegmentationDirectory = externalNucleusSegmentationDirectory;
+    private String externalDetectionDirectory = externalNucleusSegmentationDirectory;
+    private String externalSegmentationFileEnding = ".tif";
+    private String externalNucleusSegmentationSuffix = "NucSeg";
+    private String externalCellSegmentationSuffix = "CellSeg";
+    private String externalDetectionSuffix = "Detect";
 
     // list of files
     private JList list;
@@ -862,7 +858,13 @@ public class PreviewGui extends JPanel {
 
                 if (selectionChecker != -1) {
 
+                    // get series number from file name
                     String selectedFile = (String) list.getSelectedValue();
+
+                    // this gets the base name of the file from fileList
+                    String fileNameWOtExt = selectedFile.substring(0, selectedFile.lastIndexOf("_S"));
+
+                    // get series number
                     int stringLength = selectedFile.length();
                     String seriesNumberString;
                     seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
@@ -941,9 +943,14 @@ public class PreviewGui extends JPanel {
 
                             ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalNucleusSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             externalNucleusSegmentation.visualizeExternalSegmentation(
-                                    extNucleusSegmentationDirectory,
-                                    nucleusInputFile,
+                                    externalNucleusSegmentationDirectory,
+                                    externalNucleusFileName,
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange,
@@ -1013,9 +1020,14 @@ public class PreviewGui extends JPanel {
 
                             ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalNucleusSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             externalNucleusSegmentation.visualizeExternalSegmentation(
-                                    extNucleusSegmentationDirectory,
-                                    nucleusInputFile,
+                                    externalNucleusSegmentationDirectory,
+                                    externalNucleusFileName,
                                     newImage,
                                     previewImage,
                                     setDisplayRange,
@@ -1071,8 +1083,13 @@ public class PreviewGui extends JPanel {
 
                 if (selectionChecker != -1) {
 
-                    // gets series number from filename in file list
+                    // get series number from file name
                     String selectedFile = (String) list.getSelectedValue();
+
+                    // this gets the base name of the file from fileList
+                    String fileNameWOtExt = selectedFile.substring(0, selectedFile.lastIndexOf("_S"));
+
+                    // get series number
                     int stringLength = selectedFile.length();
                     String seriesNumberString;
                     seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
@@ -1113,6 +1130,8 @@ public class PreviewGui extends JPanel {
 
                         if (useInternalNucleusSegmentation) {
 
+                            IJ.log("Using internal nucleus segmentation");
+
                             // open individual channels
                             ImagePlus[] imp_channels = ChannelSplitter.split(selectedImage);
                             ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
@@ -1141,17 +1160,26 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external nucleus segmentation");
+
                             ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalNucleusSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
-                                    extNucleusSegmentationDirectory,
-                                    nucleusInputFile,
+                                    externalNucleusSegmentationDirectory,
+                                    externalNucleusFileName,
                                     selectedImage.getCalibration()
                             );
 
                         }
 
                         if (useInternalCellSegmentation) {
+
+                            IJ.log("Using internal cell segmentation");
 
                             boolean invertCellImageSetting = checkInvertCellImage.isSelected();
                             Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
@@ -1190,11 +1218,18 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external cell segmentation");
+
                             ExternalSegmentationLoader externalCellSegmentation = new ExternalSegmentationLoader();
 
+                            String externalCellFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalCellSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             externalCellSegmentation.visualizeExternalSegmentation(
-                                    extCellSegmentationDirectory,
-                                    cellInputFile,
+                                    externalCellSegmentationDirectory,
+                                    externalCellFileName,
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange,
@@ -1226,6 +1261,8 @@ public class PreviewGui extends JPanel {
 
                         if (useInternalNucleusSegmentation) {
 
+                            IJ.log("Using internal nucleus segmentation");
+
                             // open individual channels
                             ImagePlus[] imp_channels = ChannelSplitter.split(newImage);
                             ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
@@ -1255,17 +1292,26 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external nucleus segmentation");
+
                             ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalNucleusSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
-                                    extNucleusSegmentationDirectory,
-                                    nucleusInputFile,
+                                    externalNucleusSegmentationDirectory,
+                                    externalNucleusFileName,
                                     newImage.getCalibration()
                             );
 
                         }
 
                         if (useInternalCellSegmentation) {
+
+                            IJ.log("Using internal cell segmentation");
 
                             boolean invertCellImageSetting = checkInvertCellImage.isSelected();
                             Double cellAreaFilterSize = (Double) doubleSpinKernelCellArea.getValue();
@@ -1303,11 +1349,18 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external cell segmentation");
+
                             ExternalSegmentationLoader externalCellSegmentation = new ExternalSegmentationLoader();
 
+                            String externalCellFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalCellSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             externalCellSegmentation.visualizeExternalSegmentation(
-                                    extCellSegmentationDirectory,
-                                    cellInputFile,
+                                    externalCellSegmentationDirectory,
+                                    externalCellFileName,
                                     newImage,
                                     previewImage,
                                     setDisplayRange,
@@ -1358,8 +1411,13 @@ public class PreviewGui extends JPanel {
 
                 if (selectionChecker != -1){
 
-                    // gets series number from filename in file list
+                    // get series number from file name
                     String selectedFile = (String) list.getSelectedValue();
+
+                    // this gets the base name of the file from fileList
+                    String fileNameWOtExt = selectedFile.substring(0, selectedFile.lastIndexOf("_S"));
+
+                    // get series number
                     int stringLength = selectedFile.length();
                     String seriesNumberString;
                     seriesNumberString = selectedFile.substring( selectedFile.lastIndexOf("_S") + 2 , stringLength );
@@ -1399,6 +1457,8 @@ public class PreviewGui extends JPanel {
 
                         if (useInternalNucleusSegmentation) {
 
+                            IJ.log("Using internal nucleus segmentation");
+
                             // open individual channels
                             ImagePlus[] imp_channels = ChannelSplitter.split(selectedImage);
                             ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
@@ -1428,17 +1488,26 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external nucleus segmentation");
+
                             ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalNucleusSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
-                                    extNucleusSegmentationDirectory ,
-                                    nucleusInputFile,
+                                    externalNucleusSegmentationDirectory,
+                                    externalNucleusFileName ,
                                     selectedImage.getCalibration()
                             );
 
                         }
 
                         if (useInternalDetection) {
+
+                            IJ.log("Using internal detection");
 
                             Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
                             Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
@@ -1459,11 +1528,18 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external detection");
+
                             ExternalSegmentationLoader visualizeExternalDetection = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = visualizeExternalDetection.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalDetectionSuffix,
+                                    externalSegmentationFileEnding);
+
                             visualizeExternalDetection.visualizeExternalSpots(
-                                    extDetectionDirectory,
-                                    organelleInputFile,
+                                    externalDetectionDirectory,
+                                    externalNucleusFileName,
                                     selectedImage,
                                     previewImage,
                                     setDisplayRange);
@@ -1494,6 +1570,8 @@ public class PreviewGui extends JPanel {
 
                         if (useInternalNucleusSegmentation) {
 
+                            IJ.log("Using internal nucleus segmentation");
+
                             // open individual channels
                             ImagePlus[] imp_channels = ChannelSplitter.split(newImage);
                             ImagePlus nucleus = imp_channels[previewImage.nucleus - 1];
@@ -1522,17 +1600,26 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external nucleus segmentation");
+
                             ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalNucleusSegmentationSuffix,
+                                    externalSegmentationFileEnding);
+
                             nucleiMask = externalNucleusSegmentation.createExternalSegmentationMask(
-                                    extNucleusSegmentationDirectory,
-                                    nucleusInputFile,
+                                    externalNucleusSegmentationDirectory,
+                                    externalNucleusFileName,
                                     newImage.getCalibration()
                             );
 
                         }
 
                         if (useInternalDetection) {
+
+                            IJ.log("Using internal detection");
 
                             Double organelleLoGSigma = (Double) doubleSpinnerLoGOragenelle.getValue();
                             Double organelleProminence = (Double) doubleSpinnerProminenceOrganelle.getValue();
@@ -1553,11 +1640,18 @@ public class PreviewGui extends JPanel {
 
                         } else {
 
+                            IJ.log("Using external detection");
+
                             ExternalSegmentationLoader visualizeExternalDetection = new ExternalSegmentationLoader();
 
+                            String externalNucleusFileName = visualizeExternalDetection.createExternalFileNameSingleSeries(
+                                    fileNameWOtExt,
+                                    externalDetectionSuffix,
+                                    externalSegmentationFileEnding);
+
                             visualizeExternalDetection.visualizeExternalSpots(
-                                    extDetectionDirectory,
-                                    organelleInputFile,
+                                    externalDetectionDirectory,
+                                    externalNucleusFileName,
                                     newImage,
                                     previewImage,
                                     setDisplayRange);
