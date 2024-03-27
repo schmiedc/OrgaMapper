@@ -121,8 +121,8 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
                 //private String externalDetectionSuffix = "Detect";
 
                 IJ.log("Test External segmentation GUI");
-                ExtSegDetectGUI guiTest = new ExtSegDetectGUI(true, false, false);
-                guiTest.createWindow();
+                // ExtSegDetectGUI guiTest = new ExtSegDetectGUI(true, false, false);
+                // guiTest.createWindow();
 
             }
 

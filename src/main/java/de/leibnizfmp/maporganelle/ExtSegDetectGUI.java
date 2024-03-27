@@ -2,61 +2,57 @@ package de.leibnizfmp.maporganelle;
 
 import fiji.util.gui.GenericDialogPlus;
 
+import java.util.ArrayList;
+
 /**
  * Implements the setup dialog for external segmentation and detection
  * Uses ImageJ's inbuilt dialogs
  */
 public class ExtSegDetectGUI {
 
-
+    private final String inputDir;
+    private final String outputDir;
+    private final ArrayList<String> fileList;
+    private final String fileFormat;
+    private final double pxSizeMicron;
+    private final int channelNumber;
+    private boolean multiSeries;
+    String externalFileDirectory;
+    String defaultSegmentationFileFormat;
     private final Boolean externalCellSegSwitch;
     String externalCellSegDirectory;
     String defaultExternalCellSegIndicator;
-    String defaultCellSegFileFormat;
     private final Boolean externalNucSegSwitch;
     String  externalNucSegDirectory;
     String defaultExternalNucSegIndicator;
-    String defaultNucSegFileFormat;
     private final Boolean externalDetectionSwitch;
     String externalDetectionDirectory;
     String defaultExternalDetectionIndicator;
 
-    String defaultDetectionFileFormat;
-
     void createWindow() {
-
-        // TODO: Sequence - InputGUI check if files are present get base name
-        // TODO: After extSegDetectGUI then check if the matching files according to settings exist
-        // TODO: Cell Preview GUI and load in new settings
-        // TODO: Linkt to InputGUIFiji
 
         GenericDialogPlus gdPlus = new GenericDialogPlus("External segmentation (seg.) and detection dialog");
 
-
-        if (externalCellSegSwitch) {
-
-            gdPlus.addDirectoryField("Cell seg. input directory: ", externalCellSegDirectory, 50);
-            gdPlus.addStringField("Cell seg. name indicator: ", defaultExternalCellSegIndicator, 50);
-            gdPlus.addStringField("Cell seg. file ending: ", defaultCellSegFileFormat, 50);
-
-        }
+        gdPlus.addDirectoryField("External file directory: ", externalNucSegDirectory, 50);
+        gdPlus.addStringField("External file ending: ", defaultSegmentationFileFormat , 50);
 
         if (externalNucSegSwitch) {
 
-            gdPlus.addDirectoryField("Nuc seg. input directory: ", externalCellSegDirectory, 50);
-            gdPlus.addStringField("Nuc seg. name indicator: ", defaultExternalCellSegIndicator, 50);
-            gdPlus.addStringField("Nuc seg. file ending: ", defaultNucSegFileFormat, 50);
+            gdPlus.addStringField("Nucleus segmentation suffix: ", defaultExternalNucSegIndicator, 50);
+
+        }
+
+        if (externalCellSegSwitch) {
+
+            gdPlus.addStringField("Cell segmentation suffix: ", defaultExternalCellSegIndicator, 50);
 
         }
 
         if (externalDetectionSwitch) {
 
-            gdPlus.addDirectoryField("Detection input directory: ", externalCellSegDirectory, 50);
-            gdPlus.addStringField("Detection name indicator: ", defaultExternalCellSegIndicator, 50);
-            gdPlus.addStringField("Detection file ending: ", defaultDetectionFileFormat , 50);
+            gdPlus.addStringField("Detection suffix: ", defaultExternalDetectionIndicator, 50);
 
         }
-
 
         gdPlus.showDialog();
 
@@ -64,23 +60,42 @@ public class ExtSegDetectGUI {
 
     }
 
-    ExtSegDetectGUI(Boolean getExternalCellSegSwitch, Boolean getExternalNucSegSwitch, Boolean getExternalDetectionSwitch) {
+    ExtSegDetectGUI (String inputDirectory,
+                     String outputDirectory,
+                     ArrayList<String> filesToProcess,
+                     String format,
+                     int getChannelNumber,
+                     double pixelSize,
+                     boolean getMultiSeries,
+                     boolean getExternalNucSegSwitch,
+                     boolean getExternalCellSegSwitch,
+                     boolean getExternalDetectionSwitch) {
 
-        externalCellSegSwitch = getExternalCellSegSwitch;
+        // From InputGUI
+        inputDir = inputDirectory;
+        outputDir = outputDirectory;
+        fileList = filesToProcess;
+        fileFormat = format;
+        channelNumber = getChannelNumber;
+        pxSizeMicron = pixelSize;
+        multiSeries = getMultiSeries;
+
+        // Settings for ExternalSeg GUI
         externalNucSegSwitch = getExternalNucSegSwitch;
+        externalCellSegSwitch = getExternalCellSegSwitch;
         externalDetectionSwitch = getExternalDetectionSwitch;
 
-        externalCellSegDirectory = "Choose Directory";
-        defaultExternalCellSegIndicator = "CellSeg";
-        defaultCellSegFileFormat = ".tif";
+        externalFileDirectory = "Choose Directory";
+        defaultSegmentationFileFormat = ".tif";
 
-        externalNucSegDirectory = "Choose Directory";
+        externalNucSegDirectory = null;
         defaultExternalNucSegIndicator = "NucSeg";
-        defaultNucSegFileFormat = ".tif";
 
-        externalDetectionDirectory = "Choose Directory";
+        externalCellSegDirectory = null;
+        defaultExternalCellSegIndicator = "CellSeg";
+
+        externalDetectionDirectory = null;
         defaultExternalDetectionIndicator = "Detect";
-        defaultDetectionFileFormat = ".tif";
 
     }
 

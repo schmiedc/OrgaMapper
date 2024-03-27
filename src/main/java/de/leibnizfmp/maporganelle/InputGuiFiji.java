@@ -36,20 +36,6 @@ class InputGuiFiji {
     Boolean testMode;
 
     /**
-     * default constructor
-     */
-    InputGuiFiji() {
-
-        InputDirectory = "Choose Directory";
-        OutputDirectory = "Choose Directory";
-        defaultFileFormat = ".tif";
-        defaultSettingsFile = "Choose a File or leave empty";
-        settingsFile = null;
-        showSettingsSwitch = true;
-        testMode = false;
-    }
-
-    /**
      * Constructor to change only the directories
      * The option for selecting a settingsFile are hidden
      *
@@ -214,7 +200,7 @@ class InputGuiFiji {
 
                 } else {
 
-                    if ( (settingsFile != null) && settingsFile.exists() && !externalNucleusSegmentation && !externalCellSegmentation && !externalDetection) {
+                    if ( settingsFile != null && settingsFile.exists() && !externalNucleusSegmentation && !externalCellSegmentation && !externalDetection) {
 
                         String settingsFileString = settingsFile.toString();
 
@@ -291,15 +277,13 @@ class InputGuiFiji {
 
                         }
 
-                    } else if (settingsFile != null && settingsFile.exists() && externalNucleusSegmentation || externalCellSegmentation || externalDetection) {
+                    } else if (settingsFile != null && settingsFile.exists() && ( externalNucleusSegmentation || externalCellSegmentation || externalDetection) ) {
 
                         IJ.log("Settings File exists. Now comes external seg gui");
 
                     } else {
 
-                        assert settingsFile != null;
-
-                        if ( !settingsFile.exists()  && !externalNucleusSegmentation && !externalCellSegmentation && !externalDetection) {
+                        if ( settingsFile == null || !settingsFile.exists()  && !externalNucleusSegmentation && !externalCellSegmentation && !externalDetection) {
 
                             String selectedFile = fileList.get(0);
                             ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
@@ -321,9 +305,27 @@ class InputGuiFiji {
                             // instantiates previewGui
                             previewGui.setUpGui();
 
-                        } else if (!settingsFile.exists() && externalNucleusSegmentation || externalCellSegmentation || externalDetection) {
+                        } else if (settingsFile == null || !settingsFile.exists() && ( externalNucleusSegmentation || externalCellSegmentation || externalDetection ) ) {
 
-                            IJ.log("Settings File does not exists.Now comes external seg gui");
+                            String selectedFile = fileList.get(0);
+                            ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
+                            double pixelHeight = imageForMetadata.getCalibration().pixelHeight;
+                            int channelN = imageForMetadata.getNChannels();
+
+                            IJ.log("Settings File does not exists. External segmentation selected");
+                            ExtSegDetectGUI extSegDetectGUI = new ExtSegDetectGUI(
+                                    checkTrailingSlash(inputFileString),
+                                    checkTrailingSlash(outputFileString),
+                                    fileList,
+                                    fileFormat,
+                                    channelN,
+                                    pixelHeight,
+                                    multiSeries,
+                                    externalNucleusSegmentation,
+                                    externalCellSegmentation,
+                                    externalDetection);
+
+                            extSegDetectGUI.createWindow();
 
                         }
                     }
