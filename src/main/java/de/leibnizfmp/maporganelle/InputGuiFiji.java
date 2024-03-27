@@ -30,6 +30,9 @@ class InputGuiFiji {
     String defaultFileFormat;
     String defaultSettingsFile;
     Boolean showSettingsSwitch;
+    Boolean externalNucleusSegmentation;
+    Boolean externalCellSegmentation;
+    Boolean externalDetection;
     Boolean testMode;
 
     /**
@@ -164,13 +167,9 @@ class InputGuiFiji {
 
                 settingsFile = new File(defaultSettingsFile = gdPlus.getNextString());
 
-                boolean externalNucleusSegmentation = gdPlus.getNextBoolean();
-                boolean externalCellSegmentation = gdPlus.getNextBoolean();
-                boolean externalDetection = gdPlus.getNextBoolean();
-
-                IJ.log("externalNucleusSegmentation: " + externalNucleusSegmentation);
-                IJ.log("externalCellSegmentation: " + externalCellSegmentation);
-                IJ.log("externalDetection: " + externalDetection);
+                externalNucleusSegmentation = gdPlus.getNextBoolean();
+                externalCellSegmentation = gdPlus.getNextBoolean();
+                externalDetection = gdPlus.getNextBoolean();
 
             }
 
@@ -190,6 +189,9 @@ class InputGuiFiji {
                 System.out.println("Output Directory: " + outputDirectory);
                 System.out.println("File Ending: " + fileFormat);
                 System.out.println("Settings File: " + settingsFile);
+                System.out.println("externalNucleusSegmentation: " + externalNucleusSegmentation);
+                System.out.println("externalCellSegmentation: " + externalCellSegmentation);
+                System.out.println("externalDetection: " + externalDetection);
 
                 FileList getFileList = new FileList(fileFormat);
 
@@ -212,7 +214,7 @@ class InputGuiFiji {
 
                 } else {
 
-                    if ( settingsFile != null && settingsFile.exists() ) {
+                    if ( (settingsFile != null) && settingsFile.exists() && !externalNucleusSegmentation && !externalCellSegmentation && !externalDetection) {
 
                         String settingsFileString = settingsFile.toString();
 
@@ -289,28 +291,41 @@ class InputGuiFiji {
 
                         }
 
+                    } else if (settingsFile != null && settingsFile.exists() && externalNucleusSegmentation || externalCellSegmentation || externalDetection) {
+
+                        IJ.log("Settings File exists. Now comes external seg gui");
+
                     } else {
 
-                        String selectedFile = fileList.get(0);
-                        ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
-                        double pixelHeight = imageForMetadata.getCalibration().pixelHeight;
-                        int channelN = imageForMetadata.getNChannels();
+                        assert settingsFile != null;
 
-                        IJ.log("Did no find xml settings file using default values");
+                        if ( !settingsFile.exists()  && !externalNucleusSegmentation && !externalCellSegmentation && !externalDetection) {
 
-                        // constructs previewGui from default settings since no valid settings file was given
-                        PreviewGui previewGui = new PreviewGui(
-                                checkTrailingSlash(inputFileString),
-                                checkTrailingSlash(outputFileString),
-                                fileList,
-                                fileFormat,
-                                channelN,
-                                pixelHeight,
-                                multiSeries);
+                            String selectedFile = fileList.get(0);
+                            ImagePlus imageForMetadata = Image.getImagePlusBF(selectedFile, fileFormat, checkTrailingSlash(inputFileString), 0);
+                            double pixelHeight = imageForMetadata.getCalibration().pixelHeight;
+                            int channelN = imageForMetadata.getNChannels();
 
-                        // instantiates previewGui
-                        previewGui.setUpGui();
+                            IJ.log("Did no find xml settings file using default values");
 
+                            // constructs previewGui from default settings since no valid settings file was given
+                            PreviewGui previewGui = new PreviewGui(
+                                    checkTrailingSlash(inputFileString),
+                                    checkTrailingSlash(outputFileString),
+                                    fileList,
+                                    fileFormat,
+                                    channelN,
+                                    pixelHeight,
+                                    multiSeries);
+
+                            // instantiates previewGui
+                            previewGui.setUpGui();
+
+                        } else if (!settingsFile.exists() && externalNucleusSegmentation || externalCellSegmentation || externalDetection) {
+
+                            IJ.log("Settings File does not exists.Now comes external seg gui");
+
+                        }
                     }
 
                 }
