@@ -51,12 +51,13 @@ public class BatchProcessor {
     private final boolean useInternalNucleusSegmentation;
     private final boolean useInternalCellSegmentation;
     private final boolean useInternalDetection;
-    private String extNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
-    private String extCellSegmentationDirectory = extNucleusSegmentationDirectory;
-    private String extDetectionDirectory = extNucleusSegmentationDirectory;
-    private String externalNucleusInputFile = "HeLa_1_NucSeg.tif";
-    private String externalCellInputFile = "HeLa_1_CellSeg.tif";
-    private String externalOrganelleInputFile = "HeLa_1_Detect.tif";
+    private String externalNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
+    private String externalCellSegmentationDirectory = externalNucleusSegmentationDirectory;
+    private String externalDetectionDirectory = externalNucleusSegmentationDirectory;
+    private String externalSegmentationFileEnding = ".tif";
+    private String externalNucleusSegmentationSuffix = "NucSeg";
+    private String externalCellSegmentationSuffix = "CellSeg";
+    private String externalDetectionFileString = "Detect";
 
     void processImage() {
 
@@ -71,12 +72,10 @@ public class BatchProcessor {
 
         for ( String fileName : fileList ) {
 
-            IJ.log("Processing file: " + fileName );
-
-            // get file names
+            // this gets the base name of the file from fileList
             String fileNameWOtExt = fileName.substring(0, fileName.lastIndexOf("_S"));
 
-            // get series number from file name
+            // get series number from file name in fileList
             int stringLength = fileName.length();
             String seriesNumberString;
             seriesNumberString = fileName.substring( fileName.lastIndexOf("_S") + 2 , stringLength );
@@ -94,6 +93,8 @@ public class BatchProcessor {
                     measureChannel);
 
             ImagePlus image = processingImage.openWithMultiseriesBF( fileName );
+
+            IJ.log("Processing file: " + fileName );
 
             // override calibration settings if selected
             if (calibrationSetting) {
@@ -120,6 +121,8 @@ public class BatchProcessor {
 
             if (useInternalNucleusSegmentation) {
 
+                IJ.log("Using internal nucleus segmentation");
+
                 nucleusMask = NucleusSegmenter.segmentNuclei(
                         nucleus,
                         kernelSizeNuc,
@@ -133,10 +136,17 @@ public class BatchProcessor {
 
             } else {
 
+                IJ.log("Using external nucleus segmentation");
+
                 ExternalSegmentationLoader externalNucleusSegmentation = new ExternalSegmentationLoader();
 
+                String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
+                        fileNameWOtExt,
+                        externalNucleusSegmentationSuffix,
+                        externalSegmentationFileEnding);
+
                 nucleusMask = externalNucleusSegmentation.createExternalSegmentationMask(
-                        extNucleusSegmentationDirectory, externalNucleusInputFile, image.getCalibration()
+                        externalNucleusSegmentationDirectory, externalNucleusFileName, image.getCalibration()
                 );
 
             }
@@ -147,7 +157,7 @@ public class BatchProcessor {
 
             if (useInternalCellSegmentation) {
 
-                IJ.log("Using internal segmentation");
+                IJ.log("Using internal cell segmentation");
 
                 // get cell segmentations
                 backgroundMask = CellAreaSegmenter.segmentCellArea(
@@ -176,26 +186,38 @@ public class BatchProcessor {
 
                 manager = CellFilter.filterByNuclei(filteredCells, nucleusMask);
 
-                IJ.log("Found " + manager.getCount() + " cell(s)");
-
             } else {
+
+                IJ.log("Using external cell segmentation");
 
                 ExternalSegmentationLoader externalCellSegmentation = new ExternalSegmentationLoader();
 
-                manager = externalCellSegmentation.createExternalCellROIs(extCellSegmentationDirectory, externalCellInputFile);
+                String externalCelLSegmentationFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
+                        fileNameWOtExt,
+                        externalCellSegmentationSuffix,
+                        externalSegmentationFileEnding);
+
+                manager = externalCellSegmentation.createExternalCellROIs(
+                        externalCellSegmentationDirectory,
+                        externalCelLSegmentationFileName);
 
                 // IMPORTANT: The external cell segmentation is used to define background area.
                 // This can be a useful approximation of the background. But also might not be!!
                 backgroundMask = externalCellSegmentation.createExternalSegmentationMask(
-                        extCellSegmentationDirectory, externalCellInputFile, image.getCalibration()
-                );
+                        externalCellSegmentationDirectory,
+                        externalCelLSegmentationFileName,
+                        image.getCalibration());
 
             }
+
+            IJ.log("Found " + manager.getCount() + " cell(s)");
 
             ImagePlus detectionsFiltered;
 
             // Detection of organelles
             if (useInternalDetection) {
+
+                IJ.log("Using internal detection");
 
                 // lysosome detection
                 ImagePlus detections = OrganelleDetector.detectOrganelles(organelle, sigmaLoGOrga, prominenceOrga);
@@ -203,9 +225,19 @@ public class BatchProcessor {
 
             } else {
 
+                IJ.log("Using external detection");
+
                 ExternalSegmentationLoader loadDetectionMask = new ExternalSegmentationLoader();
+
+                String externalDetectionFileName = loadDetectionMask.createExternalFileNameSingleSeries(
+                        fileNameWOtExt,
+                        externalDetectionFileString,
+                        externalSegmentationFileEnding);
+
                 detectionsFiltered = loadDetectionMask.createExternalSegmentationMask(
-                        extDetectionDirectory, externalOrganelleInputFile, image.getCalibration()
+                        externalDetectionDirectory,
+                        externalDetectionFileName,
+                        image.getCalibration()
                 );
 
             }

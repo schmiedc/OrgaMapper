@@ -14,10 +14,11 @@ import java.util.Objects;
 
 public class ExternalSegmentationLoader {
 
-    String createExternalFileName(String baseName, String SegmentationSuffix, String FileEnding){
+    // TODO: generalize to multiseries file
+    String createExternalFileNameSingleSeries(String baseName, String SegmentationSuffix, String FileEnding){
 
         // Add segmentationSuffix and return
-        return baseName + "_" + SegmentationSuffix + "." + FileEnding;
+        return baseName + "_" + SegmentationSuffix + FileEnding;
 
     }
 
@@ -25,6 +26,7 @@ public class ExternalSegmentationLoader {
                                              String FileName,
                                              Calibration calibration) {
 
+        IJ.log("External segmentation file processed " + FileName);
         // loads the label image
         ImagePlus labelImage = IJ.openImage(externalSegmentationDirectory + File.separator + FileName);
 
@@ -39,6 +41,8 @@ public class ExternalSegmentationLoader {
     }
 
     RoiManager createExternalCellROIs(String externalCellSegmentationDirectory, String FileName) {
+
+        IJ.log("External segmentation file processed " + FileName);
 
         ImagePlus labelImage = IJ.openImage(externalCellSegmentationDirectory + File.separator + FileName);
         RoiManager roiManager = label2Roi(labelImage);

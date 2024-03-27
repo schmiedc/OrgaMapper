@@ -1750,7 +1750,8 @@ public class PreviewGui extends JPanel {
                         organelleProminence,
                         invertCellImageSetting,
                         useInternalNucleusSegmentation,
-                        useInternalCellSegmentation, true);
+                        useInternalCellSegmentation,
+                        useInternalDetection);
 
                 processing.processImage();
 

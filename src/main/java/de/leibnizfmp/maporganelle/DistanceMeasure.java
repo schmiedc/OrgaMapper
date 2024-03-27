@@ -89,7 +89,7 @@ public class DistanceMeasure {
 
             measurementsPerCellCollected.add(measurementPerCell);
 
-            IJ.log("Measuring intensity profiles form nucleus edge");
+            IJ.log("Measuring intensity profiles from nucleus edge");
             // collects the intensity profiles for each cell
             ArrayList<ArrayList<String>> nucIntensityProfilesCells = IntensityProfile(organelleChannel,
                     measureChannelImage,
