@@ -84,7 +84,18 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
                 ArrayList<String> fileListTest = new ArrayList<>(fileList.subList(0, 3));
 
                 IJ.log("Run test 1");
-                PreviewGui guiTest = new PreviewGui(testInDir, testOutDir, fileListTest, fileEnding, 3, 0.157, 1, 2, 3);
+                PreviewGui guiTest = new PreviewGui(
+                        testInDir,
+                        testOutDir,
+                        fileListTest,
+                        fileEnding,
+                        3,
+                        0.157,
+                        1,
+                        2,
+                        3,
+                        multiSeriesSwitch);
+
                 guiTest.setUpGui();
 
                 IJ.log("Test 1 done");
@@ -99,6 +110,15 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
                 //processBatch.processImage();
 
             } else if (runTest3) {
+
+
+                //private String externalNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
+                //private String externalCellSegmentationDirectory = externalNucleusSegmentationDirectory;
+                //private String externalDetectionDirectory = externalNucleusSegmentationDirectory;
+                //private String externalSegmentationFileEnding = ".tif";
+                //private String externalNucleusSegmentationSuffix = "NucSeg";
+                //private String externalCellSegmentationSuffix = "CellSeg";
+                //private String externalDetectionSuffix = "Detect";
 
                 IJ.log("Test External segmentation GUI");
                 ExtSegDetectGUI guiTest = new ExtSegDetectGUI(true, false, false);

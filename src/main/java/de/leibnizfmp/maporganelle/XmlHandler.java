@@ -157,8 +157,6 @@ class XmlHandler {
         readMeasure = Integer.parseInt(doc.getElementsByTagName("measureChannel").item(0).getTextContent());
         readFileFormat = doc.getElementsByTagName("fileFormat").item(0).getTextContent();
 
-        IJ.log("Loaded settings file from: " + filePath);
-
     }
 
     /**

@@ -247,7 +247,8 @@ class InputGuiFiji {
                                     readMyXml.readNucleusChannel,
                                     readMyXml.readCytoplasmChannel,
                                     readMyXml.readOrganelleChannel,
-                                    readMyXml.readMeasure);
+                                    readMyXml.readMeasure,
+                                    multiSeries);
 
                             // instantiates previewGui
                             previewGui.setUpGui();
@@ -285,8 +286,14 @@ class InputGuiFiji {
                         IJ.log("Did no find xml settings file using default values");
 
                         // constructs previewGui from default settings since no valid settings file was given
-                        PreviewGui previewGui = new PreviewGui(checkTrailingSlash(inputFileString),
-                                checkTrailingSlash(outputFileString), fileList, fileFormat, channelN, pixelHeight);
+                        PreviewGui previewGui = new PreviewGui(
+                                checkTrailingSlash(inputFileString),
+                                checkTrailingSlash(outputFileString),
+                                fileList,
+                                fileFormat,
+                                channelN,
+                                pixelHeight,
+                                multiSeries);
 
                         // instantiates previewGui
                         previewGui.setUpGui();

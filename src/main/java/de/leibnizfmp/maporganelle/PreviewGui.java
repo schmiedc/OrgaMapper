@@ -43,19 +43,19 @@ public class PreviewGui extends JPanel {
     private final ArrayList<String> fileList;
 
     // external segmentation settings
-    private boolean useInternalNucleusSegmentation = false;
-    private boolean useInternalCellSegmentation = false;
-    private boolean useInternalDetection = false;
+    private boolean useInternalNucleusSegmentation;
+    private boolean useInternalCellSegmentation;
+    private boolean useInternalDetection;
 
     // TODO: get external segmentation / detection setting from ExtSegDetectGUI
-    private String externalNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
-    private String externalCellSegmentationDirectory = externalNucleusSegmentationDirectory;
-    private String externalDetectionDirectory = externalNucleusSegmentationDirectory;
-    private String externalSegmentationFileEnding = ".tif";
-    private String externalNucleusSegmentationSuffix = "NucSeg";
-    private String externalCellSegmentationSuffix = "CellSeg";
-    private String externalDetectionSuffix = "Detect";
-    private boolean multiSeries = false;
+    private String externalNucleusSegmentationDirectory;
+    private String externalCellSegmentationDirectory;
+    private String externalDetectionDirectory;
+    private String externalSegmentationFileEnding;
+    private String externalNucleusSegmentationSuffix;
+    private String externalCellSegmentationSuffix;
+    private String externalDetectionSuffix;
+    private boolean multiSeries;
 
     // list of files
     private JList list;
@@ -1864,9 +1864,17 @@ public class PreviewGui extends JPanel {
                         organelleLoGSigma,
                         organelleProminence,
                         invertCellImageSetting,
-                        useInternalNucleusSegmentation,
-                        useInternalCellSegmentation,
-                        useInternalDetection);
+                        true,
+                        true,
+                        true, 
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        false);
 
                 processing.processImage();
 
@@ -2126,8 +2134,17 @@ public class PreviewGui extends JPanel {
         }
     }
 
-    // default PreviewGUI constructor will be loaded when no settings file is present
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber, double pixelSize, int getNucleusChannel, int getCytoplasmChannel, int getOrganelleChannel) {
+    // Testing Constructor for tests
+    PreviewGui(String inputDirectory,
+                String outputDirectory,
+                ArrayList<String> filesToProcess,
+                String format,
+                int getChannelNumber,
+                double pixelSize,
+                int getNucleusChannel,
+                int getCytoplasmChannel,
+                int getOrganelleChannel,
+                boolean getMultiSeries) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -2175,10 +2192,32 @@ public class PreviewGui extends JPanel {
         organelleChannel = getOrganelleChannel;
         measure = 0;
 
+        // external segmentation settings
+        useInternalNucleusSegmentation = true;
+        useInternalCellSegmentation = true;
+        useInternalDetection = true;
+
+        externalNucleusSegmentationDirectory = null;
+        externalCellSegmentationDirectory = null;
+        externalDetectionDirectory = null;
+        externalSegmentationFileEnding = null;
+        externalNucleusSegmentationSuffix = null;
+        externalCellSegmentationSuffix = null;
+        externalDetectionSuffix = null;
+
+        multiSeries = getMultiSeries;
+
     }
 
     // default PreviewGUI constructor will be loaded when no settings file is present
-    PreviewGui ( String inputDirectory, String outputDirectory, ArrayList<String> filesToProcess, String format, int getChannelNumber, double pixelSize ) {
+    // No external segmentation is provided
+    PreviewGui (String inputDirectory,
+                String outputDirectory,
+                ArrayList<String> filesToProcess,
+                String format,
+                int getChannelNumber,
+                double pixelSize,
+                boolean getMultiSeries) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -2226,41 +2265,58 @@ public class PreviewGui extends JPanel {
         organelleChannel = 0;
         measure = 0;
 
+        // external segmentation settings
+        useInternalNucleusSegmentation = true;
+        useInternalCellSegmentation = true;
+        useInternalDetection = true;
+
+        externalNucleusSegmentationDirectory = null;
+        externalCellSegmentationDirectory = null;
+        externalDetectionDirectory = null;
+        externalSegmentationFileEnding = null;
+        externalNucleusSegmentationSuffix = null;
+        externalCellSegmentationSuffix = null;
+        externalDetectionSuffix = null;
+
+        multiSeries = getMultiSeries;
+
     }
 
     // This constructor is called by the InputGUI to load the Preview GUI with an existing settings file
-    PreviewGui ( String inputDirectory,
-                 String outputDirectory,
-                 ArrayList<String> filesToProcess,
-                 String format,
-                 int getChannelNumber,
-                 float getKernelSizeNuc,
-                 double getRollingBallRadiusNuc,
-                 String getThresholdNuc,
-                 int getErosionNuc,
-                 double getMinSizeNuc,
-                 double getMaxSizeNuc,
-                 double getLowCircNuc,
-                 double getHighCircNuc,
-                 boolean getInvertCellImageSetting,
-                 float getKernelSizeCellArea,
-                 double getRollingBallRadiusCellArea,
-                 int getManualThresholdCellArea,
-                 double getSigmaGaussCellSep,
-                 double getProminenceCellSep,
-                 double getMinCellSize,
-                 double getMaxCellSize,
-                 double getLowCircCellSize,
-                 double getHighCircCelLSize,
-                 double getSigmaLoGOrga,
-                 double getProminenceOrga,
-                 boolean getCalibrationSetting,
-                 double getPxSizeMicron,
-                 boolean getdistanceFromMembraneSetting,
-                 int getNucleusChannel,
-                 int getCytoplasmChannel,
-                 int getOrganelleChannel,
-                 int getMeasure) {
+    // Without loading external segmentations
+    PreviewGui (String inputDirectory,
+                String outputDirectory,
+                ArrayList<String> filesToProcess,
+                String format,
+                int getChannelNumber,
+                float getKernelSizeNuc,
+                double getRollingBallRadiusNuc,
+                String getThresholdNuc,
+                int getErosionNuc,
+                double getMinSizeNuc,
+                double getMaxSizeNuc,
+                double getLowCircNuc,
+                double getHighCircNuc,
+                boolean getInvertCellImageSetting,
+                float getKernelSizeCellArea,
+                double getRollingBallRadiusCellArea,
+                int getManualThresholdCellArea,
+                double getSigmaGaussCellSep,
+                double getProminenceCellSep,
+                double getMinCellSize,
+                double getMaxCellSize,
+                double getLowCircCellSize,
+                double getHighCircCelLSize,
+                double getSigmaLoGOrga,
+                double getProminenceOrga,
+                boolean getCalibrationSetting,
+                double getPxSizeMicron,
+                boolean getdistanceFromMembraneSetting,
+                int getNucleusChannel,
+                int getCytoplasmChannel,
+                int getOrganelleChannel,
+                int getMeasure,
+                boolean getMultiSeries) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -2306,6 +2362,21 @@ public class PreviewGui extends JPanel {
         cytoplasmChannel = getCytoplasmChannel;
         organelleChannel = getOrganelleChannel;
         measure = getMeasure;
+
+        // external segmentation settings
+        useInternalNucleusSegmentation = true;
+        useInternalCellSegmentation = true;
+        useInternalDetection = true;
+
+        externalNucleusSegmentationDirectory = null;
+        externalCellSegmentationDirectory = null;
+        externalDetectionDirectory = null;
+        externalSegmentationFileEnding = null;
+        externalNucleusSegmentationSuffix = null;
+        externalCellSegmentationSuffix = null;
+        externalDetectionSuffix = null;
+
+        multiSeries = getMultiSeries;
     }
 
 

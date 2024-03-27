@@ -52,14 +52,14 @@ public class BatchProcessor {
     private final boolean useInternalCellSegmentation;
     private final boolean useInternalDetection;
     // TODO: get external segmentation / detection setting from PreviewGUI
-    private String externalNucleusSegmentationDirectory = "/home/schmiedc/FMP_Docs/Projects/OrgaMapper/2024-02-29_Revision/Feature_External-Detection/input_extSegDetect/";
-    private String externalCellSegmentationDirectory = externalNucleusSegmentationDirectory;
-    private String externalDetectionDirectory = externalNucleusSegmentationDirectory;
-    private String externalSegmentationFileEnding = ".tif";
-    private String externalNucleusSegmentationSuffix = "NucSeg";
-    private String externalCellSegmentationSuffix = "CellSeg";
-    private String externalDetectionFileString = "Detect";
-    private boolean multiSeries = false;
+    private String externalNucleusSegmentationDirectory;
+    private String externalCellSegmentationDirectory;
+    private String externalDetectionDirectory;
+    private String externalSegmentationFileEnding;
+    private String externalNucleusSegmentationSuffix;
+    private String externalCellSegmentationSuffix;
+    private String externalDetectionSuffix;
+    private boolean multiSeries;
 
     void processImage() {
 
@@ -236,7 +236,7 @@ public class BatchProcessor {
 
                 String externalDetectionFileName = loadDetectionMask.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
-                        externalDetectionFileString,
+                        externalDetectionSuffix,
                         externalSegmentationFileEnding,
                         seriesNumber,
                         multiSeries);
@@ -381,6 +381,7 @@ public class BatchProcessor {
 
     }
 
+    // Batch Processor Constructor
     BatchProcessor(String inputDirectory,
                    String outputDirectory,
                    ArrayList<String> filesToProcess,
@@ -415,7 +416,15 @@ public class BatchProcessor {
                    boolean getInvertCellImageSetting,
                    boolean getUseInternalNucleusSegmentation,
                    boolean getUseInternalCellSegmentation,
-                   boolean getUseInternalDetection) {
+                   boolean getUseInternalDetection,
+                   String getExternalNucleusSegmentationDirectory,
+                   String getExternalCellSegmentationDirectory,
+                   String getExternalDetectionDirectory,
+                   String getExternalSegmentationFileEnding,
+                   String getExternalNucleusSegmentationSuffix,
+                   String getExternalCellSegmentationSuffix,
+                   String getExternalDetectionSuffix,
+                   boolean getMultiSeries) {
 
         inputDir = inputDirectory;
         outputDir = outputDirectory;
@@ -467,6 +476,16 @@ public class BatchProcessor {
         useInternalNucleusSegmentation = getUseInternalNucleusSegmentation;
         useInternalCellSegmentation = getUseInternalCellSegmentation;
         useInternalDetection = getUseInternalDetection;
+
+        externalNucleusSegmentationDirectory = getExternalNucleusSegmentationDirectory;
+        externalCellSegmentationDirectory = getExternalCellSegmentationDirectory;
+        externalDetectionDirectory = getExternalDetectionDirectory;
+        externalSegmentationFileEnding = getExternalSegmentationFileEnding;
+        externalNucleusSegmentationSuffix = getExternalNucleusSegmentationSuffix;
+        externalCellSegmentationSuffix = getExternalCellSegmentationSuffix;
+        externalDetectionSuffix = getExternalDetectionSuffix;
+
+        multiSeries = getMultiSeries;
 
     }
 
