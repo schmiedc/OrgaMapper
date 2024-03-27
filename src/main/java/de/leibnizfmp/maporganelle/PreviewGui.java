@@ -1864,17 +1864,17 @@ public class PreviewGui extends JPanel {
                         organelleLoGSigma,
                         organelleProminence,
                         invertCellImageSetting,
-                        true,
-                        true,
-                        true, 
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false);
+                        useInternalNucleusSegmentation,
+                        useInternalCellSegmentation,
+                        useInternalDetection,
+                        externalNucleusSegmentationDirectory,
+                        externalCellSegmentationDirectory,
+                        externalDetectionDirectory,
+                        externalSegmentationFileEnding,
+                        externalNucleusSegmentationSuffix,
+                        externalCellSegmentationSuffix,
+                        externalDetectionSuffix,
+                        multiSeries);
 
                 processing.processImage();
 
