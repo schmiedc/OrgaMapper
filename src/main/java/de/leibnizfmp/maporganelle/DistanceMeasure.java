@@ -206,9 +206,8 @@ public class DistanceMeasure {
         ResultsTable centerOfMassResults = new ResultsTable();
         Analyzer centerOfMassAnalyzer = new Analyzer(singleNucleusImage, Analyzer.CENTER_OF_MASS, centerOfMassResults);
         centerOfMassAnalyzer.measure();
-        cellValueList.add( String.valueOf( centerOfMassResults.getValue("XM", 0) ) );
-        cellValueList.add( String.valueOf( centerOfMassResults.getValue("YM", 0) ) );
 
+        // measure mean background
         if ( backgroundMean >= 0 ) {
 
             cellValueList.add( String.valueOf(backgroundMean));
@@ -219,6 +218,10 @@ public class DistanceMeasure {
 
         }
 
+        cellValueList.add( String.valueOf( centerOfMassResults.getValue("XM", 0) ) );
+        cellValueList.add( String.valueOf( centerOfMassResults.getValue("YM", 0) ) );
+
+        // Optional measurements based on measurement channel
         if ( measureChannel > 0) {
 
             measureChannelImage.setRoi( manager.getRoi(cellIndex) );

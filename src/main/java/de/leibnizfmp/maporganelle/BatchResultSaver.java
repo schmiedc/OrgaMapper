@@ -31,11 +31,11 @@ public class BatchResultSaver {
 
         if ( measure == 0 ) {
 
-            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,nucleusCenterMassX,nucleusCenterMassY,orgaMeanBackground");
+            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground,nucleusCenterMassX,nucleusCenterMassY");
 
         } else {
 
-            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,nucleusCenterMassX,nucleusCenterMassY,orgaMeanBackground, measureMeanIntensity,measureMeanBackground");
+            cellFile = new StringBuilder("identifier,series,cell,ferets,cellArea,numberDetections,orgaMeanIntensity,orgaMeanBackground,nucleusCenterMassX,nucleusCenterMassY,measureMeanIntensity,measureMeanBackground");
 
         }
         cellFile.append("\n");
