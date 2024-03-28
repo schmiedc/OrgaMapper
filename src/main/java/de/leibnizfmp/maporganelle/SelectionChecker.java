@@ -41,7 +41,6 @@ public class SelectionChecker {
 
                     IJ.selectWindow(image);
                     IJ.run("Close");
-                    selectedFileChecker = false;
 
                 }
 

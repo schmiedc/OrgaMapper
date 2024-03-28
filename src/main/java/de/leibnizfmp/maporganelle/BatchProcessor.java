@@ -52,14 +52,14 @@ public class BatchProcessor {
     private final boolean useInternalCellSegmentation;
     private final boolean useInternalDetection;
     // TODO: get external segmentation / detection setting from PreviewGUI
-    private String externalNucleusSegmentationDirectory;
-    private String externalCellSegmentationDirectory;
-    private String externalDetectionDirectory;
-    private String externalSegmentationFileEnding;
-    private String externalNucleusSegmentationSuffix;
-    private String externalCellSegmentationSuffix;
-    private String externalDetectionSuffix;
-    private boolean multiSeries;
+    private final String externalNucleusSegmentationDirectory;
+    private final String externalCellSegmentationDirectory;
+    private final String externalDetectionDirectory;
+    private final String externalSegmentationFileEnding;
+    private final String externalNucleusSegmentationSuffix;
+    private final String externalCellSegmentationSuffix;
+    private final String externalDetectionSuffix;
+    private final boolean multiSeries;
 
     void processImage() {
 

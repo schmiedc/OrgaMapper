@@ -21,7 +21,6 @@ public class SegmentationVisualizer {
      * @param setDisplayRange           sets the display range for vis
      */
 
-    // TODO: remove nucleus segmentation dependencies and just provide nucleus mask
     void visualizeSpots(ImagePlus originalImage,
                         Image imageObject,
                         ImagePlus nucleiMask,
@@ -160,8 +159,6 @@ public class SegmentationVisualizer {
      * @param setDisplayRange           sets the display range for vis
      * @param invertCellImage           Setting if cell channel should be inverted or not
      */
-
-    // TODO: remove nucleus segmentation dependencies and just provide nucleus mask
     void visualizeCellSegments(ImagePlus originalImage,
                                Image imageObject,
                                ImagePlus nucleiMask,

@@ -43,19 +43,17 @@ public class PreviewGui extends JPanel {
     private final ArrayList<String> fileList;
 
     // external segmentation settings
-    private boolean useInternalNucleusSegmentation;
-    private boolean useInternalCellSegmentation;
-    private boolean useInternalDetection;
-
-    // TODO: get external segmentation / detection setting from ExtSegDetectGUI
-    private String externalNucleusSegmentationDirectory;
-    private String externalCellSegmentationDirectory;
-    private String externalDetectionDirectory;
-    private String externalSegmentationFileEnding;
-    private String externalNucleusSegmentationSuffix;
-    private String externalCellSegmentationSuffix;
-    private String externalDetectionSuffix;
-    private boolean multiSeries;
+    private final boolean useInternalNucleusSegmentation;
+    private final boolean useInternalCellSegmentation;
+    private final boolean useInternalDetection;
+    private final String externalNucleusSegmentationDirectory;
+    private final String externalCellSegmentationDirectory;
+    private final String externalDetectionDirectory;
+    private final String externalSegmentationFileEnding;
+    private final String externalNucleusSegmentationSuffix;
+    private final String externalCellSegmentationSuffix;
+    private final String externalDetectionSuffix;
+    private final boolean multiSeries;
 
     // list of files
     private JList list;

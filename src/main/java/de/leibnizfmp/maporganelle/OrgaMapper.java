@@ -42,7 +42,6 @@ public class OrgaMapper<T extends RealType<T>>  implements Command {
      * your integrated development environment (IDE).
      *
      * @param args whatever, it's ignored
-     * @throws Exception
      */
     public static void main(final String... args) throws Exception {
 

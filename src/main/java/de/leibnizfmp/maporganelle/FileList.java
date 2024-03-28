@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class FileList {
 
-    private String suffix;
+    private final String suffix;
 
     /**
      * walks through input directory

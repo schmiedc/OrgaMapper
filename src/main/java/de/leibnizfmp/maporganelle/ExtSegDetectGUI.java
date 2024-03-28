@@ -22,8 +22,8 @@ public class ExtSegDetectGUI {
     private final String fileFormat;
     private final double pxSizeMicron;
     private final int channelNumber;
-    private boolean multiSeries;
-    private boolean settings;
+    private final boolean multiSeries;
+    private final boolean settings;
 
     // settings for nucleus segmentation
     private float kernelSizeNuc;

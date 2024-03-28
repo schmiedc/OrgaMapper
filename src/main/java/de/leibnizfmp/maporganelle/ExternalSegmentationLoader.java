@@ -14,7 +14,6 @@ import java.util.Objects;
 
 public class ExternalSegmentationLoader {
 
-    // TODO: generalize to multi series file
     String createExternalFileNameSingleSeries(String baseName,
                                               String SegmentationSuffix,
                                               String fileEnding,
@@ -60,9 +59,8 @@ public class ExternalSegmentationLoader {
         IJ.log("External segmentation file processed " + FileName);
 
         ImagePlus labelImage = IJ.openImage(externalCellSegmentationDirectory + File.separator + FileName);
-        RoiManager roiManager = label2Roi(labelImage);
 
-        return roiManager;
+        return label2Roi(labelImage);
 
     }
     void visualizeExternalSpots(String externalDetectionDirectory,
@@ -176,7 +174,7 @@ public class ExternalSegmentationLoader {
 
     /**
      * Converts gray scale label image to ROIs
-     * After: https://github.com/BIOP/ijp-LaRoMe/blob/master/src/main/java/ch/epfl/biop/ij2command/Labels2Rois.java
+     * After: <a href="https://github.com/BIOP/ijp-LaRoMe/blob/master/src/main/java/ch/epfl/biop/ij2command/Labels2Rois.java">...</a>
      *
      * @param labelImage a gray scale label image
      * @return ROI Manager with ROIs from label image
