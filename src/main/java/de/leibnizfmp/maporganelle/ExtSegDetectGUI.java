@@ -109,15 +109,34 @@ public class ExtSegDetectGUI {
 
             File externalSegmentationDirectory = new File(InputDirectory = gdPlus.getNextString());
             System.out.println(externalSegmentationDirectory);
-
-            String externalNucSegDirectory = checkTrailingSlash(String.valueOf(externalSegmentationDirectory));
-            String externalCellSegDirectory = checkTrailingSlash(String.valueOf(externalSegmentationDirectory));
-            String externalDetectionDirectory = checkTrailingSlash(String.valueOf(externalSegmentationDirectory));
-
             String externalSegmentationFormat = gdPlus.getNextString();
-            String externalNucSegSuffix = gdPlus.getNextString();
-            String externalCellSegSuffix = gdPlus.getNextString();
-            String externalDetectionSuffix = gdPlus.getNextString();
+
+            String externalNucSegDirectory = null;
+            String externalNucSegSuffix = null;
+            String externalCellSegDirectory = null;
+            String externalCellSegSuffix = null;
+            String externalDetectionDirectory = null;
+            String externalDetectionSuffix = null;
+
+            if (externalNucSegSwitch) {
+
+                externalNucSegDirectory = checkTrailingSlash(String.valueOf(externalSegmentationDirectory));
+                externalNucSegSuffix = gdPlus.getNextString();
+            }
+
+            if (externalCellSegSwitch) {
+
+                externalCellSegDirectory = checkTrailingSlash(String.valueOf(externalSegmentationDirectory));
+                externalCellSegSuffix = gdPlus.getNextString();
+
+            }
+
+            if (externalDetectionSwitch) {
+
+                externalDetectionDirectory = checkTrailingSlash(String.valueOf(externalSegmentationDirectory));
+                externalDetectionSuffix = gdPlus.getNextString();
+
+            }
 
             if (settings) {
 
