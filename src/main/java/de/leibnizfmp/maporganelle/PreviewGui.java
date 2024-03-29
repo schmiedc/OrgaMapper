@@ -196,7 +196,7 @@ public class PreviewGui extends JPanel {
         resetButton.addActionListener(new MyResetListener());
         saveLoadBox.add(resetButton);
 
-        JButton resetDirButton = new JButton("Reset Directories");
+        JButton resetDirButton = new JButton("Reset Preview");
         resetDirButton.addActionListener(new MyResetDirectoryListener());
         saveLoadBox.add(resetDirButton);
 
@@ -2095,26 +2095,23 @@ public class PreviewGui extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            boolean checkDir = IJ.showMessageWithCancel("Warning!", "Do you want to reset Directories? \n \n " +
-                    "Settings will remain the same!");
+            boolean checkDir = IJ.showMessageWithCancel("Warning!", "Do you want to reset Preview?");
 
             if ( checkDir ){
 
                 String fileName = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss'-settings.xml'").format(new Date());
                 saveSettings( outputDir, fileName );
 
-                String settingFilePath = outputDir + File.separator + fileName;
-
                 theFrame.dispose();
-                InputGuiFiji start = new InputGuiFiji( settingFilePath, false);
+                InputGuiFiji start = new InputGuiFiji();
 
                 start.createWindow();
 
-                IJ.log("Resetting directories...");
+                IJ.log("Resetting Preview...");
 
             } else {
 
-                IJ.log("Directory reset canceled");
+                IJ.log("Preview reset canceled");
 
             }
 
