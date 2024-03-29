@@ -16,18 +16,17 @@ public class ExternalSegmentationLoader {
 
     String createExternalFileNameSingleSeries(String baseName,
                                               String SegmentationSuffix,
-                                              String fileEnding,
                                               Integer seriesNumber,
                                               boolean multiSeries){
         String fileName;
 
         if (multiSeries) {
 
-            fileName = baseName + "_" + seriesNumber + "_" + SegmentationSuffix + fileEnding;
+            fileName = baseName + "_S" + seriesNumber + SegmentationSuffix;
 
         } else {
 
-            fileName = baseName + "_" + SegmentationSuffix + fileEnding;
+            fileName = baseName + SegmentationSuffix;
         }
 
         // Add segmentationSuffix and return

@@ -55,7 +55,6 @@ public class BatchProcessor {
     private final String externalNucleusSegmentationDirectory;
     private final String externalCellSegmentationDirectory;
     private final String externalDetectionDirectory;
-    private final String externalSegmentationFileEnding;
     private final String externalNucleusSegmentationSuffix;
     private final String externalCellSegmentationSuffix;
     private final String externalDetectionSuffix;
@@ -145,7 +144,6 @@ public class BatchProcessor {
                 String externalNucleusFileName = externalNucleusSegmentation.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalNucleusSegmentationSuffix,
-                        externalSegmentationFileEnding,
                         seriesNumber,
                         multiSeries);
 
@@ -198,7 +196,6 @@ public class BatchProcessor {
                 String externalCelLSegmentationFileName = externalCellSegmentation.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalCellSegmentationSuffix,
-                        externalSegmentationFileEnding,
                         seriesNumber,
                         multiSeries);
 
@@ -237,7 +234,6 @@ public class BatchProcessor {
                 String externalDetectionFileName = loadDetectionMask.createExternalFileNameSingleSeries(
                         fileNameWOtExt,
                         externalDetectionSuffix,
-                        externalSegmentationFileEnding,
                         seriesNumber,
                         multiSeries);
 
@@ -420,7 +416,6 @@ public class BatchProcessor {
                    String getExternalNucleusSegmentationDirectory,
                    String getExternalCellSegmentationDirectory,
                    String getExternalDetectionDirectory,
-                   String getExternalSegmentationFileEnding,
                    String getExternalNucleusSegmentationSuffix,
                    String getExternalCellSegmentationSuffix,
                    String getExternalDetectionSuffix,
@@ -480,7 +475,6 @@ public class BatchProcessor {
         externalNucleusSegmentationDirectory = getExternalNucleusSegmentationDirectory;
         externalCellSegmentationDirectory = getExternalCellSegmentationDirectory;
         externalDetectionDirectory = getExternalDetectionDirectory;
-        externalSegmentationFileEnding = getExternalSegmentationFileEnding;
         externalNucleusSegmentationSuffix = getExternalNucleusSegmentationSuffix;
         externalCellSegmentationSuffix = getExternalCellSegmentationSuffix;
         externalDetectionSuffix = getExternalDetectionSuffix;

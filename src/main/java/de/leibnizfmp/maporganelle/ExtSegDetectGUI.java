@@ -65,7 +65,6 @@ public class ExtSegDetectGUI {
 
     // external seg settings
     String externalFileDirectory;
-    String defaultSegmentationFileFormat;
     private final Boolean externalNucSegSwitch;
     String defaultExternalNucSegIndicator;
     private final Boolean externalCellSegSwitch;
@@ -78,7 +77,6 @@ public class ExtSegDetectGUI {
         GenericDialogPlus gdPlus = new GenericDialogPlus("External segmentation (seg.) and detection dialog");
 
         gdPlus.addDirectoryField("External file directory: ", externalFileDirectory, 50);
-        gdPlus.addStringField("External file ending: ", defaultSegmentationFileFormat , 50);
 
         if (externalNucSegSwitch) {
 
@@ -109,7 +107,6 @@ public class ExtSegDetectGUI {
 
             File externalSegmentationDirectory = new File(InputDirectory = gdPlus.getNextString());
             System.out.println(externalSegmentationDirectory);
-            String externalSegmentationFormat = gdPlus.getNextString();
 
             String externalNucSegDirectory = null;
             String externalNucSegSuffix = null;
@@ -180,7 +177,6 @@ public class ExtSegDetectGUI {
                         externalNucSegDirectory,
                         externalCellSegDirectory,
                         externalDetectionDirectory,
-                        externalSegmentationFormat,
                         externalNucSegSuffix,
                         externalCellSegSuffix,
                         externalDetectionSuffix);
@@ -204,7 +200,6 @@ public class ExtSegDetectGUI {
                         externalNucSegDirectory,
                         externalCellSegDirectory,
                         externalDetectionDirectory,
-                        externalSegmentationFormat,
                         externalNucSegSuffix,
                         externalCellSegSuffix,
                         externalDetectionSuffix);
@@ -244,10 +239,9 @@ public class ExtSegDetectGUI {
         externalDetectionSwitch = getExternalDetectionSwitch;
 
         externalFileDirectory = "Choose Directory";
-        defaultSegmentationFileFormat = ".tif";
-        defaultExternalNucSegIndicator = "NucSeg";
-        defaultExternalCellSegIndicator = "CellSeg";
-        defaultExternalDetectionIndicator = "Detect";
+        defaultExternalNucSegIndicator = "_NucSeg.tif";
+        defaultExternalCellSegIndicator = "_CellSeg.tif";
+        defaultExternalDetectionIndicator = "_Detect.tif";
 
         settings = false;
 
@@ -341,10 +335,9 @@ public class ExtSegDetectGUI {
         externalDetectionSwitch = getExternalDetectionSwitch;
 
         externalFileDirectory = "Choose Directory";
-        defaultSegmentationFileFormat = ".tif";
-        defaultExternalNucSegIndicator = "NucSeg";
-        defaultExternalCellSegIndicator = "CellSeg";
-        defaultExternalDetectionIndicator = "Detect";
+        defaultExternalNucSegIndicator = "_NucSeg.tif";
+        defaultExternalCellSegIndicator = "_CellSeg.tif";
+        defaultExternalDetectionIndicator = "_Detect.tif";
 
         multiSeries = getMultiSeries;
 
