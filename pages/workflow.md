@@ -8,12 +8,14 @@ title: Workflow
 ## Start and loading data
 1. Start Fiji
 2. Open OrgaMapper
-    **_Fiji > Plugins > Cellular-Imaging > OrgaMapper_**
+    **_Fiji > Plugins > Cellular-Imaging > Map Organelle_**
 3. **_Setup dialog_** pops up
 
 <img src="../images/SetupDialog.png" alt="SetupDialog" class="inline"/>
 
 Specify the location of the input, output directories and the file ending of the files to be analyzed. If already available specify the location and name of a settings file  or otherwise leave empty. You can specify files and directory also by drag & drop into the respective field.
+
+*Note:* You can also load external segmentations and/or an external detection into the workflow please have a look at the [external segmentation tutorial](pages/external_segmentation.html)
 
 Press **_ok_** to continue.
 
@@ -22,16 +24,17 @@ Press **_ok_** to continue.
 
 OrgaMapper will search recursively in the specified input directory for files with matching file ending. The OrgaMapper preview window will open. All the available input files will be displayed in the file list (1).
 
-The left section of the preview menu contains tabs with the different processing settings for nuclei and cell segmentation as well as organelle detection. Upon first loading of the workflow without a settings file appropriate default parameters are loaded (2).
+The left section of the preview menu contains tabs with the different processing settings for nuclei and cell segmentation as well as organelle detection. Upon first loading of the workflow without a settings file appropriate default parameters are loaded (2). 
 
-The right section contains all key experimental settings such as pixel size and the identity of each channel (3).
-The lower bar contains menu items for saving, loading and resetting the processing settings as well as the input & output directories (4).
+The right section contains all key experimental settings such as pixel size.  Optionally the distance measurement can be also performed from the cell mask edge.Further the identity of each channel need to be specified here (3).
+
+The lower bar contains menu items for saving, loading and resetting the processing settings as well as reseting the preview (4).
 
 <img src="../images/Overview.png" alt="Overview" class="inline"/>
 
 ## Save, load, reset settings and reset directories
 
-Different setting files can be saved and loaded. The reset Button will restore the processing setting to the system default. If you want to process a different dataset or store the output files in a different output directory you can press Reset Directories:
+The dataset settings as well as the segmentation and detection settings can be saved and loaded. The reset *Reset Processing Settings* button will restore the processing setting to the system default. You can also restart the preview using the *Reset Preview* button:
 
 <img src="../images/SaveLoadReset.png" alt="SaveLoadReset" class="inline"/>
 
@@ -41,9 +44,11 @@ The workflow stores the experimental settings in a .xml file. This is a machine 
 
 ## Specify experimental settings
 
-1. *Pixel size:* the pixel size of the loaded dataset is displayed. Verify if this is correct since segmentation parameters and the units of the measurements are depending on this setting. Modify this value and click the **_override metadata_** button if necessary.
+1. *Pixel size:* The pixel size of the loaded dataset is displayed. Verify if this is correct since segmentation parameters and the units of the measurements are depending on this setting. Modify this value and click the **_override metadata_** button if necessary.
 
-2. *Identity of the channels:* each channel is associated with a specific segmentation or measurement task. Select the correct channels for each identity. The Measurement channel is an optional setting. You can leave this on **_select_** or **_ignore_**. If you want to extract intensity measurements from another channel specify any of the other channels.
+2. *Measure distance from membrane:* The distance measurements (distnace of detections each pixel in the cytoplasm) can also be performed from the membrane by creating an euclidean distance map (EDM) from the cell mask edge. 
+
+3. *Identity of the channels:* Each channel is associated with a specific segmentation or measurement task. Select the correct channels for each identity. The Measurement channel is an optional setting. You can leave this on **_select_** or **_ignore_**. If you want to extract intensity measurements from another channel specify any of the other channels.
   - Nucleus channel
   - Cytoplasm channel
   - Organelle channel
@@ -54,7 +59,6 @@ The workflow stores the experimental settings in a .xml file. This is a machine 
 </p>
 
 ## Preview the segmentation parameters
-
 
 Select a test image of the loaded image in the file list. If no file has been selected the program will prompt you to do so. In the tabs of the left section you can select the processing tasks you can optimize.
 
