@@ -47,3 +47,6 @@ out/# User-specific stuff
 .idea/misc.xml
 .idea/uiDesigner.xml
 .idea/vcs.xml
+
+out/
+src/main/resources/META-INF/
