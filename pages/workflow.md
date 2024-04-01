@@ -15,7 +15,7 @@ title: Workflow
 
 Specify the location of the input, output directories and the file ending of the files to be analyzed. If already available specify the location and name of a settings file  or otherwise leave empty. You can specify files and directory also by drag & drop into the respective field.
 
-*Note:* You can also load external segmentations and/or an external detection into the workflow please have a look at the [external segmentation tutorial](pages/external_segmentation.html)
+*Note:* you can also load external segmentations and/or an external detection into the workflow please have a look at the [External segmentation](external_segmentation.html) tutorial.
 
 Press **_ok_** to continue.
 
@@ -44,11 +44,11 @@ The workflow stores the experimental settings in a .xml file. This is a machine 
 
 ## Specify experimental settings
 
-1. *Pixel size:* The pixel size of the loaded dataset is displayed. Verify if this is correct since segmentation parameters and the units of the measurements are depending on this setting. Modify this value and click the **_override metadata_** button if necessary.
+1. *Pixel size:* the pixel size of the loaded dataset is displayed. Verify if this is correct since segmentation parameters and the units of the measurements are depending on this setting. Modify this value and click the **_override metadata_** button if necessary.
 
-2. *Measure distance from membrane:* The distance measurements (distnace of detections each pixel in the cytoplasm) can also be performed from the membrane by creating an euclidean distance map (EDM) from the cell mask edge. 
+2. *Measure distance from membrane:* the distance measurements (distnace of detections each pixel in the cytoplasm) can also be performed from the membrane by creating an euclidean distance map (EDM) from the cell mask edge. 
 
-3. *Identity of the channels:* Each channel is associated with a specific segmentation or measurement task. Select the correct channels for each identity. The Measurement channel is an optional setting. You can leave this on **_select_** or **_ignore_**. If you want to extract intensity measurements from another channel specify any of the other channels.
+3. *Identity of the channels:* each channel is associated with a specific segmentation or measurement task. Select the correct channels for each identity. The Measurement channel is an optional setting. You can leave this on **_select_** or **_ignore_**. If you want to extract intensity measurements from another channel specify any of the other channels.
   - Nucleus channel
   - Cytoplasm channel
   - Organelle channel
@@ -64,7 +64,7 @@ Select a test image of the loaded image in the file list. If no file has been se
 
 You can preview each segmentation setting on different images. In fact we want to encourage you to do so to find the optimal parameters for the entire dataset.
 
-*TIPP:* The proposed segmentation is displayed as overlay over the image stack like any other Fiji image. So you can use any Fiji tools (zoom, pan, b/c) or can even duplicate or save the image as .tiff stack with the overlay!
+*TIPP:* the proposed segmentation is displayed as overlay over the image stack like any other Fiji image. So you can use any Fiji tools (zoom, pan, b/c) or can even duplicate or save the image as .tiff stack with the overlay!
 
 In the following sections we will discuss the different processing options for each task.
 
@@ -75,6 +75,7 @@ In the following sections we will discuss the different processing options for e
     <td><img src="../images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei"></td>
   </tr>
 </table>
+
 1. Segmentation:
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
@@ -93,6 +94,7 @@ In the following sections we will discuss the different processing options for e
 </table>
 
 1. Segmentation:
+  - Invert Cell Image - for a membrane staining the image can be inverted to achieve a segmentation. Tutorial: [Segmentation of membrane signal](seg_membrane_signal.md). 
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
   - Global Threshold (A.U.) - global intensity based threshold.
@@ -103,8 +105,7 @@ In the following sections we will discuss the different processing options for e
 
 3. Filter: tick this box to toggle the visualization cell segmentations with a single nucleus. This only affects the visualization. In the final processing the cells will always be filtered for cells that have a single nucleus. Cells without or with multiple nuclei present in the cell segmentation will always be filtered!
 
-4. Press **_Preview_** to see the outline of the segmentation on top of the cytoplasm channel.
-Adjust the brightness contrast of the image using:
+4. Press **_Preview_** to see the outline of the segmentation on top of the cytoplasm channel. Adjust the brightness contrast of the image using:
 **_Image > Adjust > Brightness/Contrast..._** - **_Ctrl + Shift + C_**
 
 ### Organelle detection
@@ -137,3 +138,9 @@ The progress of the processing will be written in the Log file. Once finished th
 <p align="center">
   <img src="../images/Finished.png" alt="Finished">
 </p>
+
+## Results
+
+For a documentation of the image analysis results have a look at the [Fiji Plugin Results](results.html).
+
+The results can be processed using an RShiny workflow: [Shiny App Execution](rShinyApp.html).

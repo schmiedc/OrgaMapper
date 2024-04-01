@@ -27,16 +27,16 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 
 The image analysis plugin solves 3 core image analysis tasks:
 
-1. Nucleus segmentation: The nucleus is segmented using an intensity threshold.
+1. Nucleus segmentation: the nucleus is segmented using an intensity threshold.
 Nuclei at the edge of the field of view are rejected.
 The generated masks are filtered for size and shape.
 
-2. Cell segmentation: Cells are segmented using an intensity threshold.
+2. Cell segmentation: cells are segmented using an intensity threshold.
 Touching cells are separated using a marker controlled watershed.
 The cell ROIs are filtered such that each cell contains 1 nucleus.
 Cells are further filered by size and shape.
 
-3. Organelle detection: We use a blob detection to detect individual organelles to locate their number and the position within the cell.
+3. Organelle detection: we use a blob detection to detect individual organelles to locate their number and the position within the cell.
 
 
 External segmentations and detections: Segmentations of nuclei and/or cells as well as the detection of organelles can be provided externally. 
@@ -119,4 +119,4 @@ As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/
 
 ## - [External segmentation](pages/external_segmentation.html)
 ## - [Segmentation of membrane signal](pages/seg_membrane_signal.md)
-## - [Analyze organelle circular distribution](pages/analyze_circ_dist.md)
+## - [Analyze organelle distribution](pages/analyze_circ_dist.md)
