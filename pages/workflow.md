@@ -94,7 +94,7 @@ In the following sections we will discuss the different processing options for e
 </table>
 
 1. Segmentation:
-  - Invert Cell Image - for a membrane staining the image can be inverted to achieve a segmentation. Tutorial: [Segmentation of membrane signal](seg_membrane_signal.md). 
+  - Invert Cell Image - for a membrane staining the image can be inverted to achieve a segmentation. Tutorial: [Segmentation of membrane signal](seg_membrane_signal.html). 
   - Median filter size (px) - noise reduction using the median value of the neighboring pixels. The filter size determines the size of the neighborhood.
   - Rolling ball radius (px) - radius of the rolling ball background subtraction.
   - Global Threshold (A.U.) - global intensity based threshold.
