@@ -9,8 +9,62 @@ This is a tutorial for loading external input data for the nucleus and cell segm
 
 ## Accepted data
 
+### Data format
+
+Currently grayscale 8-bit .tif files are supported as input for external segmentations or detections. For the segmentation each grayvalue deenotes a specific objects (e.g. individual cell or individual nucleus) thus corresponds to an instance segmentation. The detection is supplied as a Fiji mask 8-bit .tif file were each foreground pixel (value of 255) corresponds to the detection. 
+
+Further segmentation formats will be added in future work focusing on the most common usecases. 
+
+
+### Data structure
+
+The workflow requires that the external data can be matched with the original input data. This can be done by providing the external data with the base name combined with an External-Data-Suffix. All external data needs to be provided in the same folder. 
+
+External-Data-Suffix is an identifier for any external data including the file ending (i.e. .tif) and could be *_External-Data.tif*. It can also be a specific identifier for the type of external data if multiple different external data types are provided (e.g. external nucleus segmentation and organelle detection) and thus could be _NucSeg.tif and _Detect.tif. 
+
+The exact External-Data-Suffix is up to the user as long as the below structure is followed. External data can be easily renamed using custom script. Below a generic example for single series input image data:
+
+InputFolder:<br>
+├── BaseName_image-1<br>
+├── BaseName_image-2<br>
+├── BaseName_image-n<br>
+└── ...
+
+ExternalSegmentation_InputFolder:<br>
+├── BaseName_image-1**_External-Data-Suffix**<br>
+├── BaseName_image-2**_External-Data-Suffix**<br>
+├── BaseName_image-n**_External-Data-Suffix**<br>
+└── ...
+
+For multi series input image data the external files need to be matchable to the base name as well es to the series number. This series number needs to be added with the suffix \<number\>. This number starts with 1. Here shown for a generic example: 
+
+InputFolder:<br>
+├── BaseName_series-1<br>
+├── BaseName_series-2<br>
+├── BaseName_series-n<br>
+└── ...
+
+Each base multi series image file would contain n number of individual images. This is matched with external input data like so:
+
+ExternalSegmentation_InputFolder:<br>
+├── BaseName_series-1**_1_External-Data-Suffix\>**<br>
+├── BaseName_series-1**_2_External-Data-Suffix\>**<br>
+├── BaseName_series-1**_n_External-Data-Suffix\>**<br>
+├── ...<br>
+├── BaseName_series-2**_1_External-Data-Suffix\>**<br>
+├── BaseName_series-2**_2_External-Data-Suffix\>**<br>
+├── BaseName_series-2**_n_External-Data-Suffix\>**<br>
+├── ...<br>
+├── BaseName_series-n**_1_External-Data-Suffix\>**<br>
+├── BaseName_series-n**_2_External-Data-Suffix\>**<br>
+├── BaseName_series-n**_n_External-Data-Suffix\>**<br>
+└── ...
+
+
+### Example data
+
 <!---
-TODO: Describe input data
+Link to example input data
 -->
 
 
