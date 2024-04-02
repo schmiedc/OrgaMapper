@@ -72,7 +72,7 @@ In the following sections we will discuss the different processing options for e
 <table>
   <tr>
     <td><img src="../images/preview/nuclei.png" alt="nuclei" ></td>
-    <td><img src="../images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei"></td>
+    <td><img src="../images/preview/Nuc_HeLa_scr_S8-1.png" alt="nuclei_seg"></td>
   </tr>
 </table>
 
@@ -89,8 +89,8 @@ In the following sections we will discuss the different processing options for e
 
 ### Cell segmentation
 <table>
-  <td><img src="../images/preview/cells.png" alt="nuclei"></td>
-  <td><img src="../images/preview/Cell_HeLa_scr_S8.png" alt="nuclei" width="400"></td>
+  <td><img src="../images/preview/cells.png" alt="cells"></td>
+  <td><img src="../images/preview/Cell_HeLa_scr_S8.png" alt="cell_seg" width="400"></td>
 </table>
 
 1. Segmentation:
@@ -110,8 +110,8 @@ In the following sections we will discuss the different processing options for e
 
 ### Organelle detection
 <table>
-  <td><img src="../images/preview/organelles.png" alt="nuclei" align="left"></td>
-  <td><img src="../images/preview/Orga_HeLa_scr_S8-1.png" alt="nuclei"></td>
+  <td><img src="../images/preview/organelles.png" alt="organelle" align="left"></td>
+  <td><img src="../images/preview/Orga_HeLa_scr_S8-1.png" alt="organelle_detection"></td>
 </table>
 
 1. Detect number & position of spots:
