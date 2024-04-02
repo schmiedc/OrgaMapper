@@ -10,3 +10,9 @@ title: segmentationMembraneSignal
 <!---
 Link to example input data
 -->
+
+## Load example data
+
+## Preview of example data
+
+### Adjust for membrane signal
