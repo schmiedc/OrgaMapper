@@ -64,12 +64,9 @@ public class BatchProcessor {
 
         IJ.log("Starting batch processing");
 
-        ArrayList<ArrayList<String>> nucDistanceMeasureAll = new ArrayList<>();
         ArrayList<ArrayList<String>> cellMeasureAll = new ArrayList<>();
-
+        ArrayList<ArrayList<String>> nucDistanceMeasureAll = new ArrayList<>();
         ArrayList<ArrayList<String>> membraneDistanceMeasureAll = new ArrayList<>();
-        ArrayList<ArrayList<String>> membraneIntensityProfilesAll = new ArrayList<>();
-
 
         for ( String fileName : fileList ) {
 
@@ -293,25 +290,6 @@ public class BatchProcessor {
 
             }
 
-            // measure organelle distance and intensity, cell properties
-            ArrayList<ArrayList<String>> nucDistanceMeasure = resultLists.get(0);
-            ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
-            ArrayList<ArrayList<String>> nucIntensityProfiles = resultLists.get(2);
-
-            nucDistanceMeasureAll.addAll(nucDistanceMeasure);
-            cellMeasureAll.addAll(cellMeasure);
-
-            // get distance measure from membrane
-            if (distanceFromMembraneSetting) {
-
-                ArrayList<ArrayList<String>> membraneDistanceMeasure = resultLists.get(3);
-                membraneDistanceMeasureAll.addAll(membraneDistanceMeasure);
-
-                ArrayList<ArrayList<String>> membraneIntensityProfiles = resultLists.get(4);
-                membraneIntensityProfilesAll.addAll(membraneIntensityProfiles);
-
-            }
-
             // create directory for saving result images
             String saveDir = outputDir + File.separator + fileName;
             try {
@@ -335,16 +313,31 @@ public class BatchProcessor {
                     organelle,
                     detectionsFiltered);
 
+            // measure organelle distance and intensity, cell properties
+            ArrayList<ArrayList<String>> nucDistanceMeasure = resultLists.get(0);
+            ArrayList<ArrayList<String>> cellMeasure = resultLists.get(1);
+            ArrayList<ArrayList<String>> nucIntensityProfiles = resultLists.get(2);
+
+            nucDistanceMeasureAll.addAll(nucDistanceMeasure);
+            cellMeasureAll.addAll(cellMeasure);
+
             // results for value measurement too large for large datasets save measurement for each image
             BatchResultSaver.saveIntensityProfiles(
                     nucIntensityProfiles,
                     saveDir,
                     "intensityDistance.csv" , measureChannel);
 
+            // get distance measure from membrane
             if (distanceFromMembraneSetting) {
 
+                ArrayList<ArrayList<String>> membraneDistanceMeasure = resultLists.get(3);
+                membraneDistanceMeasureAll.addAll(membraneDistanceMeasure);
+
+                ArrayList<ArrayList<String>> membraneIntensityProfiles = resultLists.get(4);
+
+                // results for value measurement too large for large datasets save measurement for each image
                 BatchResultSaver.saveIntensityProfiles(
-                        membraneIntensityProfilesAll,
+                        membraneIntensityProfiles,
                         saveDir,
                         "intensityDistanceFromMembrane.csv" , measureChannel);
 
@@ -357,6 +350,7 @@ public class BatchProcessor {
                 outputDir,
                 "cellMeasurements.csv",
                 measureChannel);
+
         BatchResultSaver.saveDistanceMeasure(
                 nucDistanceMeasureAll,
                 outputDir,
