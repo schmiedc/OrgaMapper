@@ -101,7 +101,7 @@ In file **\<Result name\>\_detection.xlsx** for each, image, series and cell add
 * **orga_detection_peak_backsub:** orga_detection_peak - orga_background (Fluoresence A.U.).<br>
 * (Optional) **measure_detection_peak_backsub:** measure_detection_peak - measure_background (Fluoresence A.U.).<br>
 * **orga_distance_nucleus_normalized:** orga_distance_nucleus_calibrated / ferets (calibrated units).<br>
-* (Optional) **orga_meanDistance_membrane_pixel:** distance of detection from membrane (pixel)<br>
+* (Optional) **orga_meanDistance_membrane_pixel:** distance of detection from membrane (pixel).<br>
 * (Optional) **orga_meanDistance_membrane_calibrated:** distance of detection from membrane (calibrated units).<br>
 * (Optional) **orga_meanDistance_membrane_normalized:** orga_meanDistance_membrane_calibrated / ferets (calibrated units).<br>
 
@@ -110,9 +110,9 @@ In file **\<Result name\>\_detection.xlsx** for each, image, series and cell add
 
 In file **\<Result name\>\_intensityProfile_Nucleus.xlsx** the results are binned based on the binning settings specified in the rShiny App GUI. Optionally in file **\<Result name\>\_intensityProfile_Membrane.xlsx**. For each image per bin: 
 
-* **intensityDistanceCalibrated:** distance of bin (calibrated units)
-* **orga_mean:** average signal in organell channel in bin (Fluoresence A.U.).
-* (Optional) **measure_mean:** average signal in measurement channel in bin (Fluoresence A.U.).
+* **intensityDistanceCalibrated:** distance of bin (calibrated units).<br>
+* **orga_mean:** average signal in organell channel in bin (Fluoresence A.U.).<br>
+* (Optional) **measure_mean:** average signal in measurement channel in bin (Fluoresence A.U.).<br>
 
 ### Notes
 
