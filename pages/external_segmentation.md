@@ -63,13 +63,40 @@ ExternalSegmentation_InputFolder:<br>
 ├── BaseName_series-n**_n_External-Data-Suffix\>**<br>
 └── ...
 
-
 ### Example data
 
 <!---
 Link to example input data
 -->
 
+### Example data structure
+
+Structure of data and folders:
+Input<br>
+├── HeLa.tif<br>
+├── HeLa_Duplicate_1.tif<br>
+└── HeLa_Duplicate_2.tif<br>
+
+Input_External_Segmentation<br>
+├── HeLa_CellSeg.tif<br>
+├── HeLa_NucSeg.tif<br>
+├── HeLa_Detect.tif<br>
+└── ...<br>
+
+<!---
+Update output data
+-->
+
+Output<br>
+├── HeLa_S0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── cellSegmentation.png<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── detections.tiff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── intensityDistance.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──  nucSegmentation.png<br>
+├── ...<br>
+├── <br>
+├── cellMeasurements.csv<br>
+└── organelleDistance.csv<br>
 
 ## Start OrgaMapper and set external input data
 1. Start Fiji

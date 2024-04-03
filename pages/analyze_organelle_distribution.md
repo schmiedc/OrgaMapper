@@ -7,6 +7,8 @@ title: analysisOrganelleDistribution
 
 ## Example data
 
+## Example data structure
+
 <!---
 Link to example input data
 -->

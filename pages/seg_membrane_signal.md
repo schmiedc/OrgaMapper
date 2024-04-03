@@ -21,6 +21,16 @@ Input<br>
 Input_External_Segmentation<br>
 └── MembraneStaining_NucSeg.tif<br>
 
+Output<br>
+├── MembraneStaining_S0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── cellSegmentation.png<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── detections.tiff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── intensityDistance.csv<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──  nucSegmentation.png<br>
+├── 2024-04-03T120353-settings.xml<br>
+├── cellMeasurements.csv<br>
+└── organelleDistance.csv<br>
+
 ### Example input images
 
 The test data for this tutorial contains a nucleus stain as well as a membrane staining. To simulate and organelle channel for the organelle detection the membrane stainig has been duplicated.
