@@ -196,7 +196,7 @@ public class PreviewGui extends JPanel {
         resetButton.addActionListener(new MyResetListener());
         saveLoadBox.add(resetButton);
 
-        JButton resetDirButton = new JButton("Reset Preview");
+        JButton resetDirButton = new JButton("Reset Setup");
         resetDirButton.addActionListener(new MyResetDirectoryListener());
         saveLoadBox.add(resetDirButton);
 

@@ -74,7 +74,7 @@ public class ExtSegDetectGUI {
 
     void createWindow() {
 
-        GenericDialogPlus gdPlus = new GenericDialogPlus("External segmentation (seg.) and detection dialog");
+        GenericDialogPlus gdPlus = new GenericDialogPlus("External segmentation and detection setup dialog");
 
         gdPlus.addDirectoryField("External file directory: ", externalFileDirectory, 50);
 
