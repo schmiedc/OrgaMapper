@@ -70,7 +70,7 @@ To use this script install the packages [tidyverse](https://www.tidyverse.org/) 
 * Tidyverse version: 2.0.0
 * Circular version: 0.5.0
 
-In the provided R Script change the variable **directory** //to what?// then execute the processing. The script takes the center of mass of the nucleus as origin and computes the arctangent (atan2) of each detection in the cell. The resulting radians of the unit circle are converted to degrees mapped between 0-360. The angular information of the organelles is converted to the coordinate system of the circular package and the circular variance is computed. 
+In the provided R Script change the variable **directory** to the output directory of the image analysis and then execute the processing. The script takes the center of mass of the nucleus as origin and computes the arctangent (atan2) of each detection in the cell. The resulting radians of the unit circle are converted to degrees mapped between 0-360. The angular information of the organelles is converted to the coordinate system of the circular package and the circular variance is computed. 
 <!---
 //der letze Satz ist leider unverständlich//
 -->
