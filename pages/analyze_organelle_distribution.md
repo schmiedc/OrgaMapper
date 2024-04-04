@@ -70,13 +70,17 @@ To use this script install the packages [tidyverse](https://www.tidyverse.org/) 
 * Tidyverse version: 2.0.0
 * Circular version: 0.5.0
 
-In the provided R Script change the variable **directory** then execute the processing. This script takes the center of mass of the nucleus as origin and computes the arctangent (atan2) of each detection in the cell. The resulting radians of the unit circle are converted to degrees mapped to 0-360. This angular information of the organelles is converted to the coordinate system of the circular package and the circular variance is computed. 
+In the provided R Script change the variable **directory** //to what?// then execute the processing. The script takes the center of mass of the nucleus as origin and computes the arctangent (atan2) of each detection in the cell. The resulting radians of the unit circle are converted to degrees mapped between 0-360. The angular information of the organelles is converted to the coordinate system of the circular package and the circular variance is computed. 
+<!---
+//der letze Satz ist leider unverständlich//
+-->
 
-This results in the following circular variance values of the respective cells:
+
+Executing the calculation for the provided example cells results in the following circular variance values of the respective cells:
 * Dispersed: 0.73
 * Concentrated: 0.35
 
-The circular variance is a measure from 0-1. 0 denoting low variance (i.e. concentrated at an angle) and 1 denotes a high variance (i.e. dispersed). 
+The circular variance is a measure from 0-1. 0 indicates low variance (i.e. concentrated at an angle) and 1 indicates a high variance (i.e. dispersed). 
 
 ```
 library(tidyverse)
