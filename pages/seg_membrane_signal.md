@@ -7,9 +7,10 @@ title: segmentationMembraneSignal
 
 ## Example data
 
-<!---
-Link to example input data
--->
+You can find example data here:[https://doi.org/10.5281/zenodo.10932803](https://doi.org/10.5281/zenodo.10932803)
+
+**5_TestData**<br>
+└── seg_membrane_signal<br>
 
 ### Example data structure
 
