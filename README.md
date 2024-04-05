@@ -15,30 +15,44 @@ Have a look at the github pages site for more information:<br>
 ## Introduction
 The image analysis plugin solves 3 core image analysis tasks:
 
-**1. Nucleus segmentation:** The nucleus is segmented using an intensity threshold.
+1. Nucleus segmentation: the nucleus is segmented using an intensity threshold.
 Nuclei at the edge of the field of view are rejected.
 The generated masks are filtered for size and shape.
 
-**2. Cell segmentation:** Cells are segmented using an intensity threshold.
+2. Cell segmentation: cells are segmented using an intensity threshold.
 Touching cells are separated using a marker controlled watershed.
 The cell ROIs are filtered such that each cell contains 1 nucleus.
 Cells are further filered by size and shape.
 
-**3. Organelle detection:** We use a blob detection to detect individual organelles to locate their number and the position within the cell.
+3. Organelle detection: we use a blob detection to detect individual organelles to locate their number and the position within the cell.
 
-The generated masks and ROIs are then used to perform the following measurements:
+External segmentations and detections: Segmentations of nuclei and/or cells as well as the detection of organelles can be provided externally. 
 
-1. Filtered cell ROIs:
-  - Intensity of the organelle channel and an optional measurement channel.
-  - Ferets diameter as well as the cell area.
+The masks and detections ROIs are then used to perform the following measurements:
 
-2. Filtered cell ROIs & Nucleus Mask:
-  - Compute euclidean distance map (EDM) from edge of nucleus masks.
-  - Measure distance of each organelle detection based on EDM.
-  - Extract signal value and distance of the organelle channel and an optional measurement channel.
+1. Nucleus Mask:
+  - Nucleus center of mass.
 
-3. Outside of unfilte1. red cell ROIs:
-  - Background of the organelle channel and an optional measurement channel.
+2. Filtered cell ROIs:
+  - Cell area.
+  - Ferets diameter.
+  - Mean intensity of the organelle channel.
+  - Optional: Mean intensity of the measurement channel.
+
+3. Detections in cytoplasm, Filtered cell ROIs and Nucleus mask
+  - Euclidean distance map (EDM) from edge of nucleus masks.
+  - Optional: EDM from the edge of the cell mask.
+  - Distance of each organelle detection based on EDM(s).
+  - Signal value at the detection location in organelle channel.
+  - Optional: Signal value at the detection location in measurement channel.
+
+4. Filtered cell ROIs and Nucleus mask
+  - For each pixel in the cytoplasm the distance based on the EDM(s) is extracted
+  - For each pixel in the cytoplasm the signal value is measured.
+
+5. Outside of unfiltered cell ROIs:
+  - Background of the organelle channel.
+  - Optional:  ackground of the measurement channel.
 
 ## Accepted datasets
 
@@ -55,6 +69,10 @@ Multiseries files:<br>
 The data is expected to contain a channel with nucleus staining (DAPI) staining against cytoplasm (CMFDA) and against an organelle of choice.
 
 <img src="https://schmiedc.github.io/OrgaMapper/images/OrgaMapperInput.png" alt="InputData" class="inline"/>
+
+### External segmentations
+
+The segmentation of the nucleus, the cell as well as the detection of the organelles can be provided externally. Segmentations can be for instance achieved by other tools such as [Labkit](https://imagej.net/plugins/labkit/), [ilastik](https://www.ilastik.org/) or [cellpose](https://www.cellpose.org/).
 
 
 ## Installation
