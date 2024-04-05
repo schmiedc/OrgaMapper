@@ -9,6 +9,13 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 
 <img src="images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
 
+## Latest version
+
+**2024-04-05 OrgaMapper Version 2.0.0** 
+* A new version got released: [OrgaMapper 2.0.0](https://github.com/schmiedc/OrgaMapper/releases/tag/v2.0.0)
+* Please update the data analysis to the newest version:[OrgaMapper R Shiny 2.0.0](https://github.com/schmiedc/OrgaMapper_Rshiny/releases/tag/v2.0.0)
+
+
 ## Please cite us
 
 OrgaMapper: A robust and easy-to-use workflow for analyzing organelle positioning
