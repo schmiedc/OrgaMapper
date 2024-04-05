@@ -8,8 +8,10 @@ title: Workflow
 ## Example data
 
 You can find example data here:[https://doi.org/10.5281/zenodo.10932803](https://doi.org/10.5281/zenodo.10932803)
-* TestData > multi_series
-* TestData > single_series
+
+**5_TestData**<br>
+├── multi_series<br>
+└── single_series<br>
 
 ## Start and loading data
 1. Start Fiji
