@@ -1,7 +1,6 @@
 # Easy to use plugin for analysing organelle position
 
-The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease.
-The distance of the organelles are related to the nucleus using location or signal intensity.
+The aim of the OrgaMapper workflow is to measure and map organelle distribution within cells with ease. The distance of the organelles are related to the nucleus using location and signal intensity. Optionally the distance from the membrane edge can be used for distance measurements based on location and signal intensity 
 
 <img src="https://schmiedc.github.io/OrgaMapper/images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
 
