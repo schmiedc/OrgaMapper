@@ -87,9 +87,7 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 
 #### External segmentations
 
-The segmentation of the nucleus, the cell as well as the detection of the organelles can be provided externally. Segmentations can be for instance achieved by other tools such as [Labkit](https://imagej.net/plugins/labkit/), [ilastik](https://www.ilastik.org/) or [cellpose](https://www.cellpose.org/). 
-
-The external segmentations need to be provided as grayscale .tif file. The naming pattern needs to match the corresponding orginal file in its basename and series number. A file suffix identifies the external segmentation type (cells or nuclei) or the detection.
+The segmentation of the nucleus, the cell as well as the detection of the organelles can be provided externally. Segmentations can be for instance achieved by other tools such as [Labkit](https://imagej.net/plugins/labkit/), [ilastik](https://www.ilastik.org/) or [cellpose](https://www.cellpose.org/). For more information head to this page: [External segmentation](pages/external_segmentation.html)
 
 ### Installation
 
