@@ -131,7 +131,7 @@ class InputGuiFiji {
 
         }
 
-        GenericDialogPlus gdPlus = new GenericDialogPlus("OrgaMapper setup dialog");
+        GenericDialogPlus gdPlus = new GenericDialogPlus("OrgaMapper 2.0.0 setup dialog");
         gdPlus.addDirectoryField("Input directory: ", lastDirectory , 50);
         gdPlus.addDirectoryField("Output directory: ", defaultDirectory, 50);
         gdPlus.addStringField("File ending: ", defaultFileFormat, 50);

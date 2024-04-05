@@ -29,7 +29,7 @@ import java.util.Date;
 
 public class PreviewGui extends JPanel {
 
-    private  final String orgaMapperVersionNumber = "1.1.0";
+    private  final String orgaMapperVersionNumber = "2.0.0";
     // threshold method list
     private final String[] thresholdString = { "Default", "Huang", "IJ_IsoData", "Intermodes",
             "IsoData", "Li", "MaxEntropy", "Mean", "MinError", "Minimum",
@@ -152,7 +152,7 @@ public class PreviewGui extends JPanel {
     void setUpGui() {
 
         // sets up the frame
-        theFrame = new JFrame("OrgaMapper preview");
+        theFrame = new JFrame("OrgaMapper 2.0.0 preview");
 
         // needs to set to dispose otherwise it also closes Fiji
         theFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
