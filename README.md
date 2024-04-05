@@ -55,7 +55,7 @@ The masks and detections ROIs are then used to perform the following measurement
 
 ## Accepted datasets
 
-Single multichannel .tiff files and multichannel multiseries files. We tested the workflow on multiseries .nd2 files from Nikon CSU.
+Single multichannel .tiff files and multichannel multiseries files. We tested the workflow on multiseries .nd2 files from Nikon CSU. Example data can be found here: [https://doi.org/10.5281/zenodo.10932803]https://doi.org/10.5281/zenodo.10932803
 
 For the Data analysis and plotting to work seamlessly with the image analysis we require the following naming pattern.<br>
 <br>
