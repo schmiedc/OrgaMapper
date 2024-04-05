@@ -6,10 +6,12 @@ import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
+import ij.plugin.ContrastEnhancer;
 import ij.plugin.RGBStackMerge;
 import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.frame.RoiManager;
+import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
 
@@ -230,6 +232,9 @@ public class BatchResultSaver {
         ImagePlus[] cellSegmentation = new ImagePlus[2];
         nucleusMask.setLut(LUT.createLutFromColor(Color.magenta));
         cellSegmentation[0] = nucleusMask;
+
+        ImageConverter converter = new ImageConverter(cytoplasm);
+        converter.convertToGray8();
 
         cytoplasm.setLut(LUT.createLutFromColor(Color.green));
         cellSegmentation[1] = cytoplasm;
