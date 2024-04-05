@@ -66,7 +66,7 @@ ExternalSegmentation_InputFolder:<br>
 ### Example data
 
 You can find example data here:[https://doi.org/10.5281/zenodo.10932803](https://doi.org/10.5281/zenodo.10932803)
-* TestData > external_segmentation
+* 5_TestData > external_segmentation
 
 ### Example data structure
 
