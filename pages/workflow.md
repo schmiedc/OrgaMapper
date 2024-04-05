@@ -5,6 +5,12 @@ title: Workflow
 
 # Fiji Plugin Execution
 
+## Example data
+
+You can find example data here:[https://doi.org/10.5281/zenodo.10932803](https://doi.org/10.5281/zenodo.10932803)
+* TestData > multi_series
+* TestData > single_series
+
 ## Start and loading data
 1. Start Fiji
 2. Open OrgaMapper
