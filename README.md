@@ -4,6 +4,11 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 
 <img src="https://schmiedc.github.io/OrgaMapper/images/OrgaMapperIntro.png" alt="Intro" class="inline"/>
 
+## Please cite us
+
+OrgaMapper: A robust and easy-to-use workflow for analyzing organelle positioning
+Christopher Schmied, Michael Ebner, Paula Samsó Ferré, Volker Haucke, Martin Lehmann
+bioRxiv 2023.07.10.548452; doi: https://doi.org/10.1101/2023.07.10.548452
 
 ## Documentation
 Have a look at the github pages site for more information:<br>
