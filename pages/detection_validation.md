@@ -67,6 +67,7 @@ input_orgaMapper<br>
 
 To analyze the success of the detection quantitatively use the provided macro tool: DistanceMetric.ijm
 
+You can find the macro in the Zenodo repository [https://doi.org/10.5281/zenodo.12773379](https://doi.org/10.5281/zenodo.12773379) or here: [https://github.com/schmiedc/OrgaMapper/tree/gh-pages/resources](https://github.com/schmiedc/OrgaMapper/tree/gh-pages/resources)
 ## Start OrgaMapper and set external input data
 
 1. Start Fiji

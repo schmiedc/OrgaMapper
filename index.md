@@ -14,6 +14,7 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 **2024-04-05 OrgaMapper Version 2.0.0** 
 * A new version got released: [OrgaMapper 2.0.0](https://github.com/schmiedc/OrgaMapper/releases/tag/v2.0.0)
 * Please update the data analysis to the newest version:[OrgaMapper R Shiny 2.0.0](https://github.com/schmiedc/OrgaMapper_Rshiny/releases/tag/v2.0.0)
+* New Zenodo repository for example data: [https://doi.org/10.5281/zenodo.12773379](https://doi.org/10.5281/zenodo.12773379)
 
 
 ## Please cite us
@@ -32,7 +33,8 @@ bioRxiv 2023.07.10.548452; doi: https://doi.org/10.1101/2023.07.10.548452
 - Easy to use Shiny App for data analysis.
 
 [Link to OrgaMapper repository](https://github.com/schmiedc/OrgaMapper)<br>
-[Link to Shiny App repository](https://github.com/schmiedc/OrgaMapper_Rshiny)
+[Link to Shiny App repository](https://github.com/schmiedc/OrgaMapper_Rshiny)<br>
+[Link to Zenodo repository](https://doi.org/10.5281/zenodo.12773379)
 
 ## OrgaMapper at a glance
 

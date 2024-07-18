@@ -7,7 +7,7 @@ title: Workflow
 
 ## Example data
 
-You can find example data here:[https://doi.org/10.5281/zenodo.10932803](https://doi.org/10.5281/zenodo.10932803)
+You can find example data here:[https://doi.org/10.5281/zenodo.12773379](https://doi.org/10.5281/zenodo.12773379)
 
 **5_TestData**<br>
 ├── multi_series<br>
