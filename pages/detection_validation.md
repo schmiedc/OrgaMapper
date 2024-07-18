@@ -149,7 +149,9 @@ Set a selection marker at each location of a object. Make sure the point is at t
 
 **Edit > Selection > Create Mask**
 
-Save the resulting binary mask as .tiff: **File > Save As > Tiff...**. Each pixel with a value of 255 corresponds to the selection marker. **IMPORTANT**: Keep the basename and suffix in mind to match the automatic detection with the manual detection.
+Save the resulting binary mask as .tiff: **File > Save As > Tiff...**. Each pixel with a value of 255 corresponds to the selection marker. 
+
+**IMPORTANT**: Keep the basename and suffix in mind to match the automatic detection with the manual detection.
 
 Additionally you can add the selections to the ROI Manger. This way you can save the selections and further curate them in the future. Add the selections to the ROI Manager by pressing **t** on the keyboard: 
 
@@ -169,4 +171,6 @@ Delete the ROIs that contains the outline for the nucleus and the cell segmentat
 
 <img src="../images/detection_validation/OrgaROIClean.png" alt="orgaMapperROIClean" class="inline"/>
 
-Then turn the selections of the detection ROI into a mask with **Edit > Selection > Create Mask**. Save the resulting binary mask: **File > Save As > Tiff...**. **IMPORTANT**: Keep the basename and suffix in mind to match the automatic detection with the manual detection.
+Then turn the selections of the detection ROI into a mask with **Edit > Selection > Create Mask**. Save the resulting binary mask: **File > Save As > Tiff...**. 
+
+**IMPORTANT**: Keep the basename and suffix in mind to match the automatic detection with the manual detection.
