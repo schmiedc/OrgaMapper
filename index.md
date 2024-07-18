@@ -131,3 +131,5 @@ As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/
 ## - [External segmentation](pages/external_segmentation.html)
 ## - [Segmentation of membrane signal](pages/seg_membrane_signal.html)
 ## - [Analyze organelle radial distribution](pages/analyze_organelle_distribution.html)
+## - [Detection Validation](pages/detection_validation.html)
+
