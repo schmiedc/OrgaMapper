@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<version>45.0.0</version>
 		<relativePath />
 	</parent>
 
 	<groupId>de.leibnizfmp</groupId>
 	<artifactId>OrgaMapper</artifactId>
-	<version>2.0.1</version>
+	<version>2.1.0</version>
 
 	<name>Organelle Positioning</name>
 	<description>ImageJ plugin for detecting and mapping organelles within a cell</description>
@@ -82,7 +82,7 @@
 		<main-class>de.leibnizfmp.maporganelle.OrgaMapper</main-class>
 		<license.licenseName>MIT</license.licenseName>
 		<license.copyrightOwners>Christopher Schmied</license.copyrightOwners>
-		<scijava.app.directory>/home/schmiedc/FMP_Docs/DevelopmentEnv/2020-06-30_fiji/</scijava.app.directory>
+		<scijava.app.directory>/home/schmiedc/FMP_Docs/DevelopmentEnv/2026-08-03_fiji-latest-linux64-jdk/</scijava.app.directory>
 	</properties>
 
 	<repositories>
@@ -96,12 +96,10 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-common</artifactId>
-			<version>0.28.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
-			<version>1.52o</version>
 		</dependency>
 		<!-- imagescience dependency -->
 		<dependency>
@@ -113,7 +111,6 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>Trainable_Segmentation</artifactId>
-			<version>3.2.33</version>
 		</dependency>
 		<!-- bioformats dependency -->
 		<dependency>
