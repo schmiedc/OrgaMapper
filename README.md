@@ -15,6 +15,8 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 * The plugin jar no longer bundles its dependencies internally; it now relies on Fiji's own shared libraries, avoiding a class of dependency-version conflicts present in earlier releases.
 * Tested against real experimental data with results verified against the prior working version, and independently tested by a collaborator.
 * Current data analysis scripts are still compatible: [OrgaMapper R Shiny 2.0.0](https://github.com/schmiedc/OrgaMapper_Rshiny/releases/tag/v2.0.0)
+
+  
 **2024-04-05 OrgaMapper Version 2.0.0** 
 * A new version got released: [OrgaMapper 2.0.0](https://github.com/schmiedc/OrgaMapper/releases/tag/v2.0.0)
 * Please update the data analysis to the newest version:[OrgaMapper R Shiny 2.0.0](https://github.com/schmiedc/OrgaMapper_Rshiny/releases/tag/v2.0.0)
