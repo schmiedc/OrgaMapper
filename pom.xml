@@ -14,7 +14,7 @@
 
 	<groupId>de.leibnizfmp</groupId>
 	<artifactId>OrgaMapper</artifactId>
-	<version>2.1.0</version>
+	<version>3.0.0</version>
 
 	<name>Organelle Positioning</name>
 	<description>ImageJ plugin for detecting and mapping organelles within a cell</description>
