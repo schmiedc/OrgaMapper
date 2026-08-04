@@ -10,7 +10,7 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 * A new version got released: [OrgaMapper 3.0.0](https://github.com/schmiedc/OrgaMapper/releases/tag/v3.0.0).
 * **Requires Fiji-Latest (Java 21+).**
 * **Not compatible with Fiji-Stable (Java 8)**
-* **Fiji-Stable users should remain on [OrgaMapper 2.0.1](https://github.com/schmiedc/OrgaMapper/releases/tag/v2.0.0).**
+* **Fiji-Stable users should remain on [OrgaMapper 2.0.0](https://github.com/schmiedc/OrgaMapper/releases/tag/v2.0.0).**
 * Updated to current SciJava/Bio-Formats dependencies (`pom-scijava` 45.0.0, Bio-Formats 8.5.0, Trainable Weka Segmentation 4.0.0).
 * The plugin jar no longer bundles its dependencies internally; it now relies on Fiji's own shared libraries, avoiding a class of dependency-version conflicts present in earlier releases.
 * Tested against real experimental data with results verified against the prior working version, and independently tested by a collaborator.
