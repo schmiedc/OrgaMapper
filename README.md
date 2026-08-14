@@ -41,9 +41,17 @@ The plugin is available via an update site. Add the Cellular Imaging site and th
 1. Select **_Help  › Update...</strong>_** from the menu bar.
 2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
 3. Press **_Add update site_** a new line in the Manage update sites dialog appears
-4. Select: **_Cellular Imaging_**
-5. Select: **_ImageScience_**
+4. Select: *Cellular Imaging*
+5. Select: *ImageScience*
 7. Press **_Apply and Close_**
+8. OrgaMapper and its dependencies should appear in Updater.
+9. Press **Apply Changes**
+
+For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
+As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
+
+Then download the contents of the OrgaMapper_Rshiny repository:<br/>
+[OrgaMapper Rshiny](https://github.com/schmiedc/OrgaMapper_Rshiny/archive/main.zip)
 
 ## Introduction
 The image analysis plugin solves 3 core image analysis tasks:
@@ -106,6 +114,3 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 ### External segmentations
 
 The segmentation of the nucleus, the cell as well as the detection of the organelles can be provided externally. Segmentations can be for instance achieved by other tools such as [Labkit](https://imagej.net/plugins/labkit/), [ilastik](https://www.ilastik.org/) or [cellpose](https://www.cellpose.org/).
-
-For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
-As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
