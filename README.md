@@ -33,6 +33,18 @@ Have a look at the github pages site for more information:<br>
 <br/>
 <br/>
 
+## Installation
+
+For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
+The plugin is available via an update site. Add the Cellular Imaging site and the ImageScience update site:
+
+1. Select **_Help  › Update...</strong>_** from the menu bar.
+2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
+3. Press **_Add update site_** a new line in the Manage update sites dialog appears
+4. Select: Cellular Imaging
+5. Select: ImageScience
+7. Press **_Apply and Close_**
+
 ## Introduction
 The image analysis plugin solves 3 core image analysis tasks:
 
@@ -94,19 +106,6 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 ### External segmentations
 
 The segmentation of the nucleus, the cell as well as the detection of the organelles can be provided externally. Segmentations can be for instance achieved by other tools such as [Labkit](https://imagej.net/plugins/labkit/), [ilastik](https://www.ilastik.org/) or [cellpose](https://www.cellpose.org/).
-
-
-## Installation
-
-For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
-The plugin is available via an update site. Add the Cellular-Imaging site:
-
-1. Select **_Help  › Update...</strong>_** from the menu bar.
-2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
-3. Press **_Add update size_** a new line in the Manage update sites dialog appears
-4. Add **_https://sites.imagej.net/Cellular-Imaging/_** as url
-5. Add an optional name such as Cellular-Imaging
-6. Press **_Close_** and then **_Apply changes_**
 
 For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
 As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
