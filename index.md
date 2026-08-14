@@ -44,10 +44,10 @@ bioRxiv 2023.07.10.548452; doi: https://doi.org/10.1101/2023.07.10.548452
 [Link to Shiny App repository](https://github.com/schmiedc/OrgaMapper_Rshiny)<br>
 [Link to Zenodo repository](https://doi.org/10.5281/zenodo.12773379)
 
+## Installation
+
 For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
 The plugin is available via an update site. Add the Cellular Imaging site and the ImageScience update site:
-
-## Installation
 
 1. Select **_Help  › Update...</strong>_** from the menu bar.
 2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
@@ -56,9 +56,11 @@ The plugin is available via an update site. Add the Cellular Imaging site and th
 5. Select: **_ImageScience_**
 7. Press **_Apply and Close_**
 
-For the data anaylsis you need to install R:<br/>[https://www.r-project.org/](https://www.r-project.org/)<br/>
-<br/>
-As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
+For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
+As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
+
+Then download the contents of the OrgaMapper_Rshiny repository:<br/>
+[OrgaMapper Rshiny](https://github.com/schmiedc/OrgaMapper_Rshiny/archive/main.zip)
 
 ## OrgaMapper at a glance
 
