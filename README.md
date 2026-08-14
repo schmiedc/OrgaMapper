@@ -41,8 +41,8 @@ The plugin is available via an update site. Add the Cellular Imaging site and th
 1. Select **_Help  › Update...</strong>_** from the menu bar.
 2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
 3. Press **_Add update site_** a new line in the Manage update sites dialog appears
-4. Select: Cellular Imaging
-5. Select: ImageScience
+4. Select: **_Cellular Imaging_**
+5. Select: **_ImageScience_**
 7. Press **_Apply and Close_**
 
 ## Introduction
