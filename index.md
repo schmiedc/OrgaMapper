@@ -52,9 +52,11 @@ The plugin is available via an update site. Add the Cellular Imaging site and th
 1. Select **_Help  › Update...</strong>_** from the menu bar.
 2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
 3. Press **_Add update site_** a new line in the Manage update sites dialog appears
-4. Select: **_Cellular Imaging_**
-5. Select: **_ImageScience_**
+4. Select: *Cellular Imaging*
+5. Select: *ImageScience*
 7. Press **_Apply and Close_**
+8. OrgaMapper and its dependencies should appear in Updater.
+9. Press **Apply Changes**
 
 For the data anaylsis you need to install R: [https://www.r-project.org/](https://www.r-project.org/)<br>
 As an R editor I recommend to use RStudio: [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
