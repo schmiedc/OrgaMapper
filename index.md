@@ -25,7 +25,6 @@ The aim of the OrgaMapper workflow is to measure and map organelle distribution 
 * Please update the data analysis to the newest version:[OrgaMapper R Shiny 2.0.0](https://github.com/schmiedc/OrgaMapper_Rshiny/releases/tag/v2.0.0)
 * New Zenodo repository for example data: [https://doi.org/10.5281/zenodo.12773379](https://doi.org/10.5281/zenodo.12773379)
 
-
 ## Please cite us
 
 OrgaMapper: A robust and easy-to-use workflow for analyzing organelle positioning
@@ -44,6 +43,22 @@ bioRxiv 2023.07.10.548452; doi: https://doi.org/10.1101/2023.07.10.548452
 [Link to OrgaMapper repository](https://github.com/schmiedc/OrgaMapper)<br>
 [Link to Shiny App repository](https://github.com/schmiedc/OrgaMapper_Rshiny)<br>
 [Link to Zenodo repository](https://doi.org/10.5281/zenodo.12773379)
+
+For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
+The plugin is available via an update site. Add the Cellular Imaging site and the ImageScience update site:
+
+## Installation
+
+1. Select **_Help  › Update...</strong>_** from the menu bar.
+2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
+3. Press **_Add update site_** a new line in the Manage update sites dialog appears
+4. Select: **_Cellular Imaging_**
+5. Select: **_ImageScience_**
+7. Press **_Apply and Close_**
+
+For the data anaylsis you need to install R:<br/>[https://www.r-project.org/](https://www.r-project.org/)<br/>
+<br/>
+As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
 
 ## OrgaMapper at a glance
 
@@ -112,23 +127,6 @@ The data is expected to contain a channel with nucleus staining (DAPI) staining 
 #### External segmentations
 
 The segmentation of the nucleus, the cell as well as the detection of the organelles can be provided externally. Segmentations can be for instance achieved by other tools such as [Labkit](https://imagej.net/plugins/labkit/), [ilastik](https://www.ilastik.org/) or [cellpose](https://www.cellpose.org/). For more information head to this page: [External segmentation](pages/external_segmentation.html)
-
-### Installation
-
-For the image analysis you need to download and install Fiji: [https://fiji.sc/](https://fiji.sc/)
-The plugin is available via an update site. Add the Cellular-Imaging site:
-
-1. Select **_Help  › Update..._** from the menu bar.
-2. Click on Manage update sites. Which opens the **_Manage update sites_** dialog.
-3. Press **_Add update size_** a new line in the Manage update sites dialog appears
-4. Add **_https://sites.imagej.net/Cellular-Imaging/_** as url
-5. Add an optional name such as Cellular-Imaging
-6. Press **_Close_** and then **_Apply changes_**
-
-For the data anaylsis you need to install R:<br/>[https://www.r-project.org/](https://www.r-project.org/)<br/>
-<br/>
-As an R editor use RStudio:<br/> [https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/)
-
 
 # Basic usage tutorials
 
